@@ -54,9 +54,8 @@ body {
     font-weight: 900;
     font-size: 1.6rem;
     color: #1da1f2;
-    letter-spacing: 20px;
     text-align: center;
-    padding-left: 30px;
+    /* padding-left: 30px; */
 }
 
 /*输入部分*/
@@ -127,13 +126,34 @@ button:hover {
 .line {
     color: #ecf0f3;
     font-size: 13px;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.5px;
     margin-top: 15px;
     padding: 10px;
 }
 
-
 #button_groups {
     display: flex;
     justify-content: space-between;
+}
+
+.oneline {
+    display: flex;
+}
+
+.login_warm {
+    color:red;
+    width: 100;
+    font-size: smaller;
+    margin: 0px 0px 0px;
+    text-align: left;
+    padding-left: 45px;
+    letter-spacing: 2px;
+}
+
+#password_login_warm {
+    padding-left: 20px;
+}
+
+.label_title {
+    width: 65px;
 }
