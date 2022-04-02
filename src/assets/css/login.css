@@ -74,12 +74,9 @@
   }
   
   label {
-    margin-bottom: 4px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     font-size: 16px;
-  }
-  
-  label:nth-of-type(2) {
-    margin-top: 14px;
   }
   
   input {
@@ -121,5 +118,19 @@
   #dot {
     vertical-align: super;
     font-weight: 600;
+  }
+
+  .oneline {
+    display: flex;
+  }
+
+  .label_title {
+    width: 145px;
+  }
+
+  .label_tips {
+    color: red;
+    font-size: smaller; 
+
   }
   

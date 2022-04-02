@@ -12,7 +12,14 @@ import "../node_modules/aos/dist/aos.css";
 Vue.use(AOS);
 AOS.init()
 
+// 引入Element-ui组件库
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
 
+// 导入axios异步请求库
+import axios from 'axios'
+Vue.prototype.axios = axios
 
 Vue.config.productionTip = false
 
