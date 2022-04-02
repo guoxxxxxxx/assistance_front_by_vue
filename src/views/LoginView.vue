@@ -12,7 +12,6 @@
         <input type="text" name="code" placeholder="Enter Verification Code" />
         <button type="submit" id="login">Login</button>
       </div>
-
       <span class="line">
         <div>
           <a href="" id="forget">Forget Password?</a>
