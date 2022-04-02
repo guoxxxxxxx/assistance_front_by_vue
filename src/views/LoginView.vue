@@ -9,13 +9,8 @@
         <label>邮箱</label>
         <input type="text" name="email" placeholder="example@email.com" />
         <label>密码</label>
-        <input type="password" name="password" placeholder="Enter Password" />
-        <label>验证码</label>
         <input type="text" name="code" placeholder="Enter Verification Code" />
-        <span id="button_groups">
-          <button type="button" id="getCode">Get Code</button>
-          <button type="submit" id="login">Login</button>
-        </span>
+        <button type="submit" id="login">Login</button>
       </div>
 
       <span class="line">
