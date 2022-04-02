@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-  width: 350px;
+  width: 520px;
   height: 520px;
   background: #ecf0f3;
   padding: 40px;
@@ -77,19 +77,18 @@ button {
 label {
   margin-bottom: 4px;
   font-size: 16px;
-}
-
-label:nth-of-type(2) {
-  margin-top: 14px;
+  width: 200px;
+  margin-top: 5px;
 }
 
 input {
+  width: 200px;
   background: #ecf0f3;
   padding: 10px;
   padding-left: 20px;
   font-size: 14px;
   border-radius: 50px;
-  height: 50px;
+  height: 45px;
   box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
 }
 
@@ -98,6 +97,7 @@ input::placeholder {
 }
 
 button {
+  width: 200px;
   margin-top: 20px;
   background: #1da1f2;
   height: 40px;
@@ -126,5 +126,14 @@ button:active {
 }
 
 #register {
-  background-color: greenyellow;
+  background-color: #1da1f2;
+}
+
+#getCode {
+  background-color: rgb(232, 191, 45);
+}
+
+.oneline {
+  display: flex;
+  justify-content: space-between;
 }

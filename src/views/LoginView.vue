@@ -1,6 +1,6 @@
 <template>
   <body>
-    <div class="container" data-aos="zoom-in">
+    <div class="container" data-aos="zoom-in" data-aos-duration="700">
       <div class="logo">
         <img src="@/assets/logo.png" alt="" class="icon" />
       </div>
@@ -14,10 +14,18 @@
       </div>
       <div class="line">
         <div>
-          <a href="" id="forget">忘记密码?</a>
+          <a href="" onclick="return false" @click="go_to_registerView"
+            >注 册!</a
+          >
         </div>
         <div>
-          <a href="" onclick='return false' @click="go_to_registerView">注 册!</a>
+          <a
+            href=""
+            id="forget"
+            onclick="return false"
+            @click="go_to_forgetView"
+            >忘记密码?</a
+          >
         </div>
       </div>
     </div>
@@ -26,14 +34,24 @@
 
 <script>
 export default {
-  methods:{
-    go_to_registerView(){
-      this.$router.push('/registerView')
-    }
-  }
+  methods: {
+    /**
+     * 去注册界面
+     */
+    go_to_registerView() {
+      this.$router.push("/registerView");
+    },
+    /**
+     * 去忘记密码界面
+     */
+    go_to_forgetView() {
+      this.$router.push("/forgetView");
+    },
+  },
 };
 </script>
 
+// 导入外部样式
+<style scoped src='../assets/css/login.css'></style>
 <style scoped>
-@import url("@/assets/css/login.css");
 </style>
