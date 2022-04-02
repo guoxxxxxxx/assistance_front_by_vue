@@ -205,6 +205,9 @@ export default {
                 .then((resp) => {
                   if (resp.data.status == 200) {
                     this.$message.success("用户注册成功！");
+                    setTimeout(() => {
+                      this.go_to_login()
+                    }, 1000);
                   } else if (resp.data.status == 402) {
                     this.$message.error("该邮箱已被注册！");
                   } else {

@@ -39,7 +39,9 @@
           <button type="button" id="getCode" @click="listener_getCode_btn">
             获取验证码
           </button>
-          <button type="submit" id="amend" @click="listener_amend_btn">修 改</button>
+          <button type="submit" id="amend" @click="listener_amend_btn">
+            修 改
+          </button>
         </div>
       </div>
       <div class="line">
@@ -151,31 +153,33 @@ export default {
           .post(base_url + "/mail/verify", {
             email: this.forget_email,
             verifyCode: this.forget_verify_code,
-          }).then(resp=>{
-            // 验证码正确 执行更改操作
-            if(resp.data.status == 200){
-              this.axios.post(base_url + '/user/forget_password', {
-                email:this.forget_email,
-                password:this.forget_new_password
-              }).then(resp=>{
-                if(resp.data.status == 200){
-                  this.$message.success('密码修改成功！')
-                }
-                else if (resp.data.status == 401) {
-                  this.$message.error('该邮箱尚未注册！')
-                }
-                else{
-                  this.$message.error('修改失败！')
-                }
-              })
-            }
-            else{
-              this.$message.error('验证码错误！')
-            }
           })
-      }
-      else{
-        this.$message.error('您输入的信息有误！')
+          .then((resp) => {
+            // 验证码正确 执行更改操作
+            if (resp.data.status == 200) {
+              this.axios
+                .post(base_url + "/user/forget_password", {
+                  email: this.forget_email,
+                  password: this.forget_new_password,
+                })
+                .then((resp) => {
+                  if (resp.data.status == 200) {
+                    this.$message.success("密码修改成功！");
+                    setTimeout(() => {
+                      this.go_to_login();
+                    }, 1000);
+                  } else if (resp.data.status == 401) {
+                    this.$message.error("该邮箱尚未注册！");
+                  } else {
+                    this.$message.error("修改失败！");
+                  }
+                });
+            } else {
+              this.$message.error("验证码错误！");
+            }
+          });
+      } else {
+        this.$message.error("您输入的信息有误！");
       }
     },
   },
