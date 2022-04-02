@@ -9,7 +9,7 @@
         <div class="oneline">
           <label class="label_title">邮箱</label>
           <label class="label_tips" v-show="is_show_email_warm"
-            >邮箱格式有误</label
+            >邮箱格式错误</label
           >
         </div>
         <input

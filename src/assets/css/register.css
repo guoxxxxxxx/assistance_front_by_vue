@@ -137,3 +137,21 @@ button:active {
   display: flex;
   justify-content: space-between;
 }
+
+.label_warm {
+  color: red;
+  font-size: smaller;
+  width: 130px;
+}
+
+.label_title {
+  width: 70px;
+}
+
+#p_tips {
+  width: 150px;
+}
+
+#p_pwd_tips {
+  width: 50px;
+}
