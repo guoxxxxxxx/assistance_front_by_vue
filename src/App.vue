@@ -12,7 +12,12 @@ export default {
   },
   mounted(){
     // 跳转到登录界面
-    this.$router.push('loginView')
+    this.$router.replace({
+      path: '/loginView',
+      query: {timestamp: Date.now()}
+    })
+  },
+  methods:{
   }
 }
 </script>

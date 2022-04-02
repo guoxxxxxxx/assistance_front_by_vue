@@ -1,8 +1,8 @@
 * {
     text-decoration: none;
-}
-
-body {
+  }
+  
+  body {
     margin: 0;
     width: 100vw;
     height: 100vh;
@@ -13,11 +13,11 @@ body {
     place-items: center;
     overflow: hidden;
     font-family: sans-serif;
-}
-
-.container {
+  }
+  
+  .container {
     width: 350px;
-    height: 580px;
+    height: 520px;
     background: #ecf0f3;
     padding: 40px;
     border-radius: 20px;
@@ -30,9 +30,9 @@ body {
     left: 0;
     right: 0;
     margin: auto;
-}
-
-.logo {
+  }
+  
+  .logo {
     height: 100px;
     width: 100px;
     background-size: 160px;
@@ -41,51 +41,48 @@ body {
     border-radius: 50%;
     box-sizing: border-box;
     box-shadow: 7px 7px 10px #cbced1, -7px -7px 10px white;
-}
-
-.icon {
+  }
+  
+  .icon {
     height: 100px;
     width: 100px;
     border-radius: 50%;
-}
-
-.title {
+  }
+  .title {
     margin-top: 10px;
     font-weight: 900;
     font-size: 1.6rem;
     color: #1da1f2;
-    letter-spacing: 20px;
-    text-align: center;
-    padding-left: 30px;
-}
-
-/*输入部分*/
-.inputs {
+    letter-spacing: 1px;
+  }
+  
+  /*输入部分*/
+  .inputs {
     text-align: left;
     margin-top: 30px;
-}
-
-label,
-input,
-button {
+  }
+  
+  label,
+  input,
+  button {
     display: block;
     width: 100%;
     padding: 0;
     border: none;
     outline: none;
     box-sizing: border-box;
-}
-
-label {
+  }
+  
+  label {
     margin-bottom: 4px;
     font-size: 16px;
-}
-
-label:nth-of-type(2) {
-    margin-top: 30px;
-}
-
-input {
+  }
+  
+  label:nth-of-type(2) {
+    margin-top: 14px;
+  }
+  
+  input {
     background: #ecf0f3;
     padding: 10px;
     padding-left: 20px;
@@ -93,14 +90,14 @@ input {
     border-radius: 50px;
     height: 50px;
     box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
-}
-
-input::placeholder {
+  }
+  
+  input::placeholder {
     color: gray;
-}
-
-button {
-    margin-top: 50px;
+  }
+  
+  button {
+    margin-top: 20px;
     background: #1da1f2;
     height: 40px;
     border-radius: 20px;
@@ -109,26 +106,20 @@ button {
     font-family: sans-serif;
     letter-spacing: 1px;
     box-shadow: 6px 6px 6px #cbced1, -6px -6px 6px white;
-}
-
-button:hover {
+  }
+  button:active {
     box-shadow: none;
-}
-
-#login {
-    background: rgb(23, 164, 70);
-}
-
-.line {
-    color: #ecf0f3;
+  }
+  
+  .line {
+    color: #1da1f2;
     font-size: 13px;
     letter-spacing: 0.2px;
     margin-top: 15px;
-    padding: 10px;
-}
-
-
-#button_groups {
-    display: flex;
-    justify-content: space-between;
-}
+  }
+  
+  #dot {
+    vertical-align: super;
+    font-weight: 600;
+  }
+  
