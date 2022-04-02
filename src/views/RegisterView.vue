@@ -33,10 +33,10 @@
       </div>
       <div class="line">
         <div>
-          <a href="" onclick="return false">登 录</a>
+          <a href="" onclick="return false" @click="go_to_login">登 录</a>
         </div>
         <div>
-          <a href="" onclick="return false" id="forget">忘记密码?</a>
+          <a href="" onclick="return false" id="forget" @click="go_to_forgetView">忘记密码?</a>
         </div>
       </div>
     </div>
@@ -44,7 +44,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    /**
+     * 去忘记密码界面
+     */
+    go_to_forgetView() {
+      this.$router.push("/forgetView");
+    },
+    /**
+     * 去登录界面
+     */
+    go_to_login() {
+      this.$router.push("/loginView");
+    },
+  },
+};
 </script>
 
 <style scoped src='../assets/css/register.css'></style>

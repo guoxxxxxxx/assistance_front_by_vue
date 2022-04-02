@@ -98,7 +98,7 @@ input::placeholder {
 
 button {
   width: 200px;
-  margin-top: 20px;
+  margin-top: 30px;
   background: #1da1f2;
   height: 40px;
   border-radius: 20px;
@@ -117,7 +117,7 @@ button:active {
   color: #1da1f2;
   font-size: 13px;
   letter-spacing: 0.2px;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 #dot {
