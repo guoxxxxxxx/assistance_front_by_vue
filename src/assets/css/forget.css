@@ -130,3 +130,15 @@ button:active {
 #getCode {
     background-color: rgb(232, 191, 45);
 }
+
+.label_warm {
+    color: red;
+    font-size: smaller;
+    width: 200px;
+    text-align: center;
+    padding-right: 70px;
+}
+
+.label_title {
+    width: 70px;
+}
