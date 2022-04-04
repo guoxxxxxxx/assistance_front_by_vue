@@ -1,36 +1,41 @@
 <template>
-  <div>
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu-demo"
-      mode="horizontal"
-      @select="handleSelect"
-    >
-      <el-menu-item index="1">处理中心</el-menu-item>
-      <el-submenu index="2">
-        <template slot="title">我的工作台</template>
-        <el-menu-item index="2-1">选项1</el-menu-item>
-        <el-menu-item index="2-2">选项2</el-menu-item>
-        <el-menu-item index="2-3">选项3</el-menu-item>
-        <el-submenu index="2-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="2-4-1">选项1</el-menu-item>
-          <el-menu-item index="2-4-2">选项2</el-menu-item>
-          <el-menu-item index="2-4-3">选项3</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-      <el-menu-item index="3" disabled>消息中心</el-menu-item>
-      <el-menu-item index="4"
-        ><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item
-      >
-    </el-menu>
-    <div class="line"></div>
-  </div>
+  <b-navbar>
+    <template #brand>
+      <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <img
+          src="https://raw.githubusercontent.com/buefy/buefy/dev/static/img/buefy-logo.png"
+          alt="Lightweight UI components for Vue.js based on Bulma"
+        />
+      </b-navbar-item>
+    </template>
+    <template #start>
+      <b-navbar-item href="#"> Home </b-navbar-item>
+      <b-navbar-item href="#"> Documentation </b-navbar-item>
+      <b-navbar-dropdown label="Info">
+        <b-navbar-item href="#"> About </b-navbar-item>
+        <b-navbar-item href="#"> Contact </b-navbar-item>
+      </b-navbar-dropdown>
+    </template>
+
+    <template #end>
+      <b-navbar-item tag="div">
+        <div class="buttons">
+          <a class="button is-primary">
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-light"> Log in </a>
+        </div>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
+
+
 
 <script>
 export default {};
 </script>
 
+<style scoped src='../assets/css/indexHeader.css'></style>
 <style>
 </style>
