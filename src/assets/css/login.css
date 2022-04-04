@@ -13,6 +13,7 @@
     place-items: center;
     overflow: hidden;
     font-family: sans-serif;
+    position:fixed;
   }
   
   .container {
@@ -30,6 +31,7 @@
     left: 0;
     right: 0;
     margin: auto;
+    position: relative;
   }
   
   .logo {
@@ -133,4 +135,5 @@
     font-size: smaller; 
 
   }
+
   

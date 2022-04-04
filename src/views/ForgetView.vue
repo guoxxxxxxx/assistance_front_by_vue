@@ -1,5 +1,24 @@
 <template>
   <body>
+    <vue-particles
+      class="login-bg"
+      color="#39AFFD"
+      :particleOpacity="0.7"
+      :particlesNumber="100"
+      shapeType="circle"
+      :particleSize="5"
+      linesColor="#8DD1FE"
+      :linesWidth="2"
+      :lineLinked="true"
+      :lineOpacity="0.4"
+      :linesDistance="150"
+      :moveSpeed="3"
+      :hoverEffect="true"
+      hoverMode="grab"
+      :clickEffect="true"
+      clickMode="push"
+    >
+    </vue-particles>
     <div class="container" data-aos="zoom-in" data-aos-duration="700">
       <div class="logo">
         <img src="@/assets/logo.png" alt="" class="icon" />
@@ -59,6 +78,7 @@
     </div>
   </body>
 </template>
+
 
 <script>
 import { checkEmail } from "@/assets/js/public";

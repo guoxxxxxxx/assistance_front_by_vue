@@ -21,6 +21,10 @@ Vue.use(ElementUI);
 import axios from 'axios'
 Vue.prototype.axios = axios
 
+// 引入粒子特效
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
+
 Vue.config.productionTip = false
 
 new Vue({
