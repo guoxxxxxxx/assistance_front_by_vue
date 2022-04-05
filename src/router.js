@@ -5,7 +5,7 @@ import ForgetView from './views/ForgetView'
 import IndexView from './views/IndexView'
 import IndexDeliveryBody from './components/IndexDeliveryComp/IndexDeliveryBody'
 import IndexBodyComp from './components/IndexComp/IndexBodyComp'
-
+import IndexStudyBody from './components/IndexStudyComp/IndexStudyBody'
 
 // 创建并暴露router实例对象
 const router = new VueRouter({
@@ -27,12 +27,16 @@ const router = new VueRouter({
             component: IndexView,
             children: [
                 {
+                    path: 'indexBodyComp',
+                    component: IndexBodyComp
+                },
+                {
                     path: 'indexDeliveryBody',
                     component: IndexDeliveryBody
                 },
                 {
-                    path: 'indexBodyComp',
-                    component: IndexBodyComp
+                    path: 'indexStudyBody',
+                    component: IndexStudyBody
                 }
             ]
         },
