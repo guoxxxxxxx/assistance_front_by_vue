@@ -1,6 +1,5 @@
 <template>
-  <div class="border">
-    <div class="container">
+  <div>
       <Tabs value="all" @on-click="clickme" >
         <TabPane label="全部" name="all"></TabPane>
         <TabPane label="数学" name="math"></TabPane>
@@ -14,7 +13,6 @@
       </Tabs>
       <study-comp></study-comp>
       <!-- <router-view></router-view> -->
-    </div>
   </div>
 </template>
 
@@ -33,27 +31,5 @@ export default {
 </script>
 
 <style scoped>
-.border {
-  width: 100%;
-  height: auto;
-  background-color: #ecf0f3;
-  border: none;
-  outline: none;
-}
 
-.container {
-  width: 80%;
-  height: auto;
-  border-radius: 20px;
-  box-sizing: border-box;
-  box-shadow: 14px 14px 20px #cbced1, 14px 14px 20px white;
-  background-color: white;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  border: none;
-  outline: none;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-bottom: 40px;
-}
 </style>

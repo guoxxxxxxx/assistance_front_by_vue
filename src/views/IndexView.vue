@@ -1,12 +1,12 @@
 <template>
   <div>
     <index-header></index-header>
-    <!-- <div class="border">
-      <div class="container"> -->
+    <div class="border">
+      <div class="container">
         <router-view></router-view>
         <index-footer></index-footer>
-      <!-- </div>
-    </div> -->
+      </div>
+    </div>
   </div>
 </template>
 

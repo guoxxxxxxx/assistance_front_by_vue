@@ -1,44 +1,20 @@
 <template>
-  <div class="border">
-    <div class="container">
-        Powered By GuoX
-    </div>
+  <div id="footer">
+      email: <a href="mailto:guo_x0315@163.com">guo_x0315@163.com</a> <br>
+      Powered By GuoX <br>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style scoped>
-.border {
-  width: 100%;
-  height: auto;
-  background-color: #ecf0f3;
-  border: none;
-  outline: none;
-  align-items: center;
-  justify-content: center;
-  display: flex;
+#footer {
+    padding-top: 50px;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    font-size: smaller
 }
-
-.container {
-  width: 80%;
-  height: auto;
-  border-radius: 20px;
-  box-sizing: border-box;
-  box-shadow: 14px 14px 20px #cbced1, 14px 14px 20px white;
-  background-color: white;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  border: none;
-  outline: none;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-bottom: 40px;
-  display: flex;
-}
-
 </style>

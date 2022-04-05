@@ -1,6 +1,5 @@
 <template>
-  <div class="border">
-    <div class="container">
+  <div>
       <Tabs value="all" @on-click="clickme" >
         <TabPane label="全部" name="all"></TabPane>
         <TabPane label="快递代取" name="express"></TabPane>
@@ -10,7 +9,6 @@
       </Tabs>
       <errand-comp></errand-comp>
       <!-- <router-view></router-view> -->
-    </div>
   </div>
 </template>
 
