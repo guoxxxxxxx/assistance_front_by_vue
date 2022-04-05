@@ -6,6 +6,9 @@ import IndexView from './views/IndexView'
 import IndexDeliveryBody from './components/IndexDeliveryComp/IndexDeliveryBody'
 import IndexBodyComp from './components/IndexComp/IndexBodyComp'
 import IndexStudyBody from './components/IndexStudyComp/IndexStudyBody'
+import IndexSecondHandBody from './components/SecondHandComp/IndexSecondHandBody'
+import IndexMissAndFindBody from './components/MissAndFindComp/IndexMissAndFindBody'
+import IndexSchoolmateBody from './components/SchoolmateComp/IndexSchoolmateBody'
 
 // 创建并暴露router实例对象
 const router = new VueRouter({
@@ -37,6 +40,18 @@ const router = new VueRouter({
                 {
                     path: 'indexStudyBody',
                     component: IndexStudyBody
+                },
+                {
+                    path: 'indexSecondHandBody',
+                    component: IndexSecondHandBody  
+                },
+                {
+                    path: 'indexMissAndFindBody',
+                    component: IndexMissAndFindBody
+                },
+                {
+                    path: 'indexSchoolmateBody',
+                    component: IndexSchoolmateBody
                 }
             ]
         },

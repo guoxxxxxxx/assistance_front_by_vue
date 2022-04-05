@@ -17,15 +17,15 @@
           <Icon type="ios-book" />
           学习交流
         </MenuItem>
-        <MenuItem name="4">
+        <MenuItem name="4" to="/indexView/IndexSecondHandBody">
           <Icon type="logo-usd" />
           二手交易
         </MenuItem>
-        <MenuItem name="5">
-          <Icon type="md-search" />
+        <MenuItem name="5" to="/indexView/indexMissAndFindBody">
+          <Icon type="md-search"/>
           失物招领
         </MenuItem>
-        <MenuItem name="6">
+        <MenuItem name="6" to="/indexView/indexSchoolmateBody">
           <Icon type="ios-people" />
           校友圈
         </MenuItem>
