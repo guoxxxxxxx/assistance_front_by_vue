@@ -2,26 +2,30 @@
   <div class="index_header">
     <div id="left_box">
       <div id="index_logo_box">
-        <img class="index_logo" src="../assets/img/index_logo.png" />
+        <img class="index_logo" src="../../assets/img/index_logo.png" />
       </div>
-      <Menu mode="horizontal" :theme="theme1" active-name="1">
-        <MenuItem name="1">
+      <Menu mode="horizontal" active-name="1">
+        <MenuItem name="1" to="/indexView/indexBodyComp">
+          <Icon type="ios-home" />
+          主页
+        </MenuItem>
+        <MenuItem name="2" to="/indexView/IndexDeliveryBody">
           <Icon type="md-bicycle" />
           跑腿
         </MenuItem>
-        <MenuItem name="2">
+        <MenuItem name="3">
           <Icon type="ios-book" />
           学习交流
         </MenuItem>
-        <MenuItem name="3">
+        <MenuItem name="4">
           <Icon type="logo-usd" />
           二手交易
         </MenuItem>
-        <MenuItem name="4">
+        <MenuItem name="5">
           <Icon type="md-search" />
           失物招领
         </MenuItem>
-        <MenuItem name="5">
+        <MenuItem name="6">
           <Icon type="ios-people" />
           校友圈
         </MenuItem>
@@ -29,7 +33,10 @@
     </div>
     <div id="right_box">
       <Dropdown>
-        <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" size="large"/>
+        <Avatar
+          src="https://i.loli.net/2017/08/21/599a521472424.jpg"
+          size="large"
+        />
         <DropdownMenu slot="list">
           <DropdownItem name>用户名: 闪光皮皮</DropdownItem>
           <DropdownItem>个人中心</DropdownItem>
@@ -42,13 +49,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+
+  },
+};
 </script>
 
 <style scoped>
 #left_box {
-  /* width: 70%; */
+  width: 70%;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .index_header {

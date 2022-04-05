@@ -3,27 +3,39 @@ import LoginView from './views/LoginView'
 import RegisterView from './views/RegisterView'
 import ForgetView from './views/ForgetView'
 import IndexView from './views/IndexView'
+import IndexDeliveryBody from './components/IndexDeliveryComp/IndexDeliveryBody'
+import IndexBodyComp from './components/IndexComp/IndexBodyComp'
 
 
 // 创建并暴露router实例对象
 const router = new VueRouter({
-    routes:[
+    routes: [
         {
-            path:'/loginView',
+            path: '/loginView',
             component: LoginView
         },
         {
-            path:"/registerView",
+            path: "/registerView",
             component: RegisterView
         },
         {
-            path:'/forgetView',
+            path: '/forgetView',
             component: ForgetView
         },
         {
-            path:'/indexView',
-            component: IndexView
-        }
+            path: '/indexView',
+            component: IndexView,
+            children: [
+                {
+                    path: 'indexDeliveryBody',
+                    component: IndexDeliveryBody
+                },
+                {
+                    path: 'indexBodyComp',
+                    component: IndexBodyComp
+                }
+            ]
+        },
     ]
 })
 

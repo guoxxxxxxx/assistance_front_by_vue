@@ -1,14 +1,14 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
-  components: {
-  },
-  mounted(){
+  name: "App",
+  components: {},
+  mounted() {
     // // 跳转到登录界面
     // this.$router.replace({
     //   path: '/loginView',
@@ -17,14 +17,12 @@ export default {
 
     // 主界面
     this.$router.replace({
-      path: '/indexView',
-      query: {timestamp: Date.now()}
-    })
-
+      path: "/indexView",
+      query: { timestamp: Date.now() },
+    });
   },
-  methods:{
-  }
-}
+  methods: {},
+};
 </script>
 
 <style>

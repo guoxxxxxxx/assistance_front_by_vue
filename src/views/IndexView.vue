@@ -1,21 +1,21 @@
 <template>
   <div>
-      <index-header></index-header>
-      <index-delivery-body></index-delivery-body>
+    <index-header></index-header>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import IndexHeader from '@/components/IndexHeader.vue'
-import IndexDeliveryBody from '@/components/IndexDeliveryBody.vue'
+import IndexHeader from "@/components/IndexComp/IndexHeader.vue";
 export default {
-  components:{
+  components: {
     IndexHeader,
-    IndexDeliveryBody
+  },
+  mounted(){
+    this.$router.replace('/indexView/indexBodyComp')
   }
-}
+};
 </script>
 
 <style>
-
 </style>

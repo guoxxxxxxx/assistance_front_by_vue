@@ -38,9 +38,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // 引入Buefy第三方组件库
-import Buefy from 'buefy'
-import 'buefy/dist/buefy.css'
-Vue.use(Buefy)
+// import Buefy from 'buefy'
+// import 'buefy/dist/buefy.css'
+// Vue.use(Buefy)
 
 // 引入Vue-Material组件库
 import VueMaterial from 'vue-material'
