@@ -6,6 +6,11 @@ import VueRouter from 'vue-router'
 import router from './router'
 Vue.use(VueRouter)
 
+// 引入iView组件库
+import ViewUI from 'view-design';
+import 'view-design/dist/styles/iview.css';
+Vue.use(ViewUI);
+
 // 导入AOS动画库
 import AOS from "aos";
 import "../node_modules/aos/dist/aos.css";
