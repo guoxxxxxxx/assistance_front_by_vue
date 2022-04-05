@@ -11,7 +11,10 @@ const actions = {}
 // 用于操作数据-- state
 const mutations = {
     // 修改token, 并将token存入localStorage
-    
+    changeLogin(state, user){
+        state.Autorization = user.Autorization;
+        localStorage.setItem('Autorization', user.Autorization);
+    }
 }
 // 用于存储数据
 const state = {

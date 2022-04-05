@@ -6,7 +6,7 @@ import IndexView from './views/IndexView'
 
 
 // 创建并暴露router实例对象
-export default new VueRouter({
+const router = new VueRouter({
     routes:[
         {
             path:'/loginView',
@@ -26,3 +26,14 @@ export default new VueRouter({
         }
     ]
 })
+
+// // 每次路由切换之前被调用
+// router.beforeEach((to, from, next)=>{
+//     // to 到哪里去
+//     // from 从哪里来
+//     // next() 允许通过
+//     console.log(to, from, next)
+//     next()
+// })
+
+export default router

@@ -123,13 +123,13 @@ export default {
      * 去忘记密码界面
      */
     go_to_forgetView() {
-      this.$router.push("/forgetView");
+      this.$router.replace("/forgetView");
     },
     /**
      * 去登录界面
      */
     go_to_login() {
-      this.$router.push("/loginView");
+      this.$router.replace("/loginView");
     },
     /**
      * 当按下键盘时检查邮箱格式是否正确

@@ -20,22 +20,20 @@
     <template #end>
       <b-navbar-item tag="div">
         <div class="buttons">
-          <a class="button is-primary">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light"> Log in </a>
+          <b-button tag="router-link" to="/loginView" type="is-link">
+            Login
+          </b-button>
         </div>
       </b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
-
-
 <script>
-export default {};
+export default {
+  methods: {},
+};
 </script>
 
-<style scoped src='../assets/css/indexHeader.css'></style>
 <style>
 </style>

@@ -99,13 +99,13 @@ export default {
      * 去登录界面
      */
     go_to_login() {
-      this.$router.push("/loginView");
+      this.$router.replace("/loginView");
     },
     /**
      * 去注册界面
      */
     go_to_registerView() {
-      this.$router.push("/registerView");
+      this.$router.replace("/registerView");
     },
     /**
      * 检测邮箱格式是否正确

@@ -86,13 +86,13 @@ export default {
      * 去注册界面
      */
     go_to_registerView() {
-      this.$router.push("/registerView");
+      this.$router.replace("/registerView");
     },
     /**
      * 去忘记密码界面
      */
     go_to_forgetView() {
-      this.$router.push("/forgetView");
+      this.$router.replace("/forgetView");
     },
     /**
      * 监听用户输入的邮箱是否正确
