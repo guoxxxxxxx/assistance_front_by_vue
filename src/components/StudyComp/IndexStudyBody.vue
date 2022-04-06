@@ -10,6 +10,7 @@
         <TabPane label="生物" name="biology"></TabPane>
         <TabPane label="计算机" name="computer"></TabPane>
         <TabPane label="其他" name="other"></TabPane>
+        <TabPane label="发布信息" name="pubdata"></TabPane>
       </Tabs>
       <study-comp></study-comp>
       <!-- <router-view></router-view> -->
@@ -17,7 +18,7 @@
 </template>
 
 <script>
-import StudyComp from '@/components/IndexStudyComp/StudyComp.vue'
+import StudyComp from '@/components/StudyComp/StudyComp.vue'
 export default {
   components: {
       StudyComp

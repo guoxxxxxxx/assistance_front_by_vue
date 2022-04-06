@@ -7,6 +7,7 @@
         <TabPane label="生活用品" name="supplies"></TabPane>
         <TabPane label="电脑配件" name="computer_device"></TabPane>
         <TabPane label="其他" name="other"></TabPane>
+        <TabPane label="发布信息" name="pubdata"></TabPane>
       </Tabs>
   </div>
 </template>

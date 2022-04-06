@@ -22,7 +22,7 @@
           二手交易
         </MenuItem>
         <MenuItem name="5" to="/indexView/indexMissAndFindBody">
-          <Icon type="md-search"/>
+          <Icon type="md-search" />
           失物招领
         </MenuItem>
         <MenuItem name="6" to="/indexView/indexSchoolmateBody">
@@ -50,9 +50,7 @@
 
 <script>
 export default {
-  methods: {
-
-  },
+  methods: {},
 };
 </script>
 
