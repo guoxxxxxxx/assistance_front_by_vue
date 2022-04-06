@@ -11,6 +11,9 @@ import IndexMissAndFindBody from './components/MissAndFindComp/IndexMissAndFindB
 import IndexSchoolmateBody from './components/SchoolmateComp/IndexSchoolmateBody'
 import ErrandPublishData from './components/ErrandComp/ErrandPublishData'
 import ErrandComp from './components/ErrandComp/ErrandComp'
+import ErrandDetailsComp from './components/ErrandComp/ErrandDetailsComp'
+import PersonalInfomationComp from '@/components/UserComp/PersonalInfomationComp'
+
 
 // 创建并暴露router实例对象
 const router = new VueRouter({
@@ -46,6 +49,11 @@ const router = new VueRouter({
                         {
                             path: 'errandComp',
                             component: ErrandComp
+                        },
+                        {
+                            // 详细信息界面
+                            path: 'errandDetailsComp',
+                            component: ErrandDetailsComp
                         }
                     ]
                 },
@@ -64,6 +72,10 @@ const router = new VueRouter({
                 {
                     path: 'indexSchoolmateBody',
                     component: IndexSchoolmateBody
+                },
+                {
+                    path: 'PersonalInfomationComp',
+                    component: PersonalInfomationComp
                 }
             ]
         },

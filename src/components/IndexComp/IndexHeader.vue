@@ -32,16 +32,17 @@
       </Menu>
     </div>
     <div id="right_box">
-      <Dropdown>
+      <Dropdown @on-click="selectItem">
         <Avatar
           src="https://i.loli.net/2017/08/21/599a521472424.jpg"
           size="large"
         />
         <DropdownMenu slot="list">
-          <DropdownItem name>用户名: 闪光皮皮</DropdownItem>
-          <DropdownItem>个人中心</DropdownItem>
-          <DropdownItem>消息</DropdownItem>
-          <DropdownItem divided>退出登录</DropdownItem>
+          <DropdownItem name="username">用户名: 闪光皮皮</DropdownItem>
+          <DropdownItem name="user_center">个人中心</DropdownItem>
+          <DropdownItem name="message">消息</DropdownItem>
+          <DropdownItem divided name="change_password">修改密码</DropdownItem>
+          <DropdownItem name="exit">退出登录</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </div>
@@ -50,7 +51,16 @@
 
 <script>
 export default {
-  methods: {},
+  methods: {
+    /**
+     * 个人中心选择项目
+     */
+    selectItem(name){
+      if(name == 'user_center'){
+        this.$router.push('/indexView/PersonalInfomationComp')
+      }
+    }
+  },
 };
 </script>
 

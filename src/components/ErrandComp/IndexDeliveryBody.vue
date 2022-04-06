@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Tabs value="all" @on-click="clickme">
+    <Tabs value="all" @on-click="this_router">
       <TabPane label="全部" name="all"></TabPane>
       <TabPane label="快递代取" name="express"></TabPane>
       <TabPane label="外卖代取" name="takeaway"></TabPane>
@@ -14,9 +14,12 @@
 
 <script>
 export default {
+  data() {
+    return {};
+  },
   components: {},
   methods: {
-    clickme(id) {
+    this_router(id) {
       if (id == "all") {
         this.$router.push("/indexView/IndexDeliveryBody/ErrandComp");
       } else if (id == "pubdata") {
@@ -31,4 +34,13 @@ export default {
 </script>
 
 <style scoped>
+#page_box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+#page {
+}
 </style>

@@ -7,11 +7,11 @@
         :rules="ruleValidate"
         :label-width="80"
       >
-        <FormItem label="标题" prop="name">
-          <Input v-model="formValidate.name" placeholder="请输入标题"></Input>
+        <FormItem label="标题" prop="title">
+          <Input v-model="formValidate.title" placeholder="请输入标题"></Input>
         </FormItem>
         <FormItem label="类别" prop="category">
-          <Select v-model="formValidate.city" placeholder="请选择类别">
+          <Select v-model="formValidate.category" placeholder="请选择类别">
             <Option value="express">快递代取</Option>
             <Option value="takeaway">外卖代取</Option>
             <Option value="hotWater">热水代打</Option>
@@ -25,7 +25,7 @@
                 <DatePicker
                   type="date"
                   placeholder="选择截止日期"
-                  v-model="formValidate.date"
+                  v-model="deadline_data"
                 ></DatePicker>
               </FormItem>
             </Col>
@@ -34,20 +34,20 @@
                 <TimePicker
                   type="time"
                   placeholder="选择截止时间"
-                  v-model="formValidate.time"
+                  v-model="deadline_time"
                 ></TimePicker>
               </FormItem>
             </Col>
           </Row>
         </FormItem>
         <FormItem label="赏金" prop="gender">
-          <RadioGroup v-model="formValidate.gender">
-            <Radio label="male">白嫖</Radio>
-            <Radio label="female">给小费</Radio>
+          <RadioGroup v-model="is_show_tips">
+            <Radio label="true">白嫖</Radio>
+            <Radio label="false">给小费</Radio>
             <InputNumber
               v-if="is_show_tips"
               :max="10000"
-              v-model="value9"
+              v-model="formValidate.money"
               :formatter="
                 (value) => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
               "
@@ -55,12 +55,12 @@
             ></InputNumber>
           </RadioGroup>
         </FormItem>
-        <FormItem label="上传图片"> 
+        <FormItem label="上传图片">
           <upload-comp></upload-comp>
         </FormItem>
-        <FormItem label="详细信息" prop="desc">
+        <FormItem label="详细信息" prop="details">
           <Input
-            v-model="formValidate.desc"
+            v-model="formValidate.details"
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 5 }"
             placeholder="请输入详细信息"
@@ -83,15 +83,15 @@ import UploadComp from "@/components/publicComp/UploadComp.vue";
 export default {
   data() {
     return {
+      is_show_tips: "",
+      deadline_time: "",
+      deadline_date: "",
       formValidate: {
-        name: "",
-        mail: "",
-        city: "",
-        gender: "",
-        interest: [],
-        date: "",
-        time: "",
-        desc: "",
+        title: "",
+        category: "",
+        deadline: this.deadline_date + this.deadline_time,
+        money: "",
+        details: "",
       },
       ruleValidate: {
         name: [
