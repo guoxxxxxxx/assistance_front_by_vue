@@ -34,7 +34,7 @@
     <div id="right_box">
       <Dropdown @on-click="selectItem">
         <Avatar
-          src="https://i.loli.net/2017/08/21/599a521472424.jpg"
+          :src="user.avatarPath"
           size="large"
         />
         <DropdownMenu slot="list">
@@ -51,6 +51,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      user: this.$store.getters.getUserInfo,
+    }
+  },
   methods: {
     /**
      * 个人中心选择项目

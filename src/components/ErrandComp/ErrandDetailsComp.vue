@@ -46,10 +46,13 @@
       <span>--</span>
       <Button type="warning" ghost @click="back">返回</Button>
     </div>
+    <comment></comment>
   </div>
 </template>
 
 <script>
+// 引入评论组件
+import comment from "bright-comment";
 export default {
   methods: {
     /**
@@ -81,6 +84,9 @@ export default {
       ],
     };
   },
+  components:{
+      comment,
+  }
 };
 </script>
 

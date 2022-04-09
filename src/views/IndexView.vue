@@ -4,9 +4,9 @@
     <div class="border">
       <div class="container">
         <router-view></router-view>
-        <index-footer></index-footer>
       </div>
     </div>
+        <index-footer></index-footer>
   </div>
 </template>
 
@@ -47,5 +47,6 @@ export default {
   padding-left: 50px;
   padding-right: 50px;
   padding-bottom: 40px;
+  min-height: 900px;
 }
 </style>

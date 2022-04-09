@@ -27,8 +27,7 @@
                发布日期: {{e.pubdate}}
            </div>
           <md-card-actions>
-            <Button type="warning" ghost>查看详情</Button>
-            <Button type="success" ghost>接单</Button>
+            <Button type="warning" ghost @click="see_details">查看详情</Button>
           </md-card-actions>
         </div>
       </md-card>
@@ -52,6 +51,11 @@ export default {
       },
     };
   },
+  methods: {
+    see_details(){
+      this.$router.push('/indexView/IndexStudyBody/studyDetailsComp')
+    }
+  }
 };
 </script>
 

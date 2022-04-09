@@ -13,40 +13,52 @@ import ErrandPublishData from './components/ErrandComp/ErrandPublishData'
 import ErrandComp from './components/ErrandComp/ErrandComp'
 import ErrandDetailsComp from './components/ErrandComp/ErrandDetailsComp'
 import PersonalInfomationComp from '@/components/UserComp/PersonalInfomationComp'
-
+import StudyPublishData from '@/components/StudyComp/StudyPublishData'
+import StudyComp from '@/components/StudyComp/StudyComp'
+import SecondHandPublishData from '@/components/SecondHandComp/SecondHandPublishData'
+import StudyDetailsComp from '@/components/StudyComp/StudyDetailsComp'
+import PersonalInfomationChangeComp from '@/components/UserComp/PersonalInfomationChangeComp'
 
 // 创建并暴露router实例对象
 const router = new VueRouter({
     routes: [
         {
+            // 登录界面
             path: '/loginView',
             component: LoginView
         },
         {
+            // 注册界面
             path: "/registerView",
             component: RegisterView
         },
         {
+            // 忘记密码界面
             path: '/forgetView',
             component: ForgetView
         },
         {
+            // 主界面
             path: '/indexView',
             component: IndexView,
             children: [
                 {
+                    // 主界面主体
                     path: 'indexBodyComp',
                     component: IndexBodyComp
                 },
                 {
+                    // 跑腿界面
                     path: 'indexDeliveryBody',
                     component: IndexDeliveryBody,
                     children: [
                         {
+                            // 跑腿界面发布信息
                             path: 'errandPublishData',
                             component: ErrandPublishData
                         },
                         {
+                            // 跑腿界面订单信息
                             path: 'errandComp',
                             component: ErrandComp
                         },
@@ -58,24 +70,58 @@ const router = new VueRouter({
                     ]
                 },
                 {
+                    // 学习界面
                     path: 'indexStudyBody',
-                    component: IndexStudyBody
+                    component: IndexStudyBody,
+                    children: [
+                        {
+                            // 学习发送信息界面
+                            path: 'studyPublishData',
+                            component: StudyPublishData
+                        },
+                        {
+                            // 学习item界面
+                            path: 'studyComp',
+                            component: StudyComp
+                        },
+                        {
+                            // 学习界面详细信息界面
+                            path: 'studyDetailsComp',
+                            component: StudyDetailsComp
+                        }
+                    ]
                 },
                 {
+                    // 二手交易主体
                     path: 'indexSecondHandBody',
-                    component: IndexSecondHandBody  
+                    component: IndexSecondHandBody,
+                    children: [
+                        {
+                            // 二手交易发布信息界面
+                            path:'SecondHandPublishData',
+                            component: SecondHandPublishData
+                        }
+                    ]  
                 },
                 {
+                    // 失物寻找主体
                     path: 'indexMissAndFindBody',
                     component: IndexMissAndFindBody
                 },
                 {
+                    // 校友圈主体
                     path: 'indexSchoolmateBody',
                     component: IndexSchoolmateBody
                 },
                 {
+                    // 查看个人信息主体
                     path: 'PersonalInfomationComp',
                     component: PersonalInfomationComp
+                },
+                {
+                    // 修改个人信息
+                    path: 'PersonalInfomationChangeComp',
+                    component: PersonalInfomationChangeComp
                 }
             ]
         },

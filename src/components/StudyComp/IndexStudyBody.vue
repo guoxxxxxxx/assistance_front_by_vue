@@ -1,6 +1,6 @@
 <template>
   <div>
-      <Tabs value="all" @on-click="clickme" >
+      <Tabs value="all" @on-click="selectItem" >
         <TabPane label="全部" name="all"></TabPane>
         <TabPane label="数学" name="math"></TabPane>
         <TabPane label="英语" name="english"></TabPane>
@@ -12,21 +12,26 @@
         <TabPane label="其他" name="other"></TabPane>
         <TabPane label="发布信息" name="pubdata"></TabPane>
       </Tabs>
-      <study-comp></study-comp>
-      <!-- <router-view></router-view> -->
+      <!-- <study-comp></study-comp> -->
+      <router-view></router-view>
   </div>
 </template>
 
 <script>
-import StudyComp from '@/components/StudyComp/StudyComp.vue'
+// import StudyComp from '@/components/StudyComp/StudyComp.vue'
 export default {
   components: {
-      StudyComp
+      // StudyComp
   },
   methods:{
-    clickme(id){
-      console.log(id);
+    selectItem(name){
+      if(name == 'pubdata'){
+        this.$router.replace('/indexView/IndexStudyBody/studyPublishData')
+      }
     }
+  },
+  mounted(){
+    this.$router.replace('/indexView/IndexStudyBody/studyComp')
   }
 };
 </script>

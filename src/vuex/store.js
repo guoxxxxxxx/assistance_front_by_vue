@@ -4,27 +4,43 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-
-// 准备actions -- 用于响应组件中的动作
-// 里面用于设置方法
-const actions = {}
-// 用于操作数据-- state
-const mutations = {
-    // 修改token, 并将token存入localStorage
-    changeLogin(state, user){
-        state.Autorization = user.Autorization;
-        localStorage.setItem('Autorization', user.Autorization);
-    }
-}
-// 用于存储数据
-const state = {
-    // 存储token
-    Autorization: localStorage.getItem('Autorization') ? localStorage.getItem('Autorization') : ''
-}
-
-// 创建store
 export default new Vuex.Store({
-    actions,
-    mutations,
-    state,
+    state:{
+        // 要设置的全局访问的State对象
+        // 要设置的初始属性值
+        user:{
+            uid: '',
+            name: '',
+            sex: '',
+            birthday: '',
+            phone: '',
+            faculty: '',
+            grade: '',
+            major: '',
+            email: '',
+            wechat: '',
+            qq: '',
+            avatarPath: '',
+        }
+    },
+    getters:{
+        // 实时监听state值的变化(最新状态)
+        getUserInfo(state){
+            return state.user;
+        },
+        // 获取用户头像路径
+        getUserAvatar(state){
+            return state.getUserAvatar
+        }
+    },
+    mutations:{
+        // 更新用户信息
+        updateUserInfo(state, user){
+            state.user = user;
+        },
+        // 更新用户头像信息
+        updateUserAvatar(state, avatarPath){
+            state.user.avatarPath = avatarPath;
+        }
+    }
 })

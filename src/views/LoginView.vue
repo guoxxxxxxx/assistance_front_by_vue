@@ -123,6 +123,11 @@ export default {
           .then((resp) => {
             if (resp.data.status == 200) {
               this.$message.success("登录成功！");
+              // 保存到Vuex中
+              this.$store.commit('updateUserInfo', resp.data.object)
+              // 将数据保存到sessionStorage中
+              window.sessionStorage.setItem('user', resp.data.object.uid) 
+              this.$router.replace('/indexView')
             } else if (resp.data.status == 401) {
               this.$message.error("该邮箱尚未注册！");
             } else if (resp.data.status == 400) {
@@ -136,6 +141,9 @@ export default {
       }
     },
   },
+  mounted(){
+    
+  }
 };
 </script>
 

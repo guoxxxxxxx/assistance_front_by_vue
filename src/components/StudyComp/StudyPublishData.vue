@@ -12,24 +12,15 @@
         </FormItem>
         <FormItem label="类别" prop="category">
           <Select v-model="formValidate.category" placeholder="请选择类别">
-            <Option value="快递代取">快递代取</Option>
-            <Option value="外卖代取">外卖代取</Option>
-            <Option value="热水代打">热水代打</Option>
+            <Option value="数学">数学</Option>
+            <Option value="英语">英语</Option>
+            <Option value="物理">物理</Option>
+            <Option value="政治">政治</Option>
+            <Option value="化学">化学</Option>
+            <Option value="生物">生物</Option>
+            <Option value="计算机">计算机</Option>
             <Option value="其他">其他</Option>
           </Select>
-        </FormItem>
-        <FormItem label="截止时间">
-          <Row>
-            <Col span="20">
-              <FormItem prop="deadline">
-                <DatePicker
-                  type="date"
-                  placeholder="选择截止日期"
-                  v-model="formValidate.deadline_data"
-                ></DatePicker>
-              </FormItem>
-            </Col>
-          </Row>
         </FormItem>
         <FormItem label="赏金" prop="isGiveMoney">
           <el-input-number
@@ -71,7 +62,6 @@ export default {
       formValidate: {
         title: "",
         category: "",
-        deadline: "",
         money: 0,
         details: "",
       },

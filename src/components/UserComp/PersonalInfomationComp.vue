@@ -1,14 +1,9 @@
 <template>
   <div>
     <div id="container01">
-      <el-avatar
-        :size="150"
-        src="https://raw.githubusercontent.com/guoxxxxxxx/Pic-Go/main/img/%E5%A4%B4%E5%83%8F.jpg"
-      ></el-avatar>
-      <Button id="change_ava_btn" @click="show_change_ava = true"
-        >更改头像</Button
-      >
-      <div id="username">闪光皮皮</div>
+      <el-avatar :size="150" :src="user.avatarPath"></el-avatar>
+      <Button id="change_ava_btn" @click="changeAvatar">更改头像</Button>
+      <div id="username">{{user.name}}</div>
     </div>
     <!-- 上传头像对话框 -->
     <Modal
@@ -19,13 +14,19 @@
       style="text-align: center"
     >
       <el-upload
+        :file-list="fileList"
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :show-file-list="false"
+        action="http://localhost:8080/upload/uploadAvatar/"
+        accept=".jpg, .jpeg, .png"
+        :show-file-list="true"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
+        :multiple="false"
+        :limit="1"
+        :on-exceed="handleOnExceed"
+        :on-remove="cleanAvatar"
       >
-        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+        <img v-if="uploadImgUrl" :src="uploadImgUrl" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </Modal>
@@ -33,60 +34,127 @@
     <div id="detail_container_0">
       <div id="detail_container">
         <el-descriptions title="用户信息" :column="2">
-          <el-descriptions-item label="用户id">100001</el-descriptions-item>
-          <el-descriptions-item label="用户姓名">闪光皮皮</el-descriptions-item>
-          <el-descriptions-item label="性别">男</el-descriptions-item>
-          <el-descriptions-item label="学院">信息学院</el-descriptions-item>
-          <el-descriptions-item label="年级">2018</el-descriptions-item>
-          <el-descriptions-item label="专业">软件工程</el-descriptions-item>
-          <el-descriptions-item label="手机号"
-            >18831516175</el-descriptions-item
-          >
-          <el-descriptions-item label="邮箱"
-            >guo_x0315@163.com</el-descriptions-item
-          >
-          <el-descriptions-item label="微信号"
-            >guo_xxxxxxxxxx</el-descriptions-item
-          >
-          <el-descriptions-item label="QQ号">945855456</el-descriptions-item>
+          <el-descriptions-item label="用户id">{{
+            user.uid
+          }}</el-descriptions-item>
+          <el-descriptions-item label="用户姓名">{{
+            user.name
+          }}</el-descriptions-item>
+          <el-descriptions-item label="性别">{{
+            user.sex
+          }}</el-descriptions-item>
+          <el-descriptions-item label="生日">{{
+            user.birthday
+          }}</el-descriptions-item>
+          <el-descriptions-item label="学院">{{
+            user.faculty
+          }}</el-descriptions-item>
+          <el-descriptions-item label="年级">{{
+            user.grade
+          }}</el-descriptions-item>
+          <el-descriptions-item label="专业">{{
+            user.major
+          }}</el-descriptions-item>
+          <el-descriptions-item label="手机号">{{
+            user.phone
+          }}</el-descriptions-item>
+          <el-descriptions-item label="邮箱">{{
+            user.email
+          }}</el-descriptions-item>
+          <el-descriptions-item label="微信号">{{
+            user.wechat
+          }}</el-descriptions-item>
+          <el-descriptions-item label="QQ号">{{
+            user.qq
+          }}</el-descriptions-item>
         </el-descriptions>
       </div>
     </div>
     <div id="change_info_btn">
-      <el-button plain>修改信息</el-button>
+      <el-button plain @click="change_personal_info_btn">修改信息</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { base_url } from "@/config";
 export default {
   data() {
     return {
+      fileList: [],
+      format_date: "",
       show_change_ava: false,
+      user: this.$store.getters.getUserInfo,
       imageUrl: "",
+      last_fileName: "",
+      uploadImgUrl: "",
     };
   },
   methods: {
-    ok() {
-      this.$Message.info("Clicked ok");
+    // 点击更改头像按钮
+    changeAvatar() {
+      this.show_change_ava = true;
+      this.uploadImgUrl = "";
+      this.fileList = '';
     },
+    // 点击头像上传成功按钮
+    ok() {
+      axios
+        .post(base_url + "/user/updateAvatarById", {
+          uid: this.user.uid,
+          avatarPath: this.last_fileName,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify({
+              title: "成功",
+              message: "更改头像成功",
+              type: "success",
+            });
+            // 更新vuex中头像信息所在位置
+            this.$store.commit(
+              "updateUserAvatar",
+              base_url + "/avatar/" + this.last_fileName
+            );
+            this.imageUrl = this.$store.getters.getUserInfo.avatarPath;
+          } else {
+            this.$notify({
+              title: "失败",
+              message: "更改头像失败",
+              type: "fail",
+            });
+          }
+        });
+    },
+    // 点击取消按钮
     cancel() {
       this.$Message.info("Clicked cancel");
     },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+    // 成功上传后的动作
+    handleAvatarSuccess(resp, file) {
+      this.uploadImgUrl = URL.createObjectURL(file.raw);
+      this.last_fileName = resp.lastFileName;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return isLt2M;
+    },
+    // 重复上传时的提醒
+    handleOnExceed() {
+      this.$message.error("请先删除先前上传的文件");
+    },
+    // 点击更改用户信息按钮
+    change_personal_info_btn() {
+      this.$router.push("/indexView/PersonalInfomationChangeComp");
+    },
+    // 点击删除按钮时，清空图片显示
+    cleanAvatar() {
+      this.uploadImgUrl = "";
     },
   },
 };
@@ -94,8 +162,8 @@ export default {
 
 <style scoped>
 #change_info_btn {
-    text-align: center;
-    margin-top: 30px;
+  text-align: center;
+  margin-top: 30px;
 }
 
 #detail_container_0 {
