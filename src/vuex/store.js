@@ -21,7 +21,7 @@ export default new Vuex.Store({
             wechat: '',
             qq: '',
             avatarPath: '',
-        }
+        },
     },
     getters:{
         // 实时监听state值的变化(最新状态)
@@ -30,8 +30,8 @@ export default new Vuex.Store({
         },
         // 获取用户头像路径
         getUserAvatar(state){
-            return state.getUserAvatar
-        }
+            return state.avatarPath
+        },
     },
     mutations:{
         // 更新用户信息
@@ -41,6 +41,6 @@ export default new Vuex.Store({
         // 更新用户头像信息
         updateUserAvatar(state, avatarPath){
             state.user.avatarPath = avatarPath;
-        }
+        },
     }
 })

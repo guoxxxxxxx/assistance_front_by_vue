@@ -14,8 +14,10 @@
     <el-descriptions title="内容详细信息">
       <el-descriptions-item label="订单编号">{{item.eid}}</el-descriptions-item>
       <el-descriptions-item label="类别">{{item.title}}</el-descriptions-item>
-      <el-descriptions-item label="发布日期">{{item.pubdate}}</el-descriptions-item>
-      <el-descriptions-item label="截止日期">{{item.deadline}}</el-descriptions-item>
+      <el-descriptions-item label="发布日期">{{formatDate(item.pubdata)}}</el-descriptions-item>
+      <el-descriptions-item label="发布时间">{{item.pubtime}}</el-descriptions-item>
+      <el-descriptions-item label="截止日期">{{formatDate(item.deadline)}}</el-descriptions-item>
+      <el-descriptions-item label="截止时间">{{item.deadtime}}</el-descriptions-item>
     </el-descriptions>
     <h5 class="mt-0">详细概述</h5>
     <b-card style="width: 80%">
@@ -62,6 +64,20 @@ export default {
     back() {
       this.$router.back(1);
     },
+    /**
+     * 更改详细信息长度
+     */
+    formatDate(date){
+      if(date == null){
+        return '';
+      }
+      else if (date.length <= 30) {
+        return date;
+      }
+      else{
+        return date.substring(0, 10)
+      }
+    }
   },
   data() {
     return {

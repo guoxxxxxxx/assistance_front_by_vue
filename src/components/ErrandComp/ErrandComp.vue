@@ -1,34 +1,38 @@
 <template>
   <div class="items_box">
-    <div v-for="e in person" :key="e.id">
+    <div v-for="item in errandItems" :key="item.id">
       <md-card>
         <md-card-header>
           <md-avatar>
-            <img src="../../assets/img/user.jpg" alt="Avatar" />
+            <img :src="base_url + item.pubUser.avatarPath" alt="AVATAR" />
           </md-avatar>
 
-          <div class="md-title">{{ e.title }}</div>
+          <div class="md-title">{{item.pubUser.name}} | {{ item.title }}</div>
           <div class="md-subhead">
-            <span>分类: {{ e.category }} </span>
-            <span>| 小费: {{ e.price }}元</span>
+            <span>分类: {{ item.category }} </span>
+            <!-- 如果小费为0则显示为免费 -->
+            <span v-if="item.money">| 小费: {{ item.money }}</span>
+            <span v-if="!item.money">| 无小费</span> 
           </div>
         </md-card-header>
 
-        <md-card-media>
-          <img src="../../assets/img/example.jpg" alt="People" />
+        <!-- 预览图片 -->
+        <md-card-media v-if="item.imgUrls[0]">
+          <img :src="base_url + item.imgUrls[0]" alt="IMG" />
         </md-card-media>
 
         <md-card-content>
-          {{ e.details }}
+          {{ item.details }}
         </md-card-content>
 
         <div id="btn_groups">
-           <div id="_pubdate">
-               发布日期: {{e.pubdate}}
-           </div>
+          <div id="_pubdate">发布日期: {{item.pubdate.substring(0,10)}}</div>
           <md-card-actions>
-            <Button type="warning" ghost @click="see_details">查看详情</Button>
-            <Button type="success" ghost>接单</Button>
+            <Button type="warning" ghost @click="see_details(item.eid)"
+              >查看详情</Button
+            >
+            <Button type="success" v-if="item.uid!=current_user.uid" ghost>接单</Button>
+            <Button type="info" v-if="item.uid==current_user.uid" ghost>修改</Button>
           </md-card-actions>
         </div>
       </md-card>
@@ -37,41 +41,53 @@
 </template>
 
 <script>
+import axios from "axios";
+import { base_url } from "@/config";
 export default {
   data() {
     return {
-      person: {
-        p1: {
-          id: 1,
-          category: "快递代取",
-          name: "张三",
-          title: "找人代取快递",
-          details: "帮我拿快递100元劳务费！！！",
-          imgsrc: "../../assets/img/user.jpg",
-          headImgSrc: "../../assets/img/user.jpg",
-          price: 100,
-          pubdate: '2022/04/05'
-        },
-      },
+      errandItems:{},
+      base_url: base_url,
+      current_user: this.$store.getters.getUserInfo,
     };
   },
-  methods:{
+  methods: {
+    /**
+     * 打印数据
+     */
+    show(s) {
+      console.log(s);
+      console.log(base_url);
+    },
     /**
      * 点击查看详细信息
      */
-    see_details(){
-      this.$router.push('/indexView/IndexDeliveryBody/errandDetailsComp')
-    }
-  }
+    see_details(eid) {
+      this.$router.push({
+        path: "/indexView/IndexDeliveryBody/errandDetailsComp",
+        query: {
+          eid: eid,
+        },
+      });
+    },
+  },
+  mounted() {
+    /**
+     * 进入界面加载所有带跑腿项目
+     */
+    axios.get(base_url + "/errand/queryAll", {}).then((resp) => {
+      this.errandItems = resp.data.object;
+    });
+  },
+  computed: {},
 };
 </script>
 
 <style scoped>
-
 #_pubdate {
-    padding-left: 5px;
-    padding-top: 15px;
-    color: rgb(163, 159, 159);
+  padding-left: 5px;
+  padding-top: 15px;
+  color: rgb(163, 159, 159);
 }
 
 #btn_groups {

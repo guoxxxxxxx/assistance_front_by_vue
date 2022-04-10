@@ -55,8 +55,8 @@
                   <DatePicker
                     type="date"
                     placeholder="选择日期"
-                    v-model="formItem.birthday"
                     format="yyyy-MM-dd"
+                    @on-change="changeBirthday"
                   ></DatePicker>
                 </Col>
               </Row>
@@ -120,7 +120,6 @@ export default {
     },
     // 提交更改后的用户信息
     submit() {
-      console.log(this.formItem.birthday);
       axios
         .post(base_url + "/user/updateUserInfoById", this.formItem)
         .then((resp) => {
@@ -141,6 +140,10 @@ export default {
           }
         });
     },
+    changeBirthday(e){
+      console.log(e);
+      this.formItem.birthday = e
+    }
   },
   mounted() {
     this.formItem = this.$store.getters.getUserInfo;

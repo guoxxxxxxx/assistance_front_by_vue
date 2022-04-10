@@ -31,7 +31,6 @@
           ></el-input-number>
         </FormItem>
         <FormItem label="上传图片">
-          <upload-comp></upload-comp>
         </FormItem>
         <FormItem label="详细信息" prop="details">
           <Input
@@ -54,7 +53,6 @@
   </div>
 </template>
 <script>
-import UploadComp from "@/components/publicComp/UploadComp.vue";
 export default {
   data() {
     return {
@@ -99,7 +97,6 @@ export default {
     },
   },
   components: {
-    UploadComp,
   },
 };
 </script>

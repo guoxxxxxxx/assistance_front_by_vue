@@ -18,16 +18,23 @@
             <Option value="其他">其他</Option>
           </Select>
         </FormItem>
+        <!-- 日期选择 -->
         <FormItem label="截止时间">
           <Row>
-            <Col span="20">
-              <FormItem prop="deadline">
-                <DatePicker
-                  type="date"
-                  placeholder="选择截止日期"
-                  v-model="formValidate.deadline_data"
-                ></DatePicker>
-              </FormItem>
+            <Col span="13">
+              <DatePicker
+                type="date"
+                placeholder="选择截止日期"
+                fromat="yyyy-MM-dd"
+                @on-change="formatDate"
+              ></DatePicker>
+            </Col>
+            <Col span="11">
+              <TimePicker
+                type="time"
+                placeholder="选择截止时间"
+                v-model="formValidate.deadtime"
+              ></TimePicker>
             </Col>
           </Row>
         </FormItem>
@@ -39,14 +46,28 @@
             :min="0"
           ></el-input-number>
         </FormItem>
-        <FormItem label="上传图片">
-          <upload-comp></upload-comp>
+        <!-- 图片上传 -->
+        <FormItem label="上传图片" prop="imgSrc">
+          <el-upload
+            :action="base_url + '/upload/uploadImg'"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :multiple="true"
+            :on-success="handleSuccess"
+            :on-error="uploadError"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="" />
+          </el-dialog>
         </FormItem>
         <FormItem label="详细信息" prop="details">
           <Input
             v-model="formValidate.details"
             type="textarea"
-            :autosize="{ minRows: 10}"
+            :autosize="{ minRows: 10 }"
             placeholder="请输入详细信息"
           ></Input>
         </FormItem>
@@ -63,16 +84,20 @@
   </div>
 </template>
 <script>
-import UploadComp from "@/components/publicComp/UploadComp.vue";
+import {base_url} from '@/config'
 export default {
   data() {
     return {
+      imgList: [],
+      base_url: base_url,
       is_show_tips: false,
       formValidate: {
+        uid: this.$store.state.getters.getUserInfo.uid,
         title: "",
         category: "",
         deadline: "",
-        money: 0,
+        deadtime: "",
+        money: '',
         details: "",
       },
       ruleValidate: {
@@ -91,25 +116,67 @@ export default {
           },
         ],
       },
+      dialogImageUrl: "",
+      dialogVisible: false,
     };
   },
   methods: {
+    // 文件上传失败时的消息
+    uploadError(){
+      this.$message.error('图片最大为10MB');
+    },
+    // 点击提交按钮
     handleSubmit(name) {
+      console.log(this.imgSrc);
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success("Success!");
+          console.log(this.formValidate);
+          // 向服务器发送数据
+          this.axios.post(base_url + '/errand/addErrandItem', {
+            errand:this.formValidate
+          }).then(resp => {
+            if (resp.data.status == 200) {
+              this.$notify({
+                title:"发布成功",
+                message:"成功",
+                type:"success"
+              })
+            }
+            else{
+              this.$notify({
+                title:"发布失败",
+                message:"失败",
+                type:"error"
+              })
+            }
+          })
         } else {
-          this.$Message.error("Fail!");
+          this.$Message.error("请正确填写信息!");
         }
       });
     },
+    // 点击重置按钮
     handleReset(name) {
       this.$refs[name].resetFields();
       console.log("show: ", this.is_show_tips);
     },
-  },
-  components: {
-    UploadComp,
+    // 格式化日期
+    formatDate(val) {
+      this.formValidate.deadline = val;
+    },
+    // 删除图片时调用方法
+    handleRemove() {
+      this.imgList.splice(this.imgList.length - 1)
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    // 上传图片成功时调用方法
+    handleSuccess(resp){
+      this.imgList.push(resp.lastFileName);
+      console.log(resp);
+    }
   },
 };
 </script>
