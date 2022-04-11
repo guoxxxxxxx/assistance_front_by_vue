@@ -56,6 +56,7 @@
             :multiple="true"
             :on-success="handleSuccess"
             :on-error="uploadError"
+            :file-list="fileList"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -72,12 +73,10 @@
           ></Input>
         </FormItem>
         <FormItem>
-          <Button type="primary" @click="handleSubmit('formValidate')"
-            >提交</Button
+          <Button type="primary" @click="handleUpdate('formValidate')"
+            >修改</Button
           >
-          <Button @click="handleReset('formValidate')" style="margin-left: 8px"
-            >重置</Button
-          >
+          <Button @click="back" style="margin-left: 8px">返回</Button>
         </FormItem>
       </Form>
     </div>
@@ -88,10 +87,12 @@ import { base_url } from "@/config";
 export default {
   data() {
     return {
-      // imgList用于保存上传图片的名称
-      imgList: [],
+      // imgUrls用于保存上传图片的名称
+      imgUrls: [],
+      fileList: [],
       base_url: base_url,
       is_show_tips: false,
+      eid: this.$route.query.eid,
       formValidate: {
         uid: this.$store.getters.getUserInfo.uid,
         title: "",
@@ -126,14 +127,15 @@ export default {
     uploadError() {
       this.$message.error("图片最大为10MB");
     },
-    // 点击提交按钮
-    handleSubmit(name) {
-      console.log(this.imgList);
+    // 点击更新按钮
+    handleUpdate(name) {
+      console.log(this.imgUrls);
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 向服务器发送数据
           this.axios
-            .post(base_url + "/errand/addErrandItem", {
+            .post(base_url + "/errand/updateErrandItemByEid", {
+              eid: this.eid,
               uid: this.formValidate.uid,
               title: this.formValidate.title,
               category: this.formValidate.category,
@@ -141,24 +143,19 @@ export default {
               deadtime: this.formValidate.deadtime,
               money: this.formValidate.money,
               details: this.formValidate.details,
-              imgUrls: this.imgList
+              imgUrls: this.imgUrls,
             })
             .then((resp) => {
               if (resp.data.status == 200) {
                 this.$notify({
-                  title: "发布成功",
+                  title: "更新成功",
                   message: "成功",
                   type: "success",
                 });
-                this.$router.replace({
-                  path:"/indexView/IndexDeliveryBody/errandComp",
-                  query: {
-                    timestamp: Date().timestamp
-                  }
-                })
+                this.$router.back(1);
               } else {
                 this.$notify({
-                  title: "发布失败",
+                  title: "更新失败",
                   message: "失败",
                   type: "error",
                 });
@@ -170,17 +167,37 @@ export default {
       });
     },
     // 点击重置按钮
-    handleReset(name) {
-      this.$refs[name].resetFields();
-      console.log("show: ", this.is_show_tips);
+    back() {
+      this.$router.back(1);
     },
     // 格式化日期
     formatDate(val) {
       this.formValidate.deadline = val;
     },
     // 删除图片时调用方法
-    handleRemove() {
-      this.imgList.splice(this.imgList.length - 1);
+    handleRemove(file) {
+      this.imgUrls.splice(this.imgUrls.length - 1);
+      console.log("file: ",file);
+      let img_src = file.url.substring(base_url.length)
+      // 向服务器发送删除图片的请求
+      this.axios.get(base_url + '/errand/fakeDeleteImgByImgSrc', {params:{img_src: img_src}}).then(resp => {
+        if(resp.data.status == 200){
+          this.$notify({
+            title:"成功",
+            message:"删除成功",
+            type:"success",
+            duration: 100
+          })
+        }
+        else{
+          this.$notify({
+            title:"失败",
+            message:"删除失败",
+            type:"error",
+            duration: 100
+          })
+        }
+      })
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -188,9 +205,33 @@ export default {
     },
     // 上传图片成功时调用方法
     handleSuccess(resp) {
-      this.imgList.push(resp.lastFileName);
+      this.imgUrls.push(resp.lastFileName);
       console.log(resp);
     },
+    // 获取回显图片对象
+    getEchoImgObj(filename) {
+      let obj = {
+        name: filename,
+        url: base_url + filename,
+      };
+      return obj;
+    },
+  },
+  mounted() {
+    // 钩子函数 起初时调用该函数
+    // 读取传递过来的参数
+    this.axios
+      .get(base_url + "/errand/queryDetailsByEid", {
+        params: { eid: this.eid },
+      })
+      .then((resp) => {
+        this.formValidate = resp.data.object;
+        let temp = this.formValidate.imgUrls;
+        // 回显图像
+        for(let i = 0; i < temp.length; i++){
+          this.fileList.push(this.getEchoImgObj(temp[i]))
+        }
+      });
   },
 };
 </script>

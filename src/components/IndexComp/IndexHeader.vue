@@ -38,7 +38,7 @@
           size="large"
         />
         <DropdownMenu slot="list">
-          <DropdownItem name="username">用户名: 闪光皮皮</DropdownItem>
+          <DropdownItem name="username">用户名: {{this.$store.getters.getUserInfo.name}}</DropdownItem>
           <DropdownItem name="user_center">个人中心</DropdownItem>
           <DropdownItem name="message">消息</DropdownItem>
           <DropdownItem divided name="change_password">修改密码</DropdownItem>

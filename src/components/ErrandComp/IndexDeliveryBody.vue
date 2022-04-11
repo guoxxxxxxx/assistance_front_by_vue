@@ -63,7 +63,4 @@ export default {
   justify-content: center;
   padding-top: 50px;
 }
-
-#page {
-}
 </style>
