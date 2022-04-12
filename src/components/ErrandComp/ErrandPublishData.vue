@@ -108,6 +108,10 @@ export default {
             message: "标题不能为空",
             trigger: "blur",
           },
+          {
+            max:30,
+            message: '标题长度不得大于30字符'
+          }
         ],
         category: [
           {
@@ -116,6 +120,12 @@ export default {
             trigger: "blur",
           },
         ],
+        details: [
+          {
+            max: 500,
+            message: '详细信息长度不得大于500字符'
+          }
+        ]
       },
       dialogImageUrl: "",
       dialogVisible: false,

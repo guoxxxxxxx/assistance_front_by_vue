@@ -95,6 +95,9 @@
         >删除</Button
       >
     </div>
+
+
+    <!-- 评论组件 -->
     <comment></comment>
   </div>
 </template>
