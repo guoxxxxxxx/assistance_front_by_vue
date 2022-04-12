@@ -58,13 +58,20 @@ export default {
   },
   methods: {
     /**
-     * 个人中心选择项目
+     * 头像下的选项
      */
     selectItem(name){
+      // 个人中心
       if(name == 'user_center'){
         this.$router.push('/indexView/PersonalInfomationComp')
       }
-    }
+      // 退出
+      else if (name == 'exit') {
+        this.$store.commit('updateUserInfo', {})
+        // location.reload();
+        this.$router.replace('/indexView');
+      }
+    },
   },
 };
 </script>

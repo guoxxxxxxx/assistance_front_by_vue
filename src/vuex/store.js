@@ -8,20 +8,7 @@ export default new Vuex.Store({
     state:{
         // 要设置的全局访问的State对象
         // 要设置的初始属性值
-        user:{
-            uid: '',
-            name: '',
-            sex: '',
-            birthday: '',
-            phone: '',
-            faculty: '',
-            grade: '',
-            major: '',
-            email: '',
-            wechat: '',
-            qq: '',
-            avatarPath: '',
-        },
+        user:{},
 
         // 设置errand的过滤属性
         // 0代表不过滤 1 代表过滤
