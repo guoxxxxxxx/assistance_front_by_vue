@@ -1,6 +1,6 @@
 <template>
   <div class="items_box">
-    <div v-for="item in errandItems" :key="item.id">
+    <div v-for="item in filterItems" :key="item.id">
       <md-card>
         <md-card-header>
           <md-avatar>
@@ -50,7 +50,13 @@
               ghost
               @click="take_orders(item.eid)"
               :disabled="item.euid != null"
-              >{{ item.euid != null ? "已被接单" : "接单" }}</Button
+              >{{
+                item.euid != null
+                  ? item.isAchieve == 1
+                    ? "已完成"
+                    : "已被接单"
+                  : "接单"
+              }}</Button
             >
             <Button
               type="info"
@@ -62,8 +68,11 @@
             <Button
               type="success"
               v-if="item.uid == current_user.uid && item.euid != null"
-              @click="achieveItem(item.eid)"
-              :disabled="!item.is_achieve"
+              @click="
+                achieveItem(item.eid);
+                item.isAchieve = 1;
+              "
+              :disabled="item.isAchieve == 1"
               >完成订单</Button
             >
             <!-- <button @click="show(item)">测试按钮</button> -->
@@ -80,9 +89,10 @@ import { base_url } from "@/config";
 export default {
   data() {
     return {
-      errandItems: {},
+      errandItems: [],
       base_url: base_url,
       current_user: this.$store.getters.getUserInfo,
+      errandFilterType: this.$store.getters.getErrandFilterType,
     };
   },
   methods: {
@@ -173,6 +183,56 @@ export default {
           }
         });
     },
+    /**
+     * 过滤器使用相关函数------------------------------------------------------开始
+     */
+
+    // 判断所属范畴
+    judgeCategory(Val, filterVal) {
+      if (filterVal == "all") {
+        return true;
+      } else {
+        return filterVal == Val;
+      }
+    },
+
+    // 判断是否显示已完成
+    judgeIsAchieve(val, filterVal) {
+      // 若为1则不显示已完成
+      if (filterVal == false) {
+        return val != 1;
+      } else {
+        // 若为0则显示已完成订单
+        return true;
+      }
+    },
+
+    /**
+     * 判断是否显示已接单订单
+     */
+    judgeIsTakeOrder(val, filterVal) {
+      if (filterVal == false) {
+        return val == null;
+      } else {
+        return true;
+      }
+    },
+
+    /**
+     * 实现模糊搜索
+     * 根据标题、详细信息、种类来进行搜索
+     */
+    search(item, target) {
+      return (
+        item.title.indexOf(target) != -1 ||
+        item.details.indexOf(target) != -1 ||
+        item.category.indexOf(target) != -1
+      );
+    },
+
+    /**
+     * 过滤器使用相关函数------------------------------------------------------结束
+     */
   },
   mounted() {
     /**
@@ -182,7 +242,35 @@ export default {
       this.errandItems = resp.data.object;
     });
   },
-  computed: {},
+  computed: {
+    /**
+     * 通过计算属性过滤跑腿订单信息
+     */
+    filterItems() {
+      return this.errandItems.filter((item) => {
+        if (this.judgeCategory(item.category, this.errandFilterType.category)) {
+          if (
+            this.judgeIsAchieve(
+              item.isAchieve,
+              this.errandFilterType.isSeeAchieve
+            )
+          ) {
+            if (
+              this.judgeIsTakeOrder(
+                item.euid,
+                this.errandFilterType.isSeeTakeOrder
+              )
+            ) {
+              if (this.search(item, this.errandFilterType.searchFilter)) {
+                return true;
+              }
+            }
+          }
+        }
+        return false;
+      });
+    },
+  },
 };
 </script>
 
