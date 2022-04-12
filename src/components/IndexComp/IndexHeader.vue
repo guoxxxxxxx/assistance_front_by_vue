@@ -9,7 +9,7 @@
           <Icon type="ios-home" />
           主页
         </MenuItem>
-        <MenuItem name="2" to="/indexView/IndexDeliveryBody">
+        <MenuItem name="2" to="/indexView/IndexDeliveryBody/ErrandComp">
           <Icon type="md-bicycle" />
           跑腿
         </MenuItem>
