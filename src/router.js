@@ -146,15 +146,12 @@ import store from '@/vuex/store'
 // 每次路由切换之前被调用
 router.beforeEach((to, from, next)=>{
     if (to.path == '/loginView' || to.path == '/forgetView' || to.path == '/registerView') {
-        console.log('基础界面通过');
         next();
     }
     else if(store.state.user.uid == null){
-        console.log('用户未登录,跳转到登录界面');
         next('/loginView')
     }
     else{
-        console.log('验证通过');
         next();
     }
 })

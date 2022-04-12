@@ -17,7 +17,10 @@ export default new Vuex.Store({
             isSeeAchieve: true,            // 是否查看已完成 default: true 查看
             isSeeTakeOrder: true,            // 是否查看已被接单的订单 default: true 查看
             searchFilter: '',               // 搜索框过滤
-        }
+        },
+
+        // 设置discussList 全局评论内容全部仅依靠该对象
+        discussList:[],
     },
     getters:{
         // 实时监听state值的变化(最新状态)
@@ -54,6 +57,10 @@ export default new Vuex.Store({
         // 更新是否查看已被接单订单
         updateErrandTypeIsSeeTakeOrder(state, isSeeTakeOrder){
             state.errandFilterType.isSeeTakeOrder = isSeeTakeOrder
+        },
+        // 更新评论信息对象
+        updateDiscussList(state, discussList){
+            state.discussList = discussList;
         }
     }
 })

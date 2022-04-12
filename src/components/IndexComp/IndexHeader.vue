@@ -9,7 +9,7 @@
           <Icon type="ios-home" />
           主页
         </MenuItem>
-        <MenuItem name="2" to="/indexView/IndexDeliveryBody/ErrandComp">
+        <MenuItem name="2" :to="{path:'/indexView/IndexDeliveryBody/ErrandComp', query: {timestamp:Date.now()}}">
           <Icon type="md-bicycle" />
           跑腿
         </MenuItem>

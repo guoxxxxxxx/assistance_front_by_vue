@@ -96,15 +96,13 @@
       >
     </div>
 
-
     <!-- 评论组件 -->
-    <comment></comment>
+    <comment-comp></comment-comp>
   </div>
 </template>
 
 <script>
-// 引入评论组件
-import comment from "bright-comment";
+import CommentComp from "@/components/publicComp/CommentComp.vue";
 import axios from "axios";
 import { base_url } from "@/config";
 export default {
@@ -186,7 +184,7 @@ export default {
               message: "删除成功",
               type: "success",
             });
-            this.$router.back(1)
+            this.$router.back(1);
           } else {
             this.$notify({
               title: "失败",
@@ -205,12 +203,26 @@ export default {
       takeOrderUser: {},
       base_url: base_url,
       currentUserUID: this.$store.getters.getUserInfo.uid,
+
+      discussList: this.$store.state.discussList,
     };
   },
   components: {
-    comment,
+    CommentComp,
   },
   mounted() {
+    // 进入详细信息界面 查询该订单评论信息
+    axios
+      .get(base_url + "/errand/queryAllCommentsAndChildComments", {
+        params: {
+          eid: this.eid,
+        },
+      })
+      .then((resp) => {
+        console.log(resp.data.object);
+        this.$store.commit("updateDiscussList", resp.data.object);
+      });
+
     // 进入详细信息界面，查询详细信息
     axios
       .get(base_url + "/errand/queryDetailsByEid", {
