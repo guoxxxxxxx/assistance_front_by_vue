@@ -97,15 +97,11 @@
     </div>
 
     <!-- 评论组件 -->
-<<<<<<< HEAD
     <comment-comp
       :authorId="pubUser.uid"
       @doSend="doSend"
       @doChidSend="doChidSend"
     ></comment-comp>
-=======
-    <comment-comp :userId="pubUser.uid"></comment-comp>
->>>>>>> 25fe691379c18698f472ad60c3f5edaa145e8ab2
   </div>
 </template>
 
