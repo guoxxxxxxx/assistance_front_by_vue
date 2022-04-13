@@ -110,6 +110,7 @@ import CommentComp from "@/components/publicComp/CommentComp.vue";
 import axios from "axios";
 import { base_url } from "@/config";
 export default {
+  props:["dontShowSearch", "showSearch"],
   methods: {
     /**
      * 点击接单按钮
@@ -148,9 +149,10 @@ export default {
         });
     },
     /**
-     * 回退
+     * 点击返回按钮 回退
      */
     back() {
+      this.showSearch()
       this.$router.back(1);
     },
     /**
@@ -232,6 +234,9 @@ export default {
           }
         });
     },
+    /**
+     * 点击发送回复按钮
+     */
     doChidSend(content, targetUserId, fatherDiscussId){
       console.log(content, targetUserId, fatherDiscussId);
       this.axios.post(base_url + '/errand/sendReply',{
@@ -277,6 +282,9 @@ export default {
         this.pubUser = this.item.pubUser;
         this.takeOrderUser = this.item.takeOrderUser;
       });
+
+    // 隐藏搜索框
+    this.dontShowSearch();
   },
 };
 </script>
