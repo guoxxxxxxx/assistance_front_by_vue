@@ -4,7 +4,7 @@
     <comment
       :avatar="user.avatarPath"
       :commentNum="getDiscussList.length"
-      :authorId="user.uid"
+      :authorId="userId"
       :commentList="getDiscussList  "
     ></comment>
   </div>
@@ -15,6 +15,7 @@
 import comment from "bright-comment";
 import { base_url } from "@/config";
 export default {
+  props:['userId'],
   data() {
     return {
       user: this.$store.state.user,

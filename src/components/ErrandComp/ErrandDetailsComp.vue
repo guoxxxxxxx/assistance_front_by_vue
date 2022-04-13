@@ -97,7 +97,7 @@
     </div>
 
     <!-- 评论组件 -->
-    <comment-comp></comment-comp>
+    <comment-comp :userId="pubUser.uid"></comment-comp>
   </div>
 </template>
 
