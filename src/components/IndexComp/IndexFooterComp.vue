@@ -1,7 +1,7 @@
 <template>
   <div id="footer">
-      email: <a href="mailto:guo_x0315@163.com">guo_x0315@163.com</a> <br>
-      Powered By GuoX <br>
+    email: <a href="mailto:guo_x0315@163.com">guo_x0315@163.com</a> <br />
+    Powered By GuoX <br />
   </div>
 </template>
 
@@ -11,10 +11,12 @@ export default {};
 
 <style scoped>
 #footer {
-    padding-top: 50px;
-    width: 100%;
-    align-items: center;
-    text-align: center;
-    font-size: smaller
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  font-size: smaller;
+  border-radius: 30px;
+  box-shadow: 10px 10px 30px rgb(255, 255, 255);
+  background-color: rgb(213, 213, 213);
 }
 </style>

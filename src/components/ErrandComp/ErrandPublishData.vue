@@ -95,7 +95,7 @@ export default {
       formValidate: {
         uid: this.$store.getters.getUserInfo.uid,
         title: "",
-        category: "",
+        category: "快递代取",
         deadline: null,
         deadtime: null,
         money: "0",

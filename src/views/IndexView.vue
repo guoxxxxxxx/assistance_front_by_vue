@@ -36,7 +36,7 @@ export default {
 .container {
   width: 80%;
   height: auto;
-  border-radius: 20px;
+  border-radius: 30px;
   box-sizing: border-box;
   box-shadow: 14px 14px 20px #cbced1, 14px 14px 20px white;
   background-color: white;

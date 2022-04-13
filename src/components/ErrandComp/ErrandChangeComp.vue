@@ -176,7 +176,7 @@ export default {
     },
     // 删除图片时调用方法
     handleRemove(file) {
-      this.imgUrls.splice(this.imgUrls.length - 1);
+      // this.imgUrls.splice(this.imgUrls.length - 1);
       console.log("file: ",file);
       let img_src = file.url.substring(base_url.length)
       // 向服务器发送删除图片的请求

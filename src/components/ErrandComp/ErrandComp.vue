@@ -1,7 +1,7 @@
 <template>
   <div class="items_box">
     <div v-for="item in filterItems" :key="item.id">
-      <md-card>
+      <md-card class="item-card" data-aos="zoom-in" data-aos-duration="1500">
         <md-card-header>
           <md-avatar>
             <img
@@ -26,6 +26,13 @@
         </md-card-header>
 
         <!-- 预览图片 -->
+        <md-card-media v-if="!item.imgUrls[0]">
+          <img
+            :src="base_url + '/img/null.png'"
+            alt="IMG"
+            style="max-width: 320px; max-height: 180px"
+          />
+        </md-card-media>
         <md-card-media v-if="item.imgUrls[0]">
           <img
             :src="base_url + item.imgUrls[0]"
@@ -34,9 +41,11 @@
           />
         </md-card-media>
 
-        <md-card-content>
-          {{ item.details }}
-        </md-card-content>
+        <div style="height: 70px">
+          <md-card-content>
+            {{ item.details }}
+          </md-card-content>
+        </div>
 
         <div id="btn_groups">
           <div id="_pubdate">日期: {{ item.pubdate.substring(0, 10) }}</div>
@@ -275,6 +284,13 @@ export default {
 </script>
 
 <style scoped>
+.item-card {
+  width: 320px;
+  height: 380px;
+  border-radius: 30px;
+  box-shadow: 10px 10px 30px rgb(128, 128, 128);
+}
+
 #_pubdate {
   padding-left: 5px;
   padding-top: 15px;
