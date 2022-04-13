@@ -97,7 +97,11 @@
     </div>
 
     <!-- 评论组件 -->
-    <comment-comp></comment-comp>
+    <comment-comp
+      :authorId="pubUser.uid"
+      @doSend="doSend"
+      @doChidSend="doChidSend"
+    ></comment-comp>
   </div>
 </template>
 
@@ -194,15 +198,66 @@ export default {
           }
         });
     },
+    /**
+     * 更新评论信息
+     */
+    updateDiscussList() {
+      axios
+        .get(base_url + "/errand/queryAllCommentsAndChildComments", {
+          params: {
+            eid: this.eid,
+          },
+        })
+        .then((resp) => {
+          console.log(resp.data.object);
+          this.$store.commit("updateDiscussList", resp.data.object);
+        });
+    },
+    /**
+     * 点击发送评论按钮
+     */
+    doSend(content) {
+      this.axios
+        .post(base_url + "/errand/sendDiscuss", {
+          eid: this.eid,
+          commentUid: this.$store.state.user.uid,
+          content: content,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.updateDiscussList();
+            this.$notify.success("评论成功");
+          } else {
+            this.$notify.error("评论失败!");
+          }
+        });
+    },
+    doChidSend(content, targetUserId, fatherDiscussId){
+      console.log(content, targetUserId, fatherDiscussId);
+      this.axios.post(base_url + '/errand/sendReply',{
+        "parentDiscussId": fatherDiscussId,
+        "commentUid": this.$store.state.user.uid,
+        "targetUid": targetUserId,
+        "content": content
+      }).then(resp => {
+        if (resp.data.status == 200) {
+          this.updateDiscussList();
+          this.$notify.success('发表回复成功!');
+        }
+        else{
+          this.$notify.error('发表回复失败!');
+        }
+      })
+    }
   },
   data() {
     return {
       eid: this.$route.query.eid,
       item: {},
-      pubUser: {},
+      pubUser: {},  // 发表该详细信息的用户
       takeOrderUser: {},
       base_url: base_url,
-      currentUserUID: this.$store.getters.getUserInfo.uid,
+      currentUserUID: this.$store.getters.getUserInfo.uid, // 当前登录的用户id
 
       discussList: this.$store.state.discussList,
     };
@@ -211,18 +266,7 @@ export default {
     CommentComp,
   },
   mounted() {
-    // 进入详细信息界面 查询该订单评论信息
-    axios
-      .get(base_url + "/errand/queryAllCommentsAndChildComments", {
-        params: {
-          eid: this.eid,
-        },
-      })
-      .then((resp) => {
-        console.log(resp.data.object);
-        this.$store.commit("updateDiscussList", resp.data.object);
-      });
-
+    this.updateDiscussList();
     // 进入详细信息界面，查询详细信息
     axios
       .get(base_url + "/errand/queryDetailsByEid", {
