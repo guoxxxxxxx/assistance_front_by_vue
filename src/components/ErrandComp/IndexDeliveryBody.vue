@@ -12,7 +12,11 @@
     <!-- 搜索过滤区域 -->
     <div v-if="isShowSearch">
       <div style="display: flex">
-        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="errandFilterType.searchFilter">
+        <el-input
+          placeholder="请输入内容"
+          prefix-icon="el-icon-search"
+          v-model="errandFilterType.searchFilter"
+        >
         </el-input>
         <el-button plain>搜索</el-button>
         <el-button plain @click="dialogVisible = true">设置过滤属性</el-button>
@@ -46,7 +50,10 @@
       </el-dialog>
     </div>
 
-    <router-view></router-view>
+    <router-view
+      :dontShowSearch="dontShowSearch"
+      :showSearch="showSearch"
+    ></router-view>
   </div>
 </template>
 
@@ -86,6 +93,13 @@ export default {
         this.errandFilterType.category = id;
       }
     },
+    // 隐藏搜索框
+    dontShowSearch() {
+      this.isShowSearch = false;
+    },
+    showSearch(){
+      this.isShowSearch = true;
+    }
   },
   mounted() {
     this.$router.push("/indexView/IndexDeliveryBody/ErrandComp");

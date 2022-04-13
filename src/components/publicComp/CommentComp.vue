@@ -1,21 +1,29 @@
 <template>
   <div>
     <!-- 评论组件 -->
-    <comment
+    <!-- <comment
       :avatar="user.avatarPath"
       :commentNum="getDiscussList.length"
       :authorId="userId"
       :commentList="getDiscussList  "
-    ></comment>
+    ></comment> -->
+
+    <my-comment-comp
+      :avatar="user.avatarPath"
+      :commentNum="getDiscussList.length"
+      :authorId="userId"
+      :commentList="getDiscussList"
+    ></my-comment-comp>
   </div>
 </template>
 
 <script>
 // 引入评论组件
-import comment from "bright-comment";
+// import comment from "bright-comment";
+import myCommentComp from "@/components/CommentCompDir/MyCommentComp.vue";
 import { base_url } from "@/config";
 export default {
-  props:['userId'],
+  props: ["userId"],
   data() {
     return {
       user: this.$store.state.user,
@@ -23,13 +31,17 @@ export default {
     };
   },
   components: {
-    comment,
+    // comment,
+    myCommentComp,
   },
   computed: {
     getDiscussList() {
       return this.$store.state.discussList;
     },
   },
+  mounted(){
+    console.log(this.user.avatarPath);
+  }
 };
 </script>
 
