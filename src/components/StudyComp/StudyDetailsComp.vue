@@ -132,20 +132,29 @@
       </el-carousel>
     </div>
     <!-- 评论区 -->
-    <comment-comp
-      :authorId="current_item.pubUser.uid"
-    ></comment-comp>
+    <comment-comp :authorId="this.current_item.pubUser.uid"></comment-comp>
+
+    <!-- 分页 -->
+    <div style="width: auto; text-align: center" v-if="discussTotal">
+      <el-pagination layout="prev, pager, next" :total="discussTotal" :page-size="12">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import CommentComp from '@/components/publicComp/CommentComp.vue'
+import CommentComp from "@/components/publicComp/CommentComp.vue";
 import { base_url } from "@/config";
 export default {
   data() {
     return {
       current_sid: null,
-      current_item: {},
+      current_item: {
+        pubUser: {},
+        imgUrls: [],
+      },
+      // 该界面评论的总数量
+      discussTotal: 0,
     };
   },
   methods: {
@@ -164,16 +173,49 @@ export default {
           console.log(this.current_item);
         });
     },
+    /**
+     * 根据sid查询与之对应的所有评论信息
+     */
+    selectDiscussBySid(sid) {
+      this.axios
+        .get(base_url + "/study/selectDiscussBySid", { params: { sid: sid } })
+        .then((resp) => {
+          // 更新vuex中的全局评论对象
+          this.$store.state.discussList = resp.data.object;
+          console.log("discuss: ", this.$store.state.discussList);
+        });
+    },
+    /**
+     * 查询当前界面所拥有的评论数量
+     */
+    selectDiscussCountBySid(sid) {
+      this.axios.get(base_url + "/study/selectDiscussCountBySid", {
+        params: {
+          sid: sid,
+        },
+      }).then(resp => {
+        if (resp.data.status == 200) {
+          this.discussTotal = resp.data.object;
+        }
+      });
+    },
   },
   mounted() {
+    // 进入该界面 先将之前的全局评论清空
+    this.$store.state.discussList = []
     // 从上级路由读取所要查询页面的sid
     this.current_sid = this.$route.query.sid;
+    // 查询当前页面详细信息
     this.selectDetailsBySid(this.current_sid);
+    // 查询当前页面评论信息
+    this.selectDiscussBySid(this.current_sid);
+    // 查询当前界面评论信息的数量
+    this.selectDiscussCountBySid(this.current_sid);
   },
   computed: {},
-  components:{
+  components: {
     CommentComp,
-  }
+  },
 };
 </script>
 
