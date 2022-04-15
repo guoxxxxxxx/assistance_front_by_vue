@@ -21,8 +21,8 @@
       :multiple="true"
       :on-success="handleSuccess"
       :on-error="uploadError"
-      :imgList="imgList"
-      :file-list="fileList"
+      :file-list="getEchoImgList"
+      ref="imgUpload"
     >
       <i class="el-icon-plus"></i>
     </el-upload>
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       current_id: 0,  // 当前所要回显图片的项目信息
-      fileList: [],   // 图片回显列表
+      // fileList: this.$store.state.echoImgList,   // 图片回显列表
       base_url: base_url,
       dialogImageUrl: "",
       dialogVisible: false,
@@ -60,7 +60,8 @@ export default {
      * 以便于后续向服务器的请求
      */
     handleSuccess(resp) {
-      this.imgList.push(resp.lastFileName);
+      // this.imgList.push(resp.lastFileName);
+      this.$store.state.uploadImgList.push(resp.lastFileName);
     },
     /**
      * 文件上传大小限制为10MB, 超过10MB时显示错误提醒
@@ -75,12 +76,20 @@ export default {
       let img_src = file.url.substring(base_url.length);
       this.$emit("handleRemove", img_src);
     },
+    /**
+     * 父组件获取子组件的图片列表时调用该方法
+     */
+    getImgList(){
+      console.log("这是子组件", this.imgList);
+      return this.imgList;
+    }
   },
-  mounted(){
-    // 从上级路由中读取传递过来的参数
-    this.current_id = this.$router.query.id;
-    if (this.current_id != 0) {
-      // 此处存放查询图片路径的方法
+  computed: {
+    /**
+     * 全局图像回显动态计算
+     */
+    getEchoImgList(){
+      return this.$store.state.echoImgList;
     }
   }
 };

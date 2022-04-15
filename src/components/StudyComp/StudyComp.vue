@@ -27,7 +27,7 @@
           将用户上传的第一张图片作为预览图片
           若 用户未上传图片则显示默认图片
          -->
-        <!-- <md-card-media v-if="!item.imgUrls[0]">
+        <md-card-media v-if="!item.imgUrls[0]">
           <img
             :src="base_url + '/img/null.png'"
             alt="IMG"
@@ -40,7 +40,7 @@
             alt="IMG"
             style="max-width: 320px; max-height: 180px"
           />
-        </md-card-media> -->
+        </md-card-media>
 
         <!-- 详细说明 -->
         <div style="height: 70px">
@@ -79,7 +79,6 @@
       >
       </el-pagination>
     </div>
-
   </div>
 </template>
 
@@ -98,8 +97,13 @@ export default {
     };
   },
   methods: {
-    see_details() {
-      this.$router.push("/indexView/IndexStudyBody/studyDetailsComp");
+    see_details(id) {
+      this.$router.push({
+        path: "/indexView/IndexStudyBody/studyDetailsComp",
+        query:{
+          sid: id
+        }
+      });
     },
     /**
      * 查询study表中有多少记录

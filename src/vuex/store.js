@@ -21,6 +21,12 @@ export default new Vuex.Store({
 
         // 设置discussList 全局评论内容全部仅依靠该对象
         discussList:[],
+
+        // 设置uploadImgList 全局图片上传路径
+        uploadImgList: [],
+
+        // 全局回显图片列表
+        echoImgList: [],
     },
     getters:{
         // 实时监听state值的变化(最新状态)

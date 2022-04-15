@@ -13,7 +13,7 @@
           <Icon type="md-bicycle" />
           跑腿
         </MenuItem>
-        <MenuItem name="3" to="/indexView/IndexStudyBody">
+        <MenuItem name="3" to="/indexView/IndexStudyBody/StudyComp">
           <Icon type="ios-book" />
           学习交流
         </MenuItem>

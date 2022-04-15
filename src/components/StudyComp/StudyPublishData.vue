@@ -84,6 +84,8 @@ export default {
      * 点击提交按钮
      */
     handleSubmit(name) {
+      let imgUrls = this.$store.state.uploadImgList;
+      console.log(imgUrls);
       this.$refs[name].validate((valid) => {
         if (valid) {
           console.log(this.formValidate);
@@ -92,9 +94,18 @@ export default {
             title: this.formValidate.title,
             category: this.formValidate.category,
             details: this.formValidate.details,
+            imgUrls: imgUrls,
           }).then(resp => {
             if (resp.data.status) {
-              this.$notify.success('发布成功')            
+              this.$notify.success('发布成功')
+              this.$store.state.uploadImgList = [];    
+              // 进入发布项目的详细界面
+              this.$router.push({
+                path:"/indexView/IndexStudyBody/studyDetailsComp",
+                query: {
+                  sid: resp.data.object
+                }
+              })      
             }
             else{
               this.$notify.error('发布失败');
@@ -105,9 +116,13 @@ export default {
         }
       });
     },
+    /**
+     * 点击重置按钮
+     */
     handleReset(name) {
       this.$refs[name].resetFields();
-      console.log("show: ", this.is_show_tips);
+      console.log(this.$store.state.echoImgList);
+      this.$store.state.echoImgList = []
     },
   },
   components: {
