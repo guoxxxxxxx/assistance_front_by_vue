@@ -89,6 +89,15 @@
         </div>
       </md-card>
     </div>
+    <!-- 分页 -->
+    <div style="width: 1500px; text-align: center">
+      <el-pagination
+        layout="prev, pager, next"
+        :total="filterItems.length"
+        :page-size="15"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 

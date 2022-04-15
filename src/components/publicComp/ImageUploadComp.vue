@@ -1,9 +1,18 @@
 <template>
-  <!-- 图片上传 -->
+  <!-- 对图片上传组件进行二次封装 -->
   <!-- 
-      对图片上传组件进行二次封装
+    文档说明: 
+      Attribute: 
+        imgList: 成功上传图片的列表信息
+
+      event:
+        handleRemove: 点击图片删除按钮时所执行的方法
+          参数: img_src: 所要删除图片的名称
+
+      注释：
+        1. 若要回显图片信息,请在跳转到该路由时传递所要查看项目的id
    -->
-  <FormItem label="上传图片" prop="imgSrc">
+  <div>
     <el-upload
       :action="base_url + '/upload/uploadImg'"
       list-type="picture-card"
@@ -12,25 +21,26 @@
       :multiple="true"
       :on-success="handleSuccess"
       :on-error="uploadError"
+      :imgList="imgList"
+      :file-list="fileList"
     >
       <i class="el-icon-plus"></i>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="" />
     </el-dialog>
-  </FormItem>
+  </div>
 </template>
 
 <script>
+import { base_url } from "@/config";
 export default {
-  props: {
-    multiple: {
-      type: String,
-      default: true,
-    },
-  },
+  props: {},
   data() {
     return {
+      current_id: 0,  // 当前所要回显图片的项目信息
+      fileList: [],   // 图片回显列表
+      base_url: base_url,
       dialogImageUrl: "",
       dialogVisible: false,
       imgList: [], // 用于保存已经上传的图片名称|路径
@@ -60,12 +70,19 @@ export default {
     },
     /**
      * 点击图片上的删除按钮时调用该方法，
-     * 从imgList列表中删除要删除的图片
      */
-    handleRemove() {
-      this.imgList.splice(this.imgList.length - 1);
+    handleRemove(file) {
+      let img_src = file.url.substring(base_url.length);
+      this.$emit("handleRemove", img_src);
     },
   },
+  mounted(){
+    // 从上级路由中读取传递过来的参数
+    this.current_id = this.$router.query.id;
+    if (this.current_id != 0) {
+      // 此处存放查询图片路径的方法
+    }
+  }
 };
 </script>
 

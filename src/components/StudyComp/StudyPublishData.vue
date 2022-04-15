@@ -22,21 +22,17 @@
             <Option value="其他">其他</Option>
           </Select>
         </FormItem>
-        <FormItem label="赏金" prop="isGiveMoney">
-          <el-input-number
-            v-model="formValidate.money"
-            :precision="2"
-            :step="1.0"
-            :min="0"
-          ></el-input-number>
+
+        <!-- 图片上传组件 -->
+        <FormItem label="上传图片" prop="imgSrc">
+          <image-upload-comp></image-upload-comp>
         </FormItem>
-        <FormItem label="上传图片">
-        </FormItem>
+
         <FormItem label="详细信息" prop="details">
           <Input
             v-model="formValidate.details"
             type="textarea"
-            :autosize="{ minRows: 10}"
+            :autosize="{ minRows: 10 }"
             placeholder="请输入详细信息"
           ></Input>
         </FormItem>
@@ -53,15 +49,17 @@
   </div>
 </template>
 <script>
+import ImageUploadComp from "@/components/publicComp/ImageUploadComp.vue";
+import { base_url } from '@/config';
 export default {
   data() {
     return {
       is_show_tips: false,
       formValidate: {
-        title: "",
+        uid: this.$store.state.user.uid,
+        title: '',
         category: "",
-        money: 0,
-        details: "",
+        details: ""
       },
       ruleValidate: {
         title: [
@@ -82,10 +80,26 @@ export default {
     };
   },
   methods: {
+    /**
+     * 点击提交按钮
+     */
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success("Success!");
+          console.log(this.formValidate);
+          this.axios.post(base_url + "/study/addNewItem", {
+            uid: this.formValidate.uid,
+            title: this.formValidate.title,
+            category: this.formValidate.category,
+            details: this.formValidate.details,
+          }).then(resp => {
+            if (resp.data.status) {
+              this.$notify.success('发布成功')            
+            }
+            else{
+              this.$notify.error('发布失败');
+            }
+          })
         } else {
           this.$Message.error("Fail!");
         }
@@ -97,6 +111,7 @@ export default {
     },
   },
   components: {
+    ImageUploadComp,
   },
 };
 </script>

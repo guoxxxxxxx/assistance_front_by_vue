@@ -3,6 +3,16 @@
     <!-- 评论组件 对评论组件进行二次封装 -->
     <!-- 
       以后传递参数仅传递authorid, doSend, doChildSend方法即可
+      文档说明: 
+        Attribute:
+          1. authorID: 发布该项目的作者
+
+        event:
+          1. doSend: 发送请求时所调用方法 
+            参数: content 评论内容
+
+          2. doChidSend: 发送回复时所调用方法 
+            参数： content 评论内容, targetUserId 被评论用户ID, fatherDiscussId 所属父评论ID
      -->
     <comment
       :avatar="user.avatarPath"

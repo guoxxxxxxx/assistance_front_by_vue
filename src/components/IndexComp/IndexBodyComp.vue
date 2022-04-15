@@ -1,13 +1,25 @@
 <template>
   <div id="index_border">
     <div id="index_container">
-        这是主页
+        <button @click="test">测试按钮</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { base_url } from '@/config';
+export default {
+  methods:{
+    test(){
+      this.axios.post(base_url + '/study/test', {
+        uid: 1,
+        name: "测试",
+      }, {params: {
+        page: 100
+      }})
+    }
+  }
+};
 </script>
 
 <style scoped>
