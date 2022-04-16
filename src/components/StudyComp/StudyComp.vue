@@ -56,14 +56,6 @@
             <Button type="warning" ghost @click="see_details(item.sid)"
               >查看详情</Button
             >
-            <!-- 判断当前发布的项目是否为当前登录用户发布 若为当前用户发布，则添加修改权限 -->
-            <Button
-              type="info"
-              v-if="item.uid == current_user.uid"
-              ghost
-              @click="changeStudyItem(item.sid)"
-              >修改</Button
-            >
           </md-card-actions>
         </div>
       </md-card>
@@ -97,12 +89,15 @@ export default {
     };
   },
   methods: {
+    /**
+     * 点击查看详情按钮
+     */
     see_details(id) {
       this.$router.push({
         path: "/indexView/IndexStudyBody/studyDetailsComp",
-        query:{
-          sid: id
-        }
+        query: {
+          sid: id,
+        },
       });
     },
     /**
@@ -128,6 +123,8 @@ export default {
      */
     currentPageEvent(current_page) {
       this.getItemsByPage(current_page);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
   },
   computed: {

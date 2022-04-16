@@ -84,6 +84,7 @@ export default {
      * 点击提交按钮
      */
     handleSubmit(name) {
+      // 图片上传 全局保存图片
       let imgUrls = this.$store.state.uploadImgList;
       console.log(imgUrls);
       this.$refs[name].validate((valid) => {

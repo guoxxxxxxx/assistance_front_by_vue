@@ -6,6 +6,7 @@
       文档说明: 
         Attribute:
           1. authorID: 发布该项目的作者
+          2. commentNum: 评论的总数量
 
         event:
           1. doSend: 发送请求时所调用方法 
@@ -16,7 +17,7 @@
      -->
     <comment
       :avatar="user.avatarPath"
-      :commentNum="getDiscussList.length"
+      :commentNum="commentNum"
       :authorId="authorId"
       :commentList="getDiscussList"
       @doSend="doSend"
@@ -30,7 +31,7 @@
 import comment from "bright-comment";
 import { base_url } from "@/config";
 export default {
-  props:["authorId"],
+  props:["authorId", "commentNum"],
   data() {
     return {
       user: this.$store.state.user,

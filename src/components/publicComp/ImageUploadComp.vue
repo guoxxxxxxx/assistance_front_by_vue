@@ -21,7 +21,7 @@
       :multiple="true"
       :on-success="handleSuccess"
       :on-error="uploadError"
-      :file-list="getEchoImgList"
+      :file-list="fileList"
       ref="imgUpload"
     >
       <i class="el-icon-plus"></i>
@@ -35,7 +35,7 @@
 <script>
 import { base_url } from "@/config";
 export default {
-  props: {},
+  props: ["fileList"],
   data() {
     return {
       current_id: 0,  // 当前所要回显图片的项目信息
@@ -73,14 +73,13 @@ export default {
      * 点击图片上的删除按钮时调用该方法，
      */
     handleRemove(file) {
-      let img_src = file.url.substring(base_url.length);
-      this.$emit("handleRemove", img_src);
+      console.log("uploadImgComp", file);
+      this.$emit("handleRemove", file);
     },
     /**
      * 父组件获取子组件的图片列表时调用该方法
      */
     getImgList(){
-      console.log("这是子组件", this.imgList);
       return this.imgList;
     }
   },
@@ -91,6 +90,10 @@ export default {
     getEchoImgList(){
       return this.$store.state.echoImgList;
     }
+  },
+  mounted(){
+    // 进到该界面就将所有陈旧数据清空
+    this.$store.state.uploadImgList = [];
   }
 };
 </script>

@@ -23,6 +23,7 @@ import PersonalInfomationChangeComp from '@/components/UserComp/PersonalInfomati
 import StudyPublishData from '@/components/StudyComp/StudyPublishData'
 import StudyComp from '@/components/StudyComp/StudyComp'
 import StudyDetailsComp from '@/components/StudyComp/StudyDetailsComp'
+import StudyChangeComp from '@/components/StudyComp/StudyChangeComp'
 
 import SecondHandPublishData from '@/components/SecondHandComp/SecondHandPublishData'
 
@@ -100,6 +101,11 @@ const router = new VueRouter({
                             // 学习界面详细信息界面
                             path: 'studyDetailsComp',
                             component: StudyDetailsComp
+                        },
+                        {
+                            // 学习界面更改信息界面
+                            path: 'studyChangeComp',
+                            component: StudyChangeComp
                         }
                     ]
                 },
