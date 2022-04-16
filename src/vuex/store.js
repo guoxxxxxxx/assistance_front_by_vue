@@ -27,6 +27,23 @@ export default new Vuex.Store({
 
         // 全局回显图片列表
         echoImgList: [],
+
+        // 全局过滤属性
+        queryCondition: {
+            page: "1", // 所查询的页码
+            category: "全部", // 所查询的种类
+            fuzzyParam: "", // 模糊查询参数
+            isHiddenAchieve: false, // 是否隐藏已完成项目 true隐藏 false不隐藏
+        },
+
+        // 全局属性, 是否显示搜索框
+        isShowSearch: true,
+
+        // 全局项目总览
+        allItems: {},
+
+        // 用于存放记录总条数, 显示页码时需要用到
+        itemsCount: 0,
     },
     getters:{
         // 实时监听state值的变化(最新状态)
@@ -67,6 +84,10 @@ export default new Vuex.Store({
         // 更新评论信息对象
         updateDiscussList(state, discussList){
             state.discussList = discussList;
+        },
+        // 更新全局查询条件对象
+        updateQueryCondition(state, queryCondition){
+            state.queryCondition = queryCondition;
         }
     }
 })

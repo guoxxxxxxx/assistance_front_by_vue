@@ -13,6 +13,7 @@ function checkEmail(email) {
     }
 }
 
+
 export {
-    checkEmail,
+    checkEmail
 }

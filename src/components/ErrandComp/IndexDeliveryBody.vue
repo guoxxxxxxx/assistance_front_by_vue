@@ -102,7 +102,12 @@ export default {
     }
   },
   mounted() {
-    this.$router.push("/indexView/IndexDeliveryBody/ErrandComp");
+    this.$router.push({
+      path:"/indexView/IndexDeliveryBody/ErrandComp",
+      query:{
+        timestamp: Date.now()
+      }
+    });
   },
   watch: {
     // 设置监听属性

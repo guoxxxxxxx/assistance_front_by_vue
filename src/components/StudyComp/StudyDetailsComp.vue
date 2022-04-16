@@ -7,10 +7,11 @@
           type="primary"
           size="small"
           @click="setAchieve"
-          v-if="current_item.uid == this.$store.state.user.uid"
+          v-if="current_item.uid == this.$store.state.user.uid || current_item.isAchieve == 1"
           :disabled="current_item.isAchieve == 1"
           >{{ current_item.isAchieve ? "已解决" : "标记为已解决" }}</el-button
         >
+        <el-button size="small" @click="back(1)">返回</el-button>
       </template>
 
       <el-descriptions-item>
@@ -160,6 +161,7 @@
     <comment-comp
       :authorId="this.current_item.pubUser.uid"
       @doSend="doSend"
+      @doChidSend="doChidSend"
       :commentNum="commentNum"
     ></comment-comp>
 
@@ -182,6 +184,7 @@ import { base_url } from "@/config";
 export default {
   data() {
     return {
+      current_page: 1,
       current_sid: null,
       current_item: {
         pubUser: {},
@@ -192,6 +195,13 @@ export default {
     };
   },
   methods: {
+    /**
+     * 返回上一级
+     */
+    back(val) {
+      this.$router.back(val);
+      this.$store.state.isShowSearch = true;
+    },
     /**
      * 点击更改信息按钮
      */
@@ -206,6 +216,7 @@ export default {
      */
     currentPageEvent(page) {
       this.selectDiscussBySid(this.current_sid, page);
+      this.current_page = page;
     },
     /**
      * 点击发送评论按钮
@@ -228,6 +239,27 @@ export default {
         });
     },
     /**
+     * 点击回复按钮
+     */
+    doChidSend(content, targetUserId, fatherDiscussId) {
+      this.axios
+        .post(base_url + "/study/doSendReply", {
+          parentDiscussId: fatherDiscussId,
+          commentUid: this.$store.state.user.uid,
+          targetUid: targetUserId,
+          content: content,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify.success("回复成功");
+            // 重新查询该界面的评论消息
+            this.selectDiscussBySid(this.current_sid, this.current_page);
+          } else {
+            this.$notify.error("回复失败");
+          }
+        });
+    },
+    /**
      * 点击删除按钮
      */
     del() {
@@ -244,7 +276,12 @@ export default {
           .then((resp) => {
             if (resp.data.status == 200) {
               this.$notify.success("删除成功");
-              this.$router.replace("/indexView/IndexStudyBody/StudyComp");
+              this.$router.replace({
+                path:"/indexView/IndexStudyBody/StudyComp",
+                query:{
+                  timestamp: Date.now()
+                }
+              });
             } else {
               this.$notify.error("删除失败");
             }
@@ -316,6 +353,9 @@ export default {
     },
   },
   mounted() {
+    // 返回顶部
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     // 进入该界面 先将之前的全局评论清空
     this.$store.state.discussList = [];
     // 从上级路由读取所要查询页面的sid

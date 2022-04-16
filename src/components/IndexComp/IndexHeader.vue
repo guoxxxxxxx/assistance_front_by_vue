@@ -63,7 +63,12 @@ export default {
     selectItem(name){
       // 个人中心
       if(name == 'user_center'){
-        this.$router.push('/indexView/PersonalInfomationComp')
+        this.$router.push({
+          path: '/indexView/PersonalInfomationComp',
+          query:{
+            timestamp: Date.now()
+          }
+        })
       }
       // 退出
       else if (name == 'exit') {

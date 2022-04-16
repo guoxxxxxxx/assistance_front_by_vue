@@ -61,8 +61,19 @@
       </md-card>
     </div>
 
+    <!-- 当该界面没有订单时展示该界面 -->
+    <el-empty
+      description="暂无信息"
+      v-if="filterItems.length == 0"
+      :image-size="350"
+      style="text-align: center; width: 100%;"
+    ></el-empty>
+
     <!-- 分页 -->
-    <div style="width: 1500px; text-align: center">
+    <div
+      style="width: 1500px; text-align: center"
+      v-if="filterItems.length != 0"
+    >
       <el-pagination
         layout="prev, pager, next"
         :total="getItemsCount"
@@ -84,8 +95,6 @@ export default {
       items: {},
       // 当前登录用户的id
       current_user: this.$store.state.user,
-      // 存放数据库中总条数
-      itemsCount: 0,
     };
   },
   methods: {
@@ -93,6 +102,7 @@ export default {
      * 点击查看详情按钮
      */
     see_details(id) {
+      this.$store.state.isShowSearch = false;
       this.$router.push({
         path: "/indexView/IndexStudyBody/studyDetailsComp",
         query: {
@@ -101,28 +111,53 @@ export default {
       });
     },
     /**
-     * 查询study表中有多少记录
+     * 查询study表中有多少记录查询itemsCount
      */
-    selectAllItemCount() {
-      this.axios.get(base_url + "/study/selectAllItemCount").then((resp) => {
-        this.itemsCount = resp.data.object;
-      });
+    selectItemsCount(condition) {
+      let temp = 0;
+      if (condition.isHiddenAchieve) {
+        temp = 1;
+      }
+      this.axios
+        .post(base_url + "/study/queryItemsCountByCondition", {
+          category: condition.category,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: temp,
+        })
+        .then((resp) => {
+          this.$store.state.itemsCount = resp.data.object;
+        });
     },
     /**
      * 获取指定页码的信息
+     * 条件查询
      */
-    getItemsByPage(page) {
+    getItemsByCondition(page, condition) {
+      console.log("queryCondition: ", condition);
+      let isHiddenAchieveTemp = 0;
+      if (condition.isHiddenAchieve) {
+        isHiddenAchieveTemp = 1;
+      }
       this.axios
-        .get(base_url + "/study/selectAll", { params: { page: page } })
+        .post(base_url + "/study/queryByCondition", {
+          page: page,
+          category: condition.category,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: isHiddenAchieveTemp,
+        })
         .then((resp) => {
-          this.items = resp.data.object;
+          this.$store.state.allItems = resp.data.object;
         });
     },
     /**
      * 点击页码按钮时响应事件
      */
     currentPageEvent(current_page) {
-      this.getItemsByPage(current_page);
+      this.getItemsByCondition(current_page, this.$store.state.queryCondition);
+      // 将页码赋值给current_page;
+      this.$store.state.queryCondition.page = current_page;
+
+      // 返回顶部
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
@@ -132,27 +167,32 @@ export default {
      * 通过计算属性来更新项目信息
      */
     filterItems() {
-      return this.items;
+      return this.$store.state.allItems;
     },
     /**
      * 获取项目总数
      */
     getItemsCount() {
-      return this.itemsCount;
+      return this.$store.state.itemsCount;
+    },
+    /**
+     * 获取查询条件
+     */
+    getQueryCondition() {
+      return this.$store.state.queryCondition;
     },
   },
   mounted() {
     /**
      * 进入页面,默认查询全部信息的第一页内容。
      */
-    this.axios.get(this.base_url + "/study/selectAll").then((resp) => {
-      this.items = resp.data.object;
-    });
+    this.getItemsByCondition(1, this.$store.state.queryCondition);
     /**
-     * 查询所有项目数量
+     * 查询项目数量
      */
-    this.selectAllItemCount();
+    this.selectItemsCount(this.$store.state.queryCondition);
   },
+  watch: {},
 };
 </script>
 
