@@ -196,7 +196,7 @@ export default {
               title: "失败",
               message: "更改完成信息失败",
               type: "error",
-              duration: 100,
+              duration: 1000,
             });
           }
         });

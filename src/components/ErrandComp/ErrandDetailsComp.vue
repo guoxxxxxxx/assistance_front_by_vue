@@ -1,104 +1,208 @@
 <template>
   <div>
-    <el-descriptions title="发布人信息">
-      <el-descriptions-item label="用户名">{{
-        pubUser.name
-      }}</el-descriptions-item>
-      <el-descriptions-item label="手机号">{{
-        pubUser.phone
-      }}</el-descriptions-item>
-      <el-descriptions-item label="学院">{{
-        pubUser.faculty
-      }}</el-descriptions-item>
-      <el-descriptions-item label="邮箱">{{
-        pubUser.email
-      }}</el-descriptions-item>
-      <el-descriptions-item label="所属专业">{{
-        pubUser.grade + pubUser.major
-      }}</el-descriptions-item>
+    <!-- 发布人信息 -->
+    <el-descriptions class="margin-top" title="发布人信息" :column="3" border>
+      <template slot="extra">
+        <el-button
+          type="primary"
+          size="small"
+          @click="achieveItem(current_item.eid)"
+          v-if="
+            current_item.uid == this.$store.state.user.uid ||
+            current_item.isAchieve == 1
+          "
+          :disabled="current_item.isAchieve == 1"
+          >{{ current_item.isAchieve ? "已完成" : "标记为已完成" }}</el-button
+        >
+        <el-button size="small" @click="back(1)">返回</el-button>
+      </template>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-price-tag"></i>
+          ID
+        </template>
+        {{ current_item.pubUser.uid }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-user"></i>
+          用户名
+        </template>
+        {{ current_item.pubUser.name }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i v-if="current_item.pubUser.sex == '男'" class="el-icon-male"></i>
+          <i v-if="current_item.pubUser.sex == '女'" class="el-icon-female"></i>
+          <i v-if="current_item.pubUser.sex == '保密'" class="el-icon-lock"></i>
+          性别
+        </template>
+        {{ current_item.pubUser.sex }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-office-building"></i>
+          所属学院
+        </template>
+        {{ current_item.pubUser.faculty }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-collection"></i>
+          专业
+        </template>
+        {{ current_item.pubUser.major }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-date"></i>
+          入学年份
+        </template>
+        {{ current_item.pubUser.grade }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-mobile-phone"></i>
+          联系电话
+        </template>
+        {{ current_item.pubUser.phone }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-message"></i>
+          邮箱
+        </template>
+        {{ current_item.pubUser.email }}
+      </el-descriptions-item>
     </el-descriptions>
 
-    <el-descriptions title="接单人信息" v-if="item.euid">
-      <el-descriptions-item label="用户名">{{
-        takeOrderUser.name
-      }}</el-descriptions-item>
-      <el-descriptions-item label="手机号">{{
-        takeOrderUser.phone
-      }}</el-descriptions-item>
-      <el-descriptions-item label="学院">{{
-        takeOrderUser.faculty
-      }}</el-descriptions-item>
-      <el-descriptions-item label="邮箱">{{
-        takeOrderUser.email
-      }}</el-descriptions-item>
-      <el-descriptions-item label="所属专业">{{
-        takeOrderUser.grade + takeOrderUser.major
-      }}</el-descriptions-item>
+    <div style="margin-top: 40px"></div>
+
+    <!-- 接单人信息 -->
+    <el-descriptions class="margin-top" title="接单人信息" :column="3" border>
+      <!-- <template slot="extra">
+        <el-button
+          type="primary"
+          size="small"
+          @click="setAchieve"
+          v-if="
+            current_item.uid == this.$store.state.user.uid ||
+            current_item.isAchieve == 1
+          "
+          :disabled="current_item.isAchieve == 1"
+          >{{ current_item.isAchieve ? "已解决" : "标记为已解决" }}</el-button
+        >
+        <el-button size="small" @click="back(1)">返回</el-button>
+      </template> -->
+
+      <el-descriptions-item v-if="current_item.takeOrderUser">
+        <template slot="label">
+          <i class="el-icon-price-tag"></i>
+          ID
+        </template>
+        {{ current_item.takeOrderUser.uid }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-user"></i>
+          用户名
+        </template>
+        {{ current_item.takeOrderUser.name }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i
+            v-if="current_item.takeOrderUser.sex == '男'"
+            class="el-icon-male"
+          ></i>
+          <i
+            v-if="current_item.takeOrderUser.sex == '女'"
+            class="el-icon-female"
+          ></i>
+          <i
+            v-if="current_item.takeOrderUser.sex == '保密'"
+            class="el-icon-lock"
+          ></i>
+          性别
+        </template>
+        {{ current_item.takeOrderUser.sex }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-office-building"></i>
+          所属学院
+        </template>
+        {{ current_item.takeOrderUser.faculty }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-collection"></i>
+          专业
+        </template>
+        {{ current_item.takeOrderUser.major }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-date"></i>
+          入学年份
+        </template>
+        {{ current_item.takeOrderUser.grade }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-mobile-phone"></i>
+          联系电话
+        </template>
+        {{ current_item.takeOrderUser.phone }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-message"></i>
+          邮箱
+        </template>
+        {{ current_item.takeOrderUser.email }}
+      </el-descriptions-item>
     </el-descriptions>
 
-    <el-descriptions title="内容详细信息">
-      <el-descriptions-item label="订单编号">{{
-        item.eid
-      }}</el-descriptions-item>
-      <el-descriptions-item label="类别">{{ item.title }}</el-descriptions-item>
-      <el-descriptions-item label="发布日期">{{
-        formatDate(item.pubdate)
-      }}</el-descriptions-item>
-      <el-descriptions-item label="发布时间">{{
-        item.pubtime
-      }}</el-descriptions-item>
-      <el-descriptions-item label="截止日期">{{
-        formatDate(item.deadline)
-      }}</el-descriptions-item>
-      <el-descriptions-item label="截止时间">{{
-        item.deadtime
-      }}</el-descriptions-item>
-    </el-descriptions>
-    <h5 class="mt-0">详细概述</h5>
-    <b-card style="width: 80%">
-      <b-media>
-        <p>
-          {{ item.details }}
-        </p>
-        <div id="pic_out_box">
-          <div
-            class="pic_show_box"
-            v-for="(src, index) in item.imgUrls"
-            :key="index"
-          >
-            <el-image
-              style="width: 100px; height: 100px"
-              :src="base_url + src"
-              :preview-src-list="addBaseUrlInImg(item.imgUrls)"
-            >
-            </el-image>
-          </div>
-        </div>
-      </b-media>
-    </b-card>
+    <div style="margin-top: 40px"></div>
 
     <div id="btn_groups">
       <Button type="warning" ghost @click="back">返回</Button>
       <Button
         type="success"
         ghost
-        v-if="pubUser.uid != this.currentUserUID"
-        @click="take_orders(item.eid)"
-        :disabled="item.euid != null"
-        >{{ item.euid != null ? "已被接单" : "接单" }}</Button
+        v-if="current_item.uid != this.currentUserUID"
+        @click="take_orders(current_item.eid)"
+        :disabled="current_item.euid != null"
+        >{{ current_item.euid != null ? "已被接单" : "接单" }}</Button
       >
       <Button
         type="error"
         ghost
-        v-if="pubUser.uid == this.currentUserUID"
-        @click="fakeDeleteItemByEid(item.eid)"
+        v-if="current_item.pubUser.uid == this.currentUserUID"
+        @click="fakeDeleteItemByEid(current_item.eid)"
         >删除</Button
       >
     </div>
 
     <!-- 评论组件 -->
     <comment-comp
-      :authorId="pubUser.uid"
+      :authorId="current_item.pubUser.uid"
       @doSend="doSend"
       @doChidSend="doChidSend"
     ></comment-comp>
@@ -110,7 +214,7 @@ import CommentComp from "@/components/publicComp/CommentComp.vue";
 import axios from "axios";
 import { base_url } from "@/config";
 export default {
-  props:["dontShowSearch", "showSearch"],
+  props: ["dontShowSearch", "showSearch"],
   methods: {
     /**
      * 点击接单按钮
@@ -152,7 +256,7 @@ export default {
      * 点击返回按钮 回退
      */
     back() {
-      this.showSearch()
+      this.showSearch();
       this.$router.back(1);
     },
     /**
@@ -235,32 +339,59 @@ export default {
         });
     },
     /**
+     * 完成订单
+     */
+    achieveItem(eid) {
+      this.axios
+        .get(base_url + "/errand/updateErrandIsAchieveStateByEid", {
+          params: {
+            eid: eid,
+          },
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify({
+              title: "成功",
+              message: "更改完成信息成功",
+              type: "success",
+              duration: 1000,
+            });
+          } else {
+            this.$notify({
+              title: "失败",
+              message: "更改完成信息失败",
+              type: "error",
+              duration: 1000,
+            });
+          }
+        });
+    },
+    /**
      * 点击发送回复按钮
      */
-    doChidSend(content, targetUserId, fatherDiscussId){
+    doChidSend(content, targetUserId, fatherDiscussId) {
       console.log(content, targetUserId, fatherDiscussId);
-      this.axios.post(base_url + '/errand/sendReply',{
-        "parentDiscussId": fatherDiscussId,
-        "commentUid": this.$store.state.user.uid,
-        "targetUid": targetUserId,
-        "content": content
-      }).then(resp => {
-        if (resp.data.status == 200) {
-          this.updateDiscussList();
-          this.$notify.success('发表回复成功!');
-        }
-        else{
-          this.$notify.error('发表回复失败!');
-        }
-      })
-    }
+      this.axios
+        .post(base_url + "/errand/sendReply", {
+          parentDiscussId: fatherDiscussId,
+          commentUid: this.$store.state.user.uid,
+          targetUid: targetUserId,
+          content: content,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.updateDiscussList();
+            this.$notify.success("发表回复成功!");
+          } else {
+            this.$notify.error("发表回复失败!");
+          }
+        });
+    },
   },
   data() {
     return {
       eid: this.$route.query.eid,
-      item: {},
-      pubUser: {},  // 发表该详细信息的用户
-      takeOrderUser: {},
+      current_item: {},
       base_url: base_url,
       currentUserUID: this.$store.getters.getUserInfo.uid, // 当前登录的用户id
 
@@ -278,9 +409,8 @@ export default {
         params: { eid: this.eid },
       })
       .then((resp) => {
-        this.item = resp.data.object;
-        this.pubUser = this.item.pubUser;
-        this.takeOrderUser = this.item.takeOrderUser;
+        console.log(resp);
+        this.current_item = resp.data.object;
       });
 
     // 隐藏搜索框
