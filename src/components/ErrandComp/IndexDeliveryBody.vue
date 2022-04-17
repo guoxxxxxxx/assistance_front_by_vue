@@ -10,7 +10,7 @@
     </Tabs>
 
     <!-- 搜索过滤区域 -->
-    <div v-if="isShowSearch">
+    <div v-if="getIsShowSearch">
       <div style="display: flex">
         <el-input
           placeholder="请输入内容"
@@ -51,8 +51,6 @@
     </div>
 
     <router-view
-      :dontShowSearch="dontShowSearch"
-      :showSearch="showSearch"
     ></router-view>
   </div>
 </template>
@@ -93,13 +91,6 @@ export default {
         this.errandFilterType.category = id;
       }
     },
-    // 隐藏搜索框
-    dontShowSearch() {
-      this.isShowSearch = false;
-    },
-    showSearch(){
-      this.isShowSearch = true;
-    }
   },
   mounted() {
     this.$router.push({
@@ -115,6 +106,14 @@ export default {
       this.errandFilterType.category = newVal;
     },
   },
+  computed:{
+    /**
+     * 获取是否显示搜索框条件
+     */
+    getIsShowSearch(){
+      return this.$store.state.isShowSearch;
+    }
+  }
 };
 </script>
 

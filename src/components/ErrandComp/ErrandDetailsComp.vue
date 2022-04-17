@@ -1,20 +1,30 @@
 <template>
-  <div>
+  <div style="margin-top: 20px">
     <!-- 发布人信息 -->
     <el-descriptions class="margin-top" title="发布人信息" :column="3" border>
       <template slot="extra">
         <el-button
           type="primary"
           size="small"
-          @click="achieveItem(current_item.eid)"
+          @click="setAchieve(current_item.eid)"
           v-if="
-            current_item.uid == this.$store.state.user.uid ||
-            current_item.isAchieve == 1
+            current_item.uid == this.$store.state.user.uid &&
+            current_item.euid != null
           "
           :disabled="current_item.isAchieve == 1"
-          >{{ current_item.isAchieve ? "已完成" : "标记为已完成" }}</el-button
+          >{{
+            current_item.isAchieve == 1 ? "已完成" : "标记为已完成"
+          }}</el-button
         >
-        <el-button size="small" @click="back(1)">返回</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          @click="take_orders(current_item.eid)"
+          v-if="current_item.uid != this.$store.state.user.uid"
+          :disabled="current_item.euid != null"
+          >{{ current_item.euid == null ? "接单" : "已被接单" }}</el-button
+        >
+        <el-button size="small" @click="back">返回</el-button>
       </template>
 
       <el-descriptions-item>
@@ -87,23 +97,14 @@
     <div style="margin-top: 40px"></div>
 
     <!-- 接单人信息 -->
-    <el-descriptions class="margin-top" title="接单人信息" :column="3" border>
-      <!-- <template slot="extra">
-        <el-button
-          type="primary"
-          size="small"
-          @click="setAchieve"
-          v-if="
-            current_item.uid == this.$store.state.user.uid ||
-            current_item.isAchieve == 1
-          "
-          :disabled="current_item.isAchieve == 1"
-          >{{ current_item.isAchieve ? "已解决" : "标记为已解决" }}</el-button
-        >
-        <el-button size="small" @click="back(1)">返回</el-button>
-      </template> -->
-
-      <el-descriptions-item v-if="current_item.takeOrderUser">
+    <el-descriptions
+      class="margin-top"
+      title="接单人信息"
+      :column="3"
+      border
+      v-if="current_item.euid"
+    >
+      <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-price-tag"></i>
           ID
@@ -181,63 +182,125 @@
 
     <div style="margin-top: 40px"></div>
 
-    <div id="btn_groups">
-      <Button type="warning" ghost @click="back">返回</Button>
-      <Button
-        type="success"
-        ghost
-        v-if="current_item.uid != this.currentUserUID"
-        @click="take_orders(current_item.eid)"
-        :disabled="current_item.euid != null"
-        >{{ current_item.euid != null ? "已被接单" : "接单" }}</Button
-      >
-      <Button
-        type="error"
-        ghost
-        v-if="current_item.pubUser.uid == this.currentUserUID"
-        @click="fakeDeleteItemByEid(current_item.eid)"
-        >删除</Button
-      >
-    </div>
+    <!-- 内容详情 -->
+    <el-descriptions class="margin-top" title="内容详情" :column="2" border>
+      <template slot="extra">
+        <el-button
+          type="warning"
+          size="small"
+          @click="changeErrandItem(current_item.eid)"
+          v-if="current_item.uid == this.$store.state.user.uid"
+          >修改信息</el-button
+        >
+      </template>
 
-    <!-- 评论组件 -->
-    <comment-comp
-      :authorId="current_item.pubUser.uid"
-      @doSend="doSend"
-      @doChidSend="doChidSend"
-    ></comment-comp>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-price-tag"></i>
+          订单编号
+        </template>
+        {{ current_item.eid }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label"> 订单标题 </template>
+        {{ current_item.title }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-date"></i>
+          发布时间
+        </template>
+        {{ current_item.pubdate.substring(0, 10) }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-date"></i>
+          截止时间
+        </template>
+        {{
+          current_eid.deadline == null
+            ? "无"
+            : current_item.deadline.substring(0, 10)
+        }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label"> 所属范畴 </template>
+        {{ current_item.category }}
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-office-building"></i>
+          当前状态
+        </template>
+        <el-tag v-if="current_item.euid != null && current_item.isAchieve == 0"
+          >已被接单</el-tag
+        >
+        <el-tag type="danger" v-if="current_item.euid == null">未被接单</el-tag>
+        <el-tag type="success" v-if="current_item.isAchieve == 1"
+          >已完成</el-tag
+        >
+      </el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-collection"></i>
+          详细信息
+        </template>
+        {{ current_item.details }}
+      </el-descriptions-item>
+    </el-descriptions>
+
+    <div style="margin-top: 40px"></div>
+
+    <!-- 用户所上传图片轮播效果 -->
+    <div
+      class="block"
+      v-if="current_item.imgUrls.length"
+      style="margin-top: 60px"
+    >
+      <el-carousel height="300px" type="card">
+        <el-carousel-item v-for="src in current_item.imgUrls" :key="src">
+          <el-image :src="src" :preview-src-list="current_item.imgUrls">
+          </el-image>
+        </el-carousel-item>
+      </el-carousel>
+    </div>
   </div>
 </template>
 
 <script>
-import CommentComp from "@/components/publicComp/CommentComp.vue";
-import axios from "axios";
 import { base_url } from "@/config";
 export default {
-  props: ["dontShowSearch", "showSearch"],
+  data() {
+    return {
+      // 当前订单的eid
+      current_eid: 0,
+      // 当前订单的详细信息
+      current_item: {
+        pubUser: {},
+        takeOrderUser: {},
+      },
+    };
+  },
   methods: {
     /**
      * 点击接单按钮
      */
     take_orders(eid) {
-      console.log(this.$store.getters.getUserInfo.uid, eid);
       this.axios
         .post(base_url + "/errand/updateEUid", {
           eid: eid,
-          euid: this.$store.getters.getUserInfo.uid,
+          euid: this.$store.state.user.uid,
         })
         .then((resp) => {
           if (resp.status == 200) {
             // 重新加载界面
-            axios
-              .get(base_url + "/errand/queryDetailsByEid", {
-                params: { eid: this.eid },
-              })
-              .then((resp) => {
-                this.item = resp.data.object;
-                this.pubUser = this.item.pubUser;
-                this.takeOrderUser = this.item.takeOrderUser;
-              });
+            this.getErrandDetails();
             this.$notify({
               title: "成功",
               message: "成功接单",
@@ -253,95 +316,48 @@ export default {
         });
     },
     /**
-     * 点击返回按钮 回退
+     * 返回上一级界面
      */
     back() {
-      this.showSearch();
       this.$router.back(1);
     },
     /**
-     * 更改详细信息长度
+     * 获取当前订单详细信息
      */
-    formatDate(date) {
-      if (date == null) {
-        return "未知";
-      } else if (date.length <= 10) {
-        return date;
-      } else {
-        return date.substring(0, 10);
-      }
-    },
-    /**
-     * 格式化图片路径，为图片路径添加源地址
-     *  */
-    addBaseUrlInImg(imgs) {
-      let res = [];
-      for (let i = 0; i < imgs.length; i++) {
-        res.push(base_url + imgs[i]);
-      }
-      return res;
-    },
-    /**
-     * 伪删除订单信息
-     */
-    fakeDeleteItemByEid(eid) {
+    getErrandDetails() {
+      // 从父级界面获取所要查询的eid
+      this.current_eid = this.$route.query.eid;
+      // 向服务器发送请求查询当前订单信息
       this.axios
-        .post(base_url + "/errand/fakeDeleteItemByEid", { eid: eid })
-        .then((resp) => {
-          if (resp.data.status == 200) {
-            this.$notify({
-              title: "成功",
-              message: "删除成功",
-              type: "success",
-            });
-            this.$router.back(1);
-          } else {
-            this.$notify({
-              title: "失败",
-              message: "删除失败",
-              type: "error",
-            });
-          }
-        });
-    },
-    /**
-     * 更新评论信息
-     */
-    updateDiscussList() {
-      axios
-        .get(base_url + "/errand/queryAllCommentsAndChildComments", {
+        .get(base_url + "/errand/queryDetailsByEid", {
           params: {
-            eid: this.eid,
+            eid: this.current_eid,
           },
         })
         .then((resp) => {
-          console.log(resp.data.object);
-          this.$store.commit("updateDiscussList", resp.data.object);
-        });
-    },
-    /**
-     * 点击发送评论按钮
-     */
-    doSend(content) {
-      this.axios
-        .post(base_url + "/errand/sendDiscuss", {
-          eid: this.eid,
-          commentUid: this.$store.state.user.uid,
-          content: content,
-        })
-        .then((resp) => {
+          console.log(resp);
           if (resp.data.status == 200) {
-            this.updateDiscussList();
-            this.$notify.success("评论成功");
+            this.current_item = resp.data.object;
           } else {
-            this.$notify.error("评论失败!");
+            this.$notify.error("加载数据失败");
           }
         });
     },
     /**
-     * 完成订单
+     * 点击修改信息按钮
      */
-    achieveItem(eid) {
+    changeErrandItem(eid) {
+      this.$router.push({
+        path: "/indexView/IndexDeliveryBody/errandChangeComp",
+        query: {
+          eid: eid,
+        },
+      });
+    },
+    /**
+     * 完成订单 设置订单属性为已完成
+     */
+    setAchieve(eid) {
       this.axios
         .get(base_url + "/errand/updateErrandIsAchieveStateByEid", {
           params: {
@@ -350,6 +366,7 @@ export default {
         })
         .then((resp) => {
           if (resp.data.status == 200) {
+            this.getErrandDetails();
             this.$notify({
               title: "成功",
               message: "更改完成信息成功",
@@ -366,72 +383,15 @@ export default {
           }
         });
     },
-    /**
-     * 点击发送回复按钮
-     */
-    doChidSend(content, targetUserId, fatherDiscussId) {
-      console.log(content, targetUserId, fatherDiscussId);
-      this.axios
-        .post(base_url + "/errand/sendReply", {
-          parentDiscussId: fatherDiscussId,
-          commentUid: this.$store.state.user.uid,
-          targetUid: targetUserId,
-          content: content,
-        })
-        .then((resp) => {
-          if (resp.data.status == 200) {
-            this.updateDiscussList();
-            this.$notify.success("发表回复成功!");
-          } else {
-            this.$notify.error("发表回复失败!");
-          }
-        });
-    },
-  },
-  data() {
-    return {
-      eid: this.$route.query.eid,
-      current_item: {},
-      base_url: base_url,
-      currentUserUID: this.$store.getters.getUserInfo.uid, // 当前登录的用户id
-
-      discussList: this.$store.state.discussList,
-    };
-  },
-  components: {
-    CommentComp,
   },
   mounted() {
-    this.updateDiscussList();
-    // 进入详细信息界面，查询详细信息
-    axios
-      .get(base_url + "/errand/queryDetailsByEid", {
-        params: { eid: this.eid },
-      })
-      .then((resp) => {
-        console.log(resp);
-        this.current_item = resp.data.object;
-      });
-
-    // 隐藏搜索框
-    this.dontShowSearch();
+    this.getErrandDetails();
+    console.log(this.current_item);
+    // 进入详细界面 隐藏搜素框
+    this.$store.state.isShowSearch = false;
   },
 };
 </script>
 
 <style>
-#btn_groups {
-  display: flex;
-  justify-content: center;
-}
-
-.pic_show_box {
-  margin-right: 10px;
-}
-
-#pic_out_box {
-  display: flex;
-  padding-top: 10px;
-  flex-wrap: wrap;
-}
 </style>

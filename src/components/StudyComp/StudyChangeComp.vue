@@ -84,7 +84,7 @@ export default {
      * 点击提交按钮
      */
     handleSubmit() {
-      // 首先先更新图片信息
+      // 首先先更删除要删除的图片信息
       if (this.prepareDeleteImg.length > 0) {
         for (let i = 0; i < this.prepareDeleteImg.length; i++) {
           this.axios.get(base_url + "/study/fakeDeleteImgByFilename", {
@@ -104,10 +104,12 @@ export default {
           category: this.formValidate.category,
           title: this.formValidate.title,
           details: this.formValidate.details,
+          imgUrls: this.$store.state.uploadImgList,
         })
         .then((resp) => {
           if (resp.data.status == 200) {
             this.$notify.success("修改成功");
+            this.$router.back(1);
           } else {
             this.$notify.error("修改失败");
           }

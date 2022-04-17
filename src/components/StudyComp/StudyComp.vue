@@ -51,7 +51,7 @@
 
         <!-- 此处发布日期仅取前十位, 包含具体日期 不包含具体时间 -->
         <div id="btn_groups">
-          <div id="_pubdate">发布日期: {{ item.pubdate.substring(0, 10) }}</div>
+          <div id="_pubdate">发布日期: {{ item.pubdate }}</div>
           <md-card-actions>
             <Button type="warning" ghost @click="see_details(item.sid)"
               >查看详情</Button

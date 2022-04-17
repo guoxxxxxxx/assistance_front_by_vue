@@ -366,6 +366,8 @@ export default {
     this.selectDiscussBySid(this.current_sid, 1);
     // 查询当前界面评论信息的数量
     this.selectDiscussCountBySid(this.current_sid);
+
+    console.log("imgUrls: " , this.current_item.imgUrls);
   },
   computed: {},
   components: {

@@ -46,24 +46,15 @@
             :min="0"
           ></el-input-number>
         </FormItem>
-        <!-- 图片上传 -->
+
+        <!-- 图片上传组件 -->
         <FormItem label="上传图片" prop="imgSrc">
-          <el-upload
-            :action="base_url + '/upload/uploadImg'"
-            list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
-            :multiple="true"
-            :on-success="handleSuccess"
-            :on-error="uploadError"
-            :file-list="fileList"
-          >
-            <i class="el-icon-plus"></i>
-          </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
-          </el-dialog>
+          <image-upload-comp
+            :fileList="fileList"
+            @handleRemove="handleRemove"
+          ></image-upload-comp>
         </FormItem>
+
         <FormItem label="详细信息" prop="details">
           <Input
             v-model="formValidate.details"
@@ -83,15 +74,16 @@
   </div>
 </template>
 <script>
+import ImageUploadComp from "@/components/publicComp/ImageUploadComp.vue";
 import { base_url } from "@/config";
 export default {
   data() {
     return {
-      // imgUrls用于保存上传图片的名称
+      // imgUrls用于保存上传图片的名称 便于后期更新到数据库中
       imgUrls: [],
+      // 回显图像列表
       fileList: [],
       base_url: base_url,
-      is_show_tips: false,
       eid: this.$route.query.eid,
       formValidate: {
         uid: this.$store.getters.getUserInfo.uid,
@@ -120,13 +112,10 @@ export default {
       },
       dialogImageUrl: "",
       dialogVisible: false,
+      prepareDeleteImg: [], // 将要删除 图片队列
     };
   },
   methods: {
-    // 文件上传失败时的消息
-    uploadError() {
-      this.$message.error("图片最大为10MB");
-    },
     // 点击更新按钮
     handleUpdate(name) {
       console.log(this.imgUrls);
@@ -143,10 +132,15 @@ export default {
               deadtime: this.formValidate.deadtime,
               money: this.formValidate.money,
               details: this.formValidate.details,
-              imgUrls: this.imgUrls,
+              imgUrls: this.$store.state.uploadImgList,
             })
             .then((resp) => {
               if (resp.data.status == 200) {
+                // 将待删除的图片从数据库中删除
+                for (let index = 0; index < this.prepareDeleteImg.length; index++) {
+                  const element = this.prepareDeleteImg[index];
+                  this.deleteImgByName(element);
+                }
                 this.$notify({
                   title: "更新成功",
                   message: "成功",
@@ -176,45 +170,55 @@ export default {
     },
     // 删除图片时调用方法
     handleRemove(file) {
-      // this.imgUrls.splice(this.imgUrls.length - 1);
-      console.log("file: ",file);
-      let img_src = file.url.substring(base_url.length)
-      // 向服务器发送删除图片的请求
-      this.axios.get(base_url + '/errand/fakeDeleteImgByImgSrc', {params:{img_src: img_src}}).then(resp => {
-        if(resp.data.status == 200){
-          this.$notify({
-            title:"成功",
-            message:"删除成功",
-            type:"success",
-            duration: 100
-          })
-        }
-        else{
-          this.$notify({
-            title:"失败",
-            message:"删除失败",
-            type:"error",
-            duration: 100
-          })
-        }
-      })
+      let img_src = file.url.substring(base_url.length);
+      this.prepareDeleteImg.push(img_src);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    // 上传图片成功时调用方法
+    /**
+     * 上传图片成功时调用方法
+     */
     handleSuccess(resp) {
       this.imgUrls.push(resp.lastFileName);
-      console.log(resp);
     },
-    // 获取回显图片对象
+    /**
+     * 获取回显图片对象
+     */
     getEchoImgObj(filename) {
       let obj = {
-        name: filename,
-        url: base_url + filename,
+        name: filename.substring(base_url),
+        url: filename,
       };
       return obj;
+    },
+    /**
+     * 通过图片名称删除图片
+     */
+    deleteImgByName(imgName) {
+      // 向服务器发送删除图片的请求
+      this.axios
+        .get(base_url + "/errand/fakeDeleteImgByImgSrc", {
+          params: { img_src: imgName },
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify({
+              title: "成功",
+              message: "删除成功",
+              type: "success",
+              duration: 100,
+            });
+          } else {
+            this.$notify({
+              title: "失败",
+              message: "删除失败",
+              type: "error",
+              duration: 100,
+            });
+          }
+        });
     },
   },
   mounted() {
@@ -228,10 +232,21 @@ export default {
         this.formValidate = resp.data.object;
         let temp = this.formValidate.imgUrls;
         // 回显图像
-        for(let i = 0; i < temp.length; i++){
-          this.fileList.push(this.getEchoImgObj(temp[i]))
+        for (let i = 0; i < temp.length; i++) {
+          this.fileList.push(this.getEchoImgObj(temp[i]));
         }
       });
+  },
+  computed: {
+    /**
+     * 获取回显图片
+     */
+    getEchoImg() {
+      return this.fileList;
+    },
+  },
+  components: {
+    ImageUploadComp,
   },
 };
 </script>
