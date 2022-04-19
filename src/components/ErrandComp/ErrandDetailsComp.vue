@@ -282,14 +282,39 @@
         </el-carousel-item>
       </el-carousel>
     </div>
+
+    <!-- 评论功能 -->
+    <comment-comp
+      :authorId="current_item.pubUser.uid"
+      :commentNum="commentNum"
+      @doSend="doSend"
+      @doChidSend="doChidSend"
+    ></comment-comp>
+
+    <!-- 分页 -->
+    <div
+      style="width: auto; text-align: center"
+      v-if="commentNum == 0 ? false : true"
+    >
+      <el-pagination
+        layout="prev, pager, next"
+        :total="commentNum"
+        :page-size="6"
+        @current-change="currentPageEvent"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 import { base_url } from "@/config";
+import CommentComp from "@/components/publicComp/CommentComp.vue";
 export default {
   data() {
     return {
+      // 当前订单评论的数量
+      commentNum: 0,
       // 当前订单的eid
       current_eid: 0,
       // 当前订单的详细信息
@@ -309,6 +334,85 @@ export default {
     };
   },
   methods: {
+    /**
+     * 查询当前界面评论的条数
+     */
+    queryDiscussCount() {
+      this.axios
+        .get(base_url + "/errand/queryDiscussCount", {
+          params: {
+            eid: this.current_eid,
+          },
+        })
+        .then((resp) => {
+          this.commentNum = resp.data.object;
+        });
+    },
+    /**
+     * 点击发送评论按钮
+     */
+    doSend(content) {
+      this.axios
+        .post(base_url + "/errand/sendDiscuss", {
+          eid: this.current_eid,
+          commentUid: this.$store.state.user.uid,
+          content: content,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify.success("发送评论成功！");
+            // 重新查询评论信息
+            this.queryDiscussList(this.current_eid);
+          } else {
+            this.$notify.error("发送评论失败!");
+          }
+        });
+    },
+    /**
+     * 点击发送回复按钮
+     */
+    doChidSend(content, targetUserId, fatherDiscussId) {
+      this.axios
+        .post(base_url + "/errand/doSendReply", {
+          parentDiscussId: fatherDiscussId,
+          commentUid: this.$store.state.user.uid,
+          targetUid: targetUserId,
+          content: content,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify.success("回复成功");
+            // 重新查询该界面的评论消息
+            this.queryDiscussList(this.current_eid, this.current_eid);
+          } else {
+            this.$notify.error("回复失败");
+          }
+        });
+    },
+    /**
+     * 点击切换页面按钮
+     */
+    currentPageEvent(newPage) {
+      this.queryDiscussList(newPage);
+      // 返回顶部
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
+    /**
+     * 查询当前订单所对应的评论信息
+     */
+    queryDiscussList(page) {
+      this.axios
+        .get(base_url + "/errand/queryAllCommentsAndChildComments", {
+          params: {
+            eid: this.current_eid,
+            page: page,
+          },
+        })
+        .then((resp) => {
+          this.$store.state.discussList = resp.data.object;
+        });
+    },
     /**
      * 点击接单按钮
      */
@@ -410,6 +514,14 @@ export default {
     console.log(this.current_item);
     // 进入详细界面 隐藏搜素框
     this.$store.state.isShowSearch = false;
+    // 查询评论信息
+    this.queryDiscussList(1);
+    // 查询评论数量
+    this.queryDiscussCount();
+  },
+  computed: {},
+  components: {
+    CommentComp,
   },
 };
 </script>

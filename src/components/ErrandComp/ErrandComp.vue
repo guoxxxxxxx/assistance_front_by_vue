@@ -153,6 +153,9 @@ export default {
     pageChange(newPage) {
       this.$store.state.queryCondition.page = newPage;
       this.reQuery(this.$store.state.queryCondition);
+      // 返回顶部
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
   },
   mounted() {
