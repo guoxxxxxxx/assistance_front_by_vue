@@ -10,15 +10,6 @@ export default new Vuex.Store({
         // 要设置的初始属性值
         user:{},
 
-        // 设置errand的过滤属性
-        // 0代表不过滤 1 代表过滤
-        errandFilterType:{
-            category:"all",             // 所属范畴 default: all
-            isSeeAchieve: true,            // 是否查看已完成 default: true 查看
-            isSeeTakeOrder: true,            // 是否查看已被接单的订单 default: true 查看
-            searchFilter: '',               // 搜索框过滤
-        },
-
         // 设置discussList 全局评论内容全部仅依靠该对象
         discussList:[],
 
@@ -33,7 +24,9 @@ export default new Vuex.Store({
             page: "1", // 所查询的页码
             category: "全部", // 所查询的种类
             fuzzyParam: "", // 模糊查询参数
-            isHiddenAchieve: false, // 是否隐藏已完成项目 true隐藏 false不隐藏
+            // 注意, 无法直接发送布尔值，只能用01来进行代替
+            isHiddenAchieve: 0, // 是否隐藏已完成项目 1隐藏 0不隐藏
+            isHiddenTakeOrders: 0,   // 是否隐藏已被接单项目
         },
 
         // 全局属性, 是否显示搜索框

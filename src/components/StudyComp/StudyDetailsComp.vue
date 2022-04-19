@@ -1,13 +1,23 @@
 <template>
   <div>
     <!-- 发布人信息 -->
-    <el-descriptions class="margin-top" title="发布人信息" :column="3" border>
+    <el-descriptions
+      class="margin-top"
+      title="发布人信息"
+      :column="3"
+      border
+      :labelStyle="LS"
+      :contentStyle="CS"
+    >
       <template slot="extra">
         <el-button
           type="primary"
           size="small"
           @click="setAchieve"
-          v-if="current_item.uid == this.$store.state.user.uid || current_item.isAchieve == 1"
+          v-if="
+            current_item.uid == this.$store.state.user.uid ||
+            current_item.isAchieve == 1
+          "
           :disabled="current_item.isAchieve == 1"
           >{{ current_item.isAchieve ? "已解决" : "标记为已解决" }}</el-button
         >
@@ -84,7 +94,14 @@
     <div style="margin-top: 40px"></div>
 
     <!-- 内容详情 -->
-    <el-descriptions class="margin-top" title="内容详情" :column="2" border>
+    <el-descriptions
+      class="margin-top"
+      title="内容详情"
+      :column="2"
+      border
+      :labelStyle="LS"
+      :contentStyle="CS"
+    >
       <template slot="extra">
         <el-button
           type="danger"
@@ -192,6 +209,14 @@ export default {
       },
       // 该界面评论的总数量
       commentNum: 0,
+      // 更改描述表的格式
+      LS: {
+        "word-break": "keep-all",
+      },
+      CS: {
+        "max-width": "300px",
+        "word-break": "break-all",
+      },
     };
   },
   methods: {
@@ -277,10 +302,10 @@ export default {
             if (resp.data.status == 200) {
               this.$notify.success("删除成功");
               this.$router.replace({
-                path:"/indexView/IndexStudyBody/StudyComp",
-                query:{
-                  timestamp: Date.now()
-                }
+                path: "/indexView/IndexStudyBody/StudyComp",
+                query: {
+                  timestamp: Date.now(),
+                },
               });
             } else {
               this.$notify.error("删除失败");
@@ -367,7 +392,7 @@ export default {
     // 查询当前界面评论信息的数量
     this.selectDiscussCountBySid(this.current_sid);
 
-    console.log("imgUrls: " , this.current_item.imgUrls);
+    console.log("imgUrls: ", this.current_item.imgUrls);
   },
   computed: {},
   components: {

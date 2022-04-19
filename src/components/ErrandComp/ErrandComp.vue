@@ -1,6 +1,6 @@
 <template>
   <div class="items_box">
-    <div v-for="item in filterItems" :key="item.id">
+    <div v-for="item in getItems" :key="item.id">
       <md-card class="item-card" data-aos="zoom-in" data-aos-duration="1500">
         <md-card-header>
           <md-avatar>
@@ -48,7 +48,7 @@
         </div>
 
         <div id="btn_groups">
-          <div id="_pubdate">发布日期: {{ item.pubdate.substring(0, 10) }}</div>
+          <div id="_pubdate">发布日期: {{ item.pubdate }}</div>
           <md-card-actions>
             <Button type="warning" ghost @click="see_details(item.eid)"
               >查看详情</Button
@@ -57,12 +57,23 @@
         </div>
       </md-card>
     </div>
+
+    <!-- 当该界面没有订单时展示该界面 -->
+    <el-empty
+      description="暂无信息"
+      v-if="getItems.length == 0"
+      :image-size="350"
+      style="text-align: center; width: 100%"
+    ></el-empty>
+
     <!-- 分页 -->
     <div style="width: 1500px; text-align: center">
       <el-pagination
         layout="prev, pager, next"
-        :total="filterItems.length"
-        :page-size="15"
+        :total="getItemsCount"
+        :page-size="12"
+        v-on:current-change="pageChange"
+        v-if="getItems.length == 0 ? false : true"
       >
       </el-pagination>
     </div>
@@ -70,12 +81,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import { base_url } from "@/config";
 export default {
   data() {
     return {
-      errandItems: [],
+      items_count: 0,
+      errand_items: [],
       base_url: base_url,
       current_user: this.$store.getters.getUserInfo,
       errandFilterType: this.$store.getters.getErrandFilterType,
@@ -94,98 +105,76 @@ export default {
       });
     },
 
-
-    
     /**
-     * 过滤器使用相关函数------------------------------------------------------开始
+     * 条件查询 并赋值给相关变量
      */
-
-    // 判断所属范畴
-    judgeCategory(Val, filterVal) {
-      if (filterVal == "all") {
-        return true;
-      } else {
-        return filterVal == Val;
-      }
-    },
-
-    // 判断是否显示已完成
-    judgeIsAchieve(val, filterVal) {
-      // 若为1则不显示已完成
-      if (filterVal == false) {
-        return val != 1;
-      } else {
-        // 若为0则显示已完成订单
-        return true;
-      }
+    queryByCondition(condition) {
+      this.axios
+        .post(base_url + "/errand/queryByCondition", {
+          category: condition.category,
+          page: condition.page,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: condition.isHiddenAchieve,
+          isHiddenTakeOrders: condition.isHiddenTakeOrders,
+        })
+        .then((resp) => {
+          this.$store.state.allItems = resp.data.object;
+        });
     },
 
     /**
-     * 判断是否显示已接单订单
+     * 条件查询符合条件的信息数目 并赋值给相关变量
      */
-    judgeIsTakeOrder(val, filterVal) {
-      if (filterVal == false) {
-        return val == null;
-      } else {
-        return true;
-      }
+    queryCountByCondition(condition) {
+      this.axios
+        .post(base_url + "/errand/queryCountByCondition", {
+          category: condition.category,
+          page: condition.page,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: condition.isHiddenAchieve,
+          isHiddenTakeOrders: condition.isHiddenTakeOrders,
+        })
+        .then((resp) => {
+          this.$store.state.itemsCount = resp.data.object;
+        });
     },
 
     /**
-     * 实现模糊搜索
-     * 根据标题、详细信息、种类来进行搜索
+     * 重新查询所需信息
      */
-    search(item, target) {
-      return (
-        item.title.indexOf(target) != -1 ||
-        item.details.indexOf(target) != -1 ||
-        item.category.indexOf(target) != -1
-      );
+    reQuery(condition) {
+      this.queryByCondition(condition);
+      this.queryCountByCondition(condition);
     },
 
     /**
-     * 过滤器使用相关函数------------------------------------------------------结束
+     * 页码改变事件监听
      */
+    pageChange(newPage) {
+      this.$store.state.queryCondition.page = newPage;
+      this.reQuery(this.$store.state.queryCondition);
+    },
   },
   mounted() {
-    /**
-     * 进入界面加载所有带跑腿项目
-     */
-    axios.get(base_url + "/errand/queryAll", {}).then((resp) => {
-      this.errandItems = resp.data.object;
-    });
-    /**
-     * 进入界面将过滤框显示设为真
-     */
+    // 进入界面加载所有带跑腿项目
+    this.queryByCondition(this.$store.state.queryCondition);
+    // 进入界面将过滤框显示设为真
     this.$store.state.isShowSearch = true;
+    // 查询符合条件项目的数量
+    this.queryCountByCondition(this.$store.state.queryCondition);
   },
   computed: {
     /**
-     * 通过计算属性过滤跑腿订单信息
+     * 获取符合条件的项目
      */
-    filterItems() {
-      return this.errandItems.filter((item) => {
-        if (this.judgeCategory(item.category, this.errandFilterType.category)) {
-          if (
-            this.judgeIsAchieve(
-              item.isAchieve,
-              this.errandFilterType.isSeeAchieve
-            )
-          ) {
-            if (
-              this.judgeIsTakeOrder(
-                item.euid,
-                this.errandFilterType.isSeeTakeOrder
-              )
-            ) {
-              if (this.search(item, this.errandFilterType.searchFilter)) {
-                return true;
-              }
-            }
-          }
-        }
-        return false;
-      });
+    getItems() {
+      return this.$store.state.allItems;
+    },
+    /**
+     * 获取符合项目的总数量
+     */
+    getItemsCount() {
+      return this.$store.state.itemsCount;
     },
   },
 };

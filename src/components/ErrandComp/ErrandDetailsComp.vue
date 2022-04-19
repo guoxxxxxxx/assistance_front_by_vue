@@ -1,7 +1,14 @@
 <template>
   <div style="margin-top: 20px">
     <!-- 发布人信息 -->
-    <el-descriptions class="margin-top" title="发布人信息" :column="3" border>
+    <el-descriptions
+      class="margin-top"
+      title="发布人信息"
+      :column="3"
+      border
+      :labelStyle="LS"
+      :contentStyle="CS"
+    >
       <template slot="extra">
         <el-button
           type="primary"
@@ -103,6 +110,8 @@
       :column="3"
       border
       v-if="current_item.euid"
+      :labelStyle="LS"
+      :contentStyle="CS"
     >
       <el-descriptions-item>
         <template slot="label">
@@ -183,7 +192,14 @@
     <div style="margin-top: 40px"></div>
 
     <!-- 内容详情 -->
-    <el-descriptions class="margin-top" title="内容详情" :column="2" border>
+    <el-descriptions
+      class="margin-top"
+      title="内容详情"
+      :column="2"
+      border
+      :labelStyle="LS"
+      :contentStyle="CS"
+    >
       <template slot="extra">
         <el-button
           type="warning"
@@ -212,7 +228,7 @@
           <i class="el-icon-date"></i>
           发布时间
         </template>
-        {{ current_item.pubdate.substring(0, 10) }}
+        {{ current_item.pubdate }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -220,11 +236,7 @@
           <i class="el-icon-date"></i>
           截止时间
         </template>
-        {{
-          current_eid.deadline == null
-            ? "无"
-            : current_item.deadline.substring(0, 10)
-        }}
+        {{ current_item.deadline == null ? "无" : current_item.deadline }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -246,7 +258,7 @@
         >
       </el-descriptions-item>
 
-      <el-descriptions-item>
+      <el-descriptions-item :span="2">
         <template slot="label">
           <i class="el-icon-collection"></i>
           详细信息
@@ -260,7 +272,7 @@
     <!-- 用户所上传图片轮播效果 -->
     <div
       class="block"
-      v-if="current_item.imgUrls.length"
+      v-if="current_item.imgUrls.length != 0"
       style="margin-top: 60px"
     >
       <el-carousel height="300px" type="card">
@@ -284,6 +296,15 @@ export default {
       current_item: {
         pubUser: {},
         takeOrderUser: {},
+        imgUrls: [],
+      },
+      // 更改描述表的格式
+      LS: {
+        "word-break": "keep-all",
+      },
+      CS: {
+        "max-width": "300px",
+        "word-break": "break-all",
       },
     };
   },

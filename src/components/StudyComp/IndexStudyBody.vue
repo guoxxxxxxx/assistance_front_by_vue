@@ -30,8 +30,8 @@
       <el-dialog title="设置过滤属性" :visible.sync="dialogVisible" width="30%">
         <div style="margin-top: 30px">
           <el-switch
-            active-text="显示已完成订单"
-            inactive-text="隐藏已完成订单"
+            active-text="隐藏已完成订单"
+            inactive-text="显示已完成订单"
             v-model="isHiddenAchieve"
           >
           </el-switch>
@@ -99,8 +99,10 @@ export default {
      */
     updateQueryConditionToVuex() {
       console.log("更新事件");
+      console.log(this.$store.state.allItems);
       // 更新界面内容
       this.getItemsByCondition(this.$store.state.queryCondition);
+      this.selectItemsCount(this.$store.state.queryCondition);
       // 隐藏对话框
       this.dialogVisible = false;
     },
@@ -109,14 +111,12 @@ export default {
      * 条件查询
      */
     getItemsByCondition(condition) {
-      console.log("queryCondition: ", condition);
-      let isHiddenAchieveTemp = condition.isHiddenAchieve ? 1 : 0;
       this.axios
         .post(base_url + "/study/queryByCondition", {
           page: 1,
           category: condition.category,
           fuzzyParam: condition.fuzzyParam,
-          isHiddenAchieve: isHiddenAchieveTemp,
+          isHiddenAchieve: this.$store.state.queryCondition.isHiddenAchieve,
         })
         .then((resp) => {
           this.$store.state.allItems = resp.data.object;
@@ -126,15 +126,11 @@ export default {
      * 查询study表中有多少记录查询itemsCount
      */
     selectItemsCount(condition) {
-      let temp = 0;
-      if (condition.isHiddenAchieve) {
-        temp = 1;
-      }
       this.axios
         .post(base_url + "/study/queryItemsCountByCondition", {
           category: condition.category,
           fuzzyParam: condition.fuzzyParam,
-          isHiddenAchieve: temp,
+          isHiddenAchieve: condition.isHiddenAchieve,
         })
         .then((resp) => {
           this.$store.state.itemsCount = resp.data.object;
@@ -151,7 +147,7 @@ export default {
         page: "1", // 所查询的页码
         category: "全部", // 所查询的种类
         fuzzyParam: "", // 模糊查询参数
-        isHiddenAchieve: false, // 是否隐藏已完成项目 true隐藏 false不隐藏
+        isHiddenAchieve: 0, // 是否隐藏已完成项目 true隐藏 false不隐藏
       };
       console.log("清空了缓存");
     },
@@ -180,6 +176,7 @@ export default {
       handler(newVal) {
         this.$store.state.queryCondition.category = newVal;
         this.selectItemsCount(this.$store.state.queryCondition);
+        this.getItemsByCondition(this.$store.state.queryCondition);
       },
       immediate: true,
     },
@@ -187,17 +184,17 @@ export default {
       handler(newVal) {
         this.$store.state.queryCondition.fuzzyParam = newVal;
         this.selectItemsCount(this.$store.state.queryCondition);
+        this.getItemsByCondition(this.$store.state.queryCondition);
       },
       immediate: true,
     },
     isHiddenAchieve: {
       handler(newVal) {
         if (newVal == true) {
-          this.$store.state.queryCondition.isHiddenAchieve = false;
+          this.$store.state.queryCondition.isHiddenAchieve = 1;
         } else {
-          this.$store.state.queryCondition.isHiddenAchieve = true;
+          this.$store.state.queryCondition.isHiddenAchieve = 0;
         }
-        this.selectItemsCount(this.$store.state.queryCondition);
       },
     },
   },

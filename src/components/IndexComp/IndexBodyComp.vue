@@ -11,12 +11,13 @@ import { base_url } from '@/config';
 export default {
   methods:{
     test(){
-      this.axios.post(base_url + '/study/test', {
-        uid: 1,
-        name: "测试",
-      }, {params: {
-        page: 100
-      }})
+      this.axios.post(base_url + '/errand/queryByCondition', {
+        category: "测试",
+        page: 2,
+        fuzzyParam: "fuzzyParam",
+        isHiddenAchieve: "true",
+        isHiddenTakeOrders: "false"
+      })
     }
   }
 };

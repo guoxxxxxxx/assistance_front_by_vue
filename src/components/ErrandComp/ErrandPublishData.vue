@@ -122,8 +122,8 @@ export default {
         ],
         details: [
           {
-            max: 500,
-            message: '详细信息长度不得大于500字符'
+            max: 50000,
+            message: '详细信息长度不得大于50000字符'
           }
         ]
       },
