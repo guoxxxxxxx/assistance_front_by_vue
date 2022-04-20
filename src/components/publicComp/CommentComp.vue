@@ -58,7 +58,6 @@ export default {
      * 调用子组件中的方法
      */
     doChidSend(content, targetUserId, fatherDiscussId){
-      // console.log(content, targetUserId, fatherDiscussId);
       this.$emit("doChidSend", content, targetUserId, fatherDiscussId);
     }
   }

@@ -325,7 +325,6 @@ export default {
         })
         .then((resp) => {
           this.current_item = resp.data.object;
-          console.log(this.current_item);
         });
     },
     /**
@@ -339,7 +338,6 @@ export default {
         .then((resp) => {
           // 更新vuex中的全局评论对象
           this.$store.state.discussList = resp.data.object;
-          console.log("discuss: ", this.$store.state.discussList);
         });
     },
     /**
@@ -392,7 +390,6 @@ export default {
     // 查询当前界面评论信息的数量
     this.selectDiscussCountBySid(this.current_sid);
 
-    console.log("imgUrls: ", this.current_item.imgUrls);
   },
   computed: {},
   components: {

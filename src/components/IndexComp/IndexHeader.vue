@@ -13,11 +13,11 @@
           <Icon type="md-bicycle" />
           跑腿
         </MenuItem>
-        <MenuItem name="3" to="/indexView/IndexStudyBody/StudyComp">
+        <MenuItem name="3" :to="{path: '/indexView/IndexStudyBody/StudyComp', query: {timestamp:Date.now()}}">
           <Icon type="ios-book" />
           学习交流
         </MenuItem>
-        <MenuItem name="4" to="/indexView/IndexSecondHandBody">
+        <MenuItem name="4" :to="{path: '/indexView/IndexSecondHandBody/secondHandComp', query:{timestamp:Date.now()}}">
           <Icon type="logo-usd" />
           二手交易
         </MenuItem>

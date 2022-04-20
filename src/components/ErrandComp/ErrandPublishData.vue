@@ -138,7 +138,6 @@ export default {
     },
     // 点击提交按钮
     handleSubmit(name) {
-      console.log(this.imgList);
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 向服务器发送数据
@@ -182,7 +181,6 @@ export default {
     // 点击重置按钮
     handleReset(name) {
       this.$refs[name].resetFields();
-      console.log("show: ", this.is_show_tips);
     },
     // 格式化日期
     formatDate(val) {
@@ -199,7 +197,6 @@ export default {
     // 上传图片成功时调用方法
     handleSuccess(resp) {
       this.imgList.push(resp.lastFileName);
-      console.log(resp);
     },
   },
 };

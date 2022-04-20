@@ -19,7 +19,7 @@
             <Option value="其他">其他</Option>
           </Select>
         </FormItem>
-        <FormItem label="赏金" prop="isGiveMoney">
+        <FormItem label="价格" prop="isGiveMoney">
           <el-input-number
             v-model="formValidate.money"
             :precision="2"
@@ -28,6 +28,7 @@
           ></el-input-number>
         </FormItem>
         <FormItem label="上传图片">
+          <image-upload-comp></image-upload-comp>
         </FormItem>
         <FormItem label="详细信息" prop="details">
           <Input
@@ -50,9 +51,13 @@
   </div>
 </template>
 <script>
+import ImageUploadComp from '@/components/publicComp/ImageUploadComp.vue'
+import { base_url } from '@/config';
 export default {
   data() {
     return {
+      // 当前登录的用户
+      current_uid: this.$store.state.user.uid,
       is_show_tips: false,
       formValidate: {
         title: "",
@@ -79,21 +84,47 @@ export default {
     };
   },
   methods: {
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success("Success!");
-        } else {
-          this.$Message.error("Fail!");
+    /**
+     * 提交新信息到数据表中
+     */
+    addNewItem(){
+      this.axios.post(base_url + "/trade/addNewItem", {
+        uid: this.current_uid,
+        title: this.formValidate.title,
+        category: this.formValidate.category,
+        money: this.formValidate.money,
+        details: this.formValidate.details,
+        imgUrls: this.$store.state.uploadImgList
+      }).then(resp=>{
+        if(resp.data.status == 200){
+          this.$notify.success("发布信息成功！")
+          // 待写 此处回调到发布信息的详细信息界面
+
+          // 将imgUrls里的内容清空
+          this.$store.state.imgUrls = [];
         }
+        else{
+          this.$notify.error("发布信息失败！")
+        }
+      })
+    },
+    /**
+     * 点击提交按钮
+     */
+    handleSubmit(name) {
+      this.$refs[name].validate(() => {
+        this.addNewItem();
       });
     },
+    /**
+     * 点击重置按钮
+     */
     handleReset(name) {
       this.$refs[name].resetFields();
-      console.log("show: ", this.is_show_tips);
     },
   },
   components: {
+    ImageUploadComp,
   },
 };
 </script>

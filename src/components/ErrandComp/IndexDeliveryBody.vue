@@ -160,6 +160,7 @@ export default {
     fuzzyParam: {
       handler(newVal) {
         this.$store.state.queryCondition.fuzzyParam = newVal;
+        this.regetItems();
       },
     },
     isHiddenAchieve: {

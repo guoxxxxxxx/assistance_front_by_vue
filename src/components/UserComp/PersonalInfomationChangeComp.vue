@@ -141,7 +141,6 @@ export default {
         });
     },
     changeBirthday(e){
-      console.log(e);
       this.formItem.birthday = e
     }
   },

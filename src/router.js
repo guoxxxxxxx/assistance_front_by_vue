@@ -26,6 +26,9 @@ import StudyDetailsComp from '@/components/StudyComp/StudyDetailsComp'
 import StudyChangeComp from '@/components/StudyComp/StudyChangeComp'
 
 import SecondHandPublishData from '@/components/SecondHandComp/SecondHandPublishData'
+import SecondHandComp from '@/components/SecondHandComp/SecondHandComp'
+import SecondHandDetailsComp from '@/components/SecondHandComp/SecondHandDetailsComp'
+import SecondHandChangeComp from '@/components/SecondHandComp/SecondHandChangeComp'
 
 // 创建并暴露router实例对象
 const router = new VueRouter({
@@ -118,6 +121,21 @@ const router = new VueRouter({
                             // 二手交易发布信息界面
                             path:'SecondHandPublishData',
                             component: SecondHandPublishData
+                        },
+                        {
+                            // 二手交易信息预览界面
+                            path:'SecondHandComp',
+                            component: SecondHandComp
+                        },
+                        {
+                            // 详细信息界面
+                            path:'SecondHandDetailsComp',
+                            component: SecondHandDetailsComp
+                        },
+                        {
+                            // 修改信息界面
+                            path:'SecondHandChangeComp',
+                            component: SecondHandChangeComp
                         }
                     ]  
                 },

@@ -86,10 +86,8 @@ export default {
     handleSubmit(name) {
       // 图片上传 全局保存图片
       let imgUrls = this.$store.state.uploadImgList;
-      console.log(imgUrls);
       this.$refs[name].validate((valid) => {
         if (valid) {
-          console.log(this.formValidate);
           this.axios.post(base_url + "/study/addNewItem", {
             uid: this.formValidate.uid,
             title: this.formValidate.title,
@@ -122,7 +120,6 @@ export default {
      */
     handleReset(name) {
       this.$refs[name].resetFields();
-      console.log(this.$store.state.echoImgList);
       this.$store.state.echoImgList = []
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="items_box">
-    <div v-for="item in filterItems" :key="item.sid">
+    <div v-for="item in getCurrentItems" :key="item.sid">
       <md-card class="item-card" data-aos="zoom-in" data-aos-duration="1500">
         <md-card-header>
           <!-- 用户头像显示区域，若用户头像为null则显示默认头像 -->
@@ -52,7 +52,7 @@
         <div id="btn_groups">
           <div id="_pubdate">发布日期: {{ item.pubdate }}</div>
           <md-card-actions>
-            <Button type="warning" ghost @click="see_details(item.sid)"
+            <Button type="warning" ghost @click="see_details(item.tid)"
               >查看详情</Button
             >
           </md-card-actions>
@@ -63,7 +63,7 @@
     <!-- 当该界面没有订单时展示该界面 -->
     <el-empty
       description="暂无信息"
-      v-if="filterItems.length == 0"
+      v-if="getCurrentItems.length == 0"
       :image-size="350"
       style="text-align: center; width: 100%;"
     ></el-empty>
@@ -71,7 +71,7 @@
     <!-- 分页 -->
     <div
       style="width: 1500px; text-align: center"
-      v-if="filterItems.length != 0"
+      v-if="getItemsCount != 0"
     >
       <el-pagination
         layout="prev, pager, next"
@@ -85,113 +85,87 @@
 </template>
 
 <script>
-import { base_url } from "@/config";
+import {base_url} from '@/config'
 export default {
-  data() {
-    return {
-      base_url: base_url,
-      // 存放从后端查询的项目信息
-      items: {},
-      // 当前登录用户的id
-      current_user: this.$store.state.user,
-    };
-  },
-  methods: {
-    /**
-     * 点击查看详情按钮
-     */
-    see_details(id) {
-      this.$store.state.isShowSearch = false;
-      this.$router.push({
-        path: "/indexView/IndexStudyBody/studyDetailsComp",
-        query: {
-          sid: id,
+    data() {
+        return {
+            base_url: base_url,
+            // 获取当前模块符合查询条件的所有信息
+            current_items: this.$store.state.allItems,
+        }
+    },
+    methods:{
+        /**
+         * 查询符合条件的全部数量
+         */
+        queryItemsCountByCondition(condition){
+            this.axios.post(base_url + '/trade/queryItemsCountByCondition', {
+                category: condition.category,
+                fuzzyParam: condition.fuzzyParam,
+                isHiddenAchieve: condition.isHiddenAchieve,
+                isHiddenTakeOrders: condition.isHiddenTakeOrders
+            }).then(resp=>{
+                if (resp.data.status == 200) {
+                    this.$store.state.itemsCount = resp.data.object;
+                }
+            })
         },
-      });
+        /**
+         * 点击查看详细信息按钮
+         */
+        see_details(tid){
+            this.$store.state.isShowSearch = false;
+            this.$router.push({
+                path: '/indexView/indexSecondHandBody/secondHandDetailsComp',
+                query :{
+                    tid: tid
+                }
+            })
+        },
+        /**
+         * 点击换页按钮
+         */
+        currentPageEvent(newPage){
+            this.condition.page = newPage;
+            this.queryItemsByCondtiton(this.condition);
+        },
+        /**
+         * 根据条件获取查询信息
+         */
+        queryItemsByCondtiton(condition){
+            this.axios.post(base_url + '/trade/queryItemsByCondition', {
+                page: condition.page,
+                category: condition.category,
+                fuzzyParam: condition.fuzzyParam,
+                isHiddenAchieve: condition.isHiddenAchieve,
+                isHiddenTakeOrders: condition.isHiddenTakeOrders
+            }).then(resp=>{
+                this.$store.state.allItems = resp.data.object;
+            })
+        }
     },
-    /**
-     * 查询study表中有多少记录查询itemsCount
-     */
-    selectItemsCount(condition) {
-      let temp = 0;
-      if (condition.isHiddenAchieve) {
-        temp = 1;
-      }
-      this.axios
-        .post(base_url + "/study/queryItemsCountByCondition", {
-          category: condition.category,
-          fuzzyParam: condition.fuzzyParam,
-          isHiddenAchieve: temp,
-        })
-        .then((resp) => {
-          this.$store.state.itemsCount = resp.data.object;
-        });
+    computed:{
+        /**
+         * 获取符合条件信息
+         */
+        getCurrentItems(){
+            return this.$store.state.allItems;
+        },
+        /**
+         * 获取项目数量
+         */
+        getItemsCount(){
+            return this.$store.state.itemsCount;
+        }
+        
     },
-    /**
-     * 获取指定页码的信息
-     * 条件查询
-     */
-    getItemsByCondition(page, condition) {
-      let isHiddenAchieveTemp = 0;
-      if (condition.isHiddenAchieve) {
-        isHiddenAchieveTemp = 1;
-      }
-      this.axios
-        .post(base_url + "/study/queryByCondition", {
-          page: page,
-          category: condition.category,
-          fuzzyParam: condition.fuzzyParam,
-          isHiddenAchieve: isHiddenAchieveTemp,
-        })
-        .then((resp) => {
-          this.$store.state.allItems = resp.data.object;
-        });
-    },
-    /**
-     * 点击页码按钮时响应事件
-     */
-    currentPageEvent(current_page) {
-      this.getItemsByCondition(current_page, this.$store.state.queryCondition);
-      // 将页码赋值给current_page;
-      this.$store.state.queryCondition.page = current_page;
-
-      // 返回顶部
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    },
-  },
-  computed: {
-    /**
-     * 通过计算属性来更新项目信息
-     */
-    filterItems() {
-      return this.$store.state.allItems;
-    },
-    /**
-     * 获取项目总数
-     */
-    getItemsCount() {
-      return this.$store.state.itemsCount;
-    },
-    /**
-     * 获取查询条件
-     */
-    getQueryCondition() {
-      return this.$store.state.queryCondition;
-    },
-  },
-  mounted() {
-    /**
-     * 进入页面,默认查询全部信息的第一页内容。
-     */
-    this.getItemsByCondition(1, this.$store.state.queryCondition);
-    /**
-     * 查询项目数量
-     */
-    this.selectItemsCount(this.$store.state.queryCondition);
-  },
-  watch: {},
-};
+    mounted(){
+        // 查询项目
+        this.queryItemsByCondtiton(this.$store.state.queryCondition);
+        // 查询项目数量
+        this.queryItemsCountByCondition(this.$store.state.queryCondition);
+    }
+}
 </script>
 
 <style scoped>

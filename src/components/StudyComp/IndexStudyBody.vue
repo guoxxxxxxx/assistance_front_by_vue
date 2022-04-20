@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Tabs value="all" @on-click="selectItem">
+    <Tabs value="全部" @on-click="selectItem">
       <TabPane label="全部" name="全部"></TabPane>
       <TabPane label="数学" name="数学"></TabPane>
       <TabPane label="英语" name="英语"></TabPane>
@@ -98,8 +98,7 @@ export default {
      * 在输入框点击回车按钮将参数传递到vuex中
      */
     updateQueryConditionToVuex() {
-      console.log("更新事件");
-      console.log(this.$store.state.allItems);
+
       // 更新界面内容
       this.getItemsByCondition(this.$store.state.queryCondition);
       this.selectItemsCount(this.$store.state.queryCondition);
@@ -149,7 +148,6 @@ export default {
         fuzzyParam: "", // 模糊查询参数
         isHiddenAchieve: 0, // 是否隐藏已完成项目 true隐藏 false不隐藏
       };
-      console.log("清空了缓存");
     },
   },
   mounted() {

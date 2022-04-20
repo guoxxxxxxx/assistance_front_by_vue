@@ -118,7 +118,6 @@ export default {
   methods: {
     // 点击更新按钮
     handleUpdate(name) {
-      console.log(this.imgUrls);
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 向服务器发送数据

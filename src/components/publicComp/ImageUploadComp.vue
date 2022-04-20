@@ -73,7 +73,6 @@ export default {
      * 点击图片上的删除按钮时调用该方法，
      */
     handleRemove(file) {
-      console.log("uploadImgComp", file);
       this.$emit("handleRemove", file);
     },
     /**

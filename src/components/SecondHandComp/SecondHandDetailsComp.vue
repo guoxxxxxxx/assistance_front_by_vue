@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 20px">
+  <div>
     <!-- 发布人信息 -->
     <el-descriptions
       class="margin-top"
@@ -13,10 +13,10 @@
         <el-button
           type="primary"
           size="small"
-          @click="setAchieve(current_item.eid)"
+          @click="setAchieve(current_item.tid)"
           v-if="
             current_item.uid == this.$store.state.user.uid &&
-            current_item.euid != null
+            current_item.tuid != null
           "
           :disabled="current_item.isAchieve == 1"
           >{{
@@ -26,10 +26,10 @@
         <el-button
           type="primary"
           size="small"
-          @click="take_orders(current_item.eid)"
+          @click="take_orders(current_item.tid)"
           v-if="current_item.uid != this.$store.state.user.uid"
-          :disabled="current_item.euid != null"
-          >{{ current_item.euid == null ? "接单" : "已被接单" }}</el-button
+          :disabled="current_item.tuid != null"
+          >{{ current_item.tuid == null ? "欲购买" : "已被预定" }}</el-button
         >
         <el-button size="small" @click="back">返回</el-button>
       </template>
@@ -106,10 +106,10 @@
     <!-- 接单人信息 -->
     <el-descriptions
       class="margin-top"
-      title="接单人信息"
+      title="预购人信息"
       :column="3"
       border
-      v-if="current_item.euid"
+      v-if="current_item.tuid"
       :labelStyle="LS"
       :contentStyle="CS"
     >
@@ -118,7 +118,7 @@
           <i class="el-icon-price-tag"></i>
           ID
         </template>
-        {{ current_item.takeOrderUser.uid }}
+        {{ current_item.takeOrdersUser.uid }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -126,26 +126,26 @@
           <i class="el-icon-user"></i>
           用户名
         </template>
-        {{ current_item.takeOrderUser.name }}
+        {{ current_item.takeOrdersUser.name }}
       </el-descriptions-item>
 
       <el-descriptions-item>
         <template slot="label">
           <i
-            v-if="current_item.takeOrderUser.sex == '男'"
+            v-if="current_item.takeOrdersUser.sex == '男'"
             class="el-icon-male"
           ></i>
           <i
-            v-if="current_item.takeOrderUser.sex == '女'"
+            v-if="current_item.takeOrdersUser.sex == '女'"
             class="el-icon-female"
           ></i>
           <i
-            v-if="current_item.takeOrderUser.sex == '保密'"
+            v-if="current_item.takeOrdersUser.sex == '保密'"
             class="el-icon-lock"
           ></i>
           性别
         </template>
-        {{ current_item.takeOrderUser.sex }}
+        {{ current_item.takeOrdersUser.sex }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -153,7 +153,7 @@
           <i class="el-icon-office-building"></i>
           所属学院
         </template>
-        {{ current_item.takeOrderUser.faculty }}
+        {{ current_item.takeOrdersUser.faculty }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -161,7 +161,7 @@
           <i class="el-icon-collection"></i>
           专业
         </template>
-        {{ current_item.takeOrderUser.major }}
+        {{ current_item.takeOrdersUser.major }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -169,7 +169,7 @@
           <i class="el-icon-date"></i>
           入学年份
         </template>
-        {{ current_item.takeOrderUser.grade }}
+        {{ current_item.takeOrdersUser.grade }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -177,7 +177,7 @@
           <i class="el-icon-mobile-phone"></i>
           联系电话
         </template>
-        {{ current_item.takeOrderUser.phone }}
+        {{ current_item.takeOrdersUser.phone }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -185,7 +185,7 @@
           <i class="el-icon-message"></i>
           邮箱
         </template>
-        {{ current_item.takeOrderUser.email }}
+        {{ current_item.takeOrdersUser.email }}
       </el-descriptions-item>
     </el-descriptions>
 
@@ -194,7 +194,7 @@
     <!-- 内容详情 -->
     <el-descriptions
       class="margin-top"
-      title="内容详情"
+      title="商品详情"
       :column="2"
       border
       :labelStyle="LS"
@@ -202,9 +202,16 @@
     >
       <template slot="extra">
         <el-button
+          type="danger"
+          size="small"
+          @click="deleteItem(current_item.tid)"
+          v-if="current_item.uid == this.$store.state.user.uid"
+          >删除信息</el-button
+        >
+        <el-button
           type="warning"
           size="small"
-          @click="changeErrandItem(current_item.eid)"
+          @click="changeItem(current_item.tid)"
           v-if="current_item.uid == this.$store.state.user.uid"
           >修改信息</el-button
         >
@@ -215,7 +222,7 @@
           <i class="el-icon-price-tag"></i>
           订单编号
         </template>
-        {{ current_item.eid }}
+        {{ current_item.tid }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -249,12 +256,12 @@
           <i class="el-icon-office-building"></i>
           当前状态
         </template>
-        <el-tag v-if="current_item.euid != null && current_item.isAchieve == 0"
-          >已被接单</el-tag
+        <el-tag v-if="current_item.tuid != null && current_item.isAchieve == 0"
+          >已预定</el-tag
         >
-        <el-tag type="danger" v-if="current_item.euid == null">未被接单</el-tag>
+        <el-tag type="danger" v-if="current_item.tuid == null">未被预定</el-tag>
         <el-tag type="success" v-if="current_item.isAchieve == 1"
-          >已完成</el-tag
+          >已出售</el-tag
         >
       </el-descriptions-item>
 
@@ -292,7 +299,7 @@
     ></comment-comp>
 
     <!-- 分页 -->
-    <div
+    <!-- <div
       style="width: auto; text-align: center"
       v-if="commentNum == 0 ? false : true"
     >
@@ -303,26 +310,24 @@
         @current-change="currentPageEvent"
       >
       </el-pagination>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { base_url } from "@/config";
 import CommentComp from "@/components/publicComp/CommentComp.vue";
+import { base_url } from "@/config";
 export default {
   data() {
     return {
-      // 当前订单评论的数量
-      commentNum: 0,
-      // 当前订单的eid
-      current_eid: 0,
-      // 当前订单的详细信息
+      // 评论的数量
+      commentNum: 1,
       current_item: {
         pubUser: {},
-        takeOrderUser: {},
+        takeOrdersUser: {},
         imgUrls: [],
       },
+      current_tid: this.$route.query.tid,
       // 更改描述表的格式
       LS: {
         "word-break": "keep-all",
@@ -335,45 +340,56 @@ export default {
   },
   methods: {
     /**
-     * 查询当前界面评论的条数
+     * 删除信息方法
      */
-    queryDiscussCount() {
-      this.axios
-        .get(base_url + "/errand/queryDiscussCount", {
-          params: {
-            eid: this.current_eid,
-          },
-        })
-        .then((resp) => {
-          this.commentNum = resp.data.object;
-        });
+    deleteItem(tid) {
+      this.$confirm("此操作将删除此贴, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // 删除操作
+        this.axios
+          .get(base_url + "/trade/fakeDeleteItem", {
+            params: {
+              tid: tid,
+            },
+          })
+          .then((resp) => {
+            if (resp.data.status == 200) {
+              this.$notify.success("删除成功");
+              this.$router.back(1);
+            } else {
+              this.$notify.error("删除失败");
+            }
+          });
+      });
     },
     /**
-     * 点击发送评论按钮
+     * 发送评论方法
      */
     doSend(content) {
       this.axios
-        .post(base_url + "/errand/sendDiscuss", {
-          eid: this.current_eid,
+        .post(base_url + "/trade/sendDiscuss", {
+          tid: this.current_tid,
           commentUid: this.$store.state.user.uid,
           content: content,
         })
         .then((resp) => {
           if (resp.data.status == 200) {
-            this.$notify.success("发送评论成功！");
-            // 重新查询评论信息
-            this.queryDiscussList(this.current_eid);
+            this.$notify.success("发表评论成功！");
+            this.queryDiscussByTid(1);
           } else {
-            this.$notify.error("发送评论失败!");
+            this.$notify.error("发表评论失败!");
           }
         });
     },
     /**
-     * 点击发送回复按钮
+     * 发送回复方法
      */
     doChidSend(content, targetUserId, fatherDiscussId) {
       this.axios
-        .post(base_url + "/errand/sendReply", {
+        .post(base_url + "/trade/sendReply", {
           parentDiscussId: fatherDiscussId,
           commentUid: this.$store.state.user.uid,
           targetUid: targetUserId,
@@ -381,31 +397,74 @@ export default {
         })
         .then((resp) => {
           if (resp.data.status == 200) {
-            this.$notify.success("回复成功");
-            // 重新查询该界面的评论消息
-            this.queryDiscussList(1);
+            this.$notify.success("发送回复成功！");
+            this.queryDiscussByTid(1);
           } else {
-            this.$notify.error("回复失败");
+            this.$notify.error("发送回复失败！");
           }
         });
     },
     /**
-     * 点击切换页面按钮
+     * 修改信息按钮
      */
-    currentPageEvent(newPage) {
-      this.queryDiscussList(newPage);
-      // 返回顶部
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+    changeItem(tid) {
+      this.$router.push({
+        path: "/indexView/indexSecondHandBody/secondHandChangeComp",
+        query: {
+          tid: tid,
+        },
+      });
     },
     /**
-     * 查询当前订单所对应的评论信息
+     * 预定
      */
-    queryDiscussList(page) {
+    take_orders(tid) {
       this.axios
-        .get(base_url + "/errand/queryAllCommentsAndChildComments", {
+        .get(base_url + "/trade/wantToBuy", {
           params: {
-            eid: this.current_eid,
+            tid: tid,
+            tuid: this.$store.state.user.uid,
+          },
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify.success("预定成功！");
+            // 刷新界面信息
+            this.queryDetailsByTid();
+          } else {
+            this.$notify.error("预定失败！");
+          }
+        });
+    },
+    /**
+     * 查询当前项目详细信息
+     */
+    queryDetailsByTid() {
+      this.axios
+        .get(base_url + "/trade/queryDetailsByTid", {
+          params: {
+            tid: this.current_tid,
+          },
+        })
+        .then((resp) => {
+          this.current_item = resp.data.object;
+        });
+    },
+    /**
+     * 返回按钮
+     */
+    back() {
+      this.$router.back(1);
+      this.$store.state.isShowSearch = true;
+    },
+    /**
+     * 通过tid查询评论信息
+     */
+    queryDiscussByTid(page) {
+      this.axios
+        .get(base_url + "/trade/queryDiscussByTid", {
+          params: {
+            tid: this.current_tid,
             page: page,
           },
         })
@@ -413,111 +472,14 @@ export default {
           this.$store.state.discussList = resp.data.object;
         });
     },
-    /**
-     * 点击接单按钮
-     */
-    take_orders(eid) {
-      this.axios
-        .post(base_url + "/errand/updateEUid", {
-          eid: eid,
-          euid: this.$store.state.user.uid,
-        })
-        .then((resp) => {
-          if (resp.status == 200) {
-            // 重新加载界面
-            this.getErrandDetails();
-            this.$notify({
-              title: "成功",
-              message: "成功接单",
-              type: "success",
-            });
-          } else {
-            this.$notify({
-              title: "失败",
-              message: "接单失败",
-              type: "error",
-            });
-          }
-        });
-    },
-    /**
-     * 返回上一级界面
-     */
-    back() {
-      this.$router.back(1);
-    },
-    /**
-     * 获取当前订单详细信息
-     */
-    getErrandDetails() {
-      // 从父级界面获取所要查询的eid
-      this.current_eid = this.$route.query.eid;
-      // 向服务器发送请求查询当前订单信息
-      this.axios
-        .get(base_url + "/errand/queryDetailsByEid", {
-          params: {
-            eid: this.current_eid,
-          },
-        })
-        .then((resp) => {
-          if (resp.data.status == 200) {
-            this.current_item = resp.data.object;
-          } else {
-            this.$notify.error("加载数据失败");
-          }
-        });
-    },
-    /**
-     * 点击修改信息按钮
-     */
-    changeErrandItem(eid) {
-      this.$router.push({
-        path: "/indexView/IndexDeliveryBody/errandChangeComp",
-        query: {
-          eid: eid,
-        },
-      });
-    },
-    /**
-     * 完成订单 设置订单属性为已完成
-     */
-    setAchieve(eid) {
-      this.axios
-        .get(base_url + "/errand/updateErrandIsAchieveStateByEid", {
-          params: {
-            eid: eid,
-          },
-        })
-        .then((resp) => {
-          if (resp.data.status == 200) {
-            this.getErrandDetails();
-            this.$notify({
-              title: "成功",
-              message: "更改完成信息成功",
-              type: "success",
-              duration: 1000,
-            });
-          } else {
-            this.$notify({
-              title: "失败",
-              message: "更改完成信息失败",
-              type: "error",
-              duration: 1000,
-            });
-          }
-        });
-    },
-  },
-  mounted() {
-    this.getErrandDetails();
-    // 进入详细界面 隐藏搜素框
-    this.$store.state.isShowSearch = false;
-    // 查询评论信息
-    this.queryDiscussList(1);
-    // 查询评论数量
-    this.queryDiscussCount();
   },
   computed: {},
+  mounted() {
+    // 查询当前项目详细信息
+    this.queryDetailsByTid();
+    // 查询评论信息
+    this.queryDiscussByTid(1);
+  },
   components: {
     CommentComp,
   },
