@@ -160,9 +160,9 @@ export default {
                   type: "success",
                 });
                 this.$router.replace({
-                  path:"/indexView/IndexDeliveryBody/errandComp",
+                  path:"/indexView/IndexDeliveryBody/errandDetailsComp",
                   query: {
-                    timestamp: Date().timestamp
+                    eid: resp.data.object
                   }
                 })
               } else {

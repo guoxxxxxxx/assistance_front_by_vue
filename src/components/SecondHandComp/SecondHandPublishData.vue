@@ -99,7 +99,12 @@ export default {
         if(resp.data.status == 200){
           this.$notify.success("发布信息成功！")
           // 待写 此处回调到发布信息的详细信息界面
-
+          this.$router.replace({
+            path:"/indexView/indexSecondHandBody/secondHandDetailsComp",
+            query:{
+              tid: resp.data.object
+            }
+          })
           // 将imgUrls里的内容清空
           this.$store.state.imgUrls = [];
         }

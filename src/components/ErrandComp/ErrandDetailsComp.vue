@@ -363,6 +363,7 @@ export default {
             this.$notify.success("发送评论成功！");
             // 重新查询评论信息
             this.queryDiscussList(this.current_eid);
+            this.queryDiscussCount()
           } else {
             this.$notify.error("发送评论失败!");
           }
