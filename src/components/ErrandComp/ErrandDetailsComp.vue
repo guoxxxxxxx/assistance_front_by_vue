@@ -202,6 +202,13 @@
     >
       <template slot="extra">
         <el-button
+          type="danger"
+          size="small"
+          @click="delete_item(current_item.eid)"
+          v-if="current_item.uid == this.$store.state.user.uid"
+          >删除信息</el-button
+        >
+        <el-button
           type="warning"
           size="small"
           @click="changeErrandItem(current_item.eid)"
@@ -335,6 +342,32 @@ export default {
   },
   methods: {
     /**
+     * 删除按钮响应事件
+     */
+    delete_item(eid) {
+      this.$confirm("此操作将删除此贴, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        // 删除操作
+        this.axios
+          .get(base_url + "/errand/fakeDeleteItem", {
+            params: {
+              eid: eid,
+            },
+          })
+          .then((resp) => {
+            if (resp.data.status == 200) {
+              this.$notify.success("删除成功！");
+              this.$router.back(1);
+            } else {
+              this.$notify.error("删除失败！");
+            }
+          });
+      });
+    },
+    /**
      * 查询当前界面评论的条数
      */
     queryDiscussCount() {
@@ -363,7 +396,7 @@ export default {
             this.$notify.success("发送评论成功！");
             // 重新查询评论信息
             this.queryDiscussList(this.current_eid);
-            this.queryDiscussCount()
+            this.queryDiscussCount();
           } else {
             this.$notify.error("发送评论失败!");
           }

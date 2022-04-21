@@ -1,7 +1,7 @@
 <template>
   <div class="items_box">
     <div v-for="item in getItems" :key="item.id">
-      <md-card class="item-card" data-aos="zoom-out" data-aos-duration="1500">
+      <md-card class="item-card" data-aos="zoom-in" data-aos-duration="1500">
         <md-card-header>
           <md-avatar>
             <img

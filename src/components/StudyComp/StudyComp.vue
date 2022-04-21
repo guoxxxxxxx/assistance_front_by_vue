@@ -1,7 +1,7 @@
 <template>
   <div class="items_box">
     <div v-for="item in filterItems" :key="item.sid">
-      <md-card class="item-card" data-aos="flip-down" data-aos-duration="1500">
+      <md-card class="item-card" data-aos="zoom-in" data-aos-duration="1500">
         <md-card-header>
           <!-- 用户头像显示区域，若用户头像为null则显示默认头像 -->
           <md-avatar>
