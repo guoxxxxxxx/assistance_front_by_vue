@@ -1,22 +1,21 @@
 <template>
   <div id="bx1">
-      
+    <div class="block">
+      <el-image :src="src" style="max-height: 380px; border-radius: 30px;"></el-image>
+    </div>
   </div>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        count: 0
-      }
-    },
-    methods: {
-      load () {
-        this.count += 2
-      }
-    }
-  }
+import { base_url } from '@/config';
+export default {
+  data() {
+    return {
+      src: base_url + "/img/index.jpg",
+    };
+  },
+  methods: {},
+};
 </script>
 
 <style scoped>

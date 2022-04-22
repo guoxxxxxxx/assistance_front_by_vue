@@ -3,8 +3,8 @@
     <index-top-comp></index-top-comp>
     <div id="index_box">
       <div id="box_left">
-        <index-left-box-1></index-left-box-1>
         <index-left-box-2></index-left-box-2>
+        <index-left-box-1 style="border-radius: 30px;"></index-left-box-1>
       </div>
       <div id="box_right">
         <index-right-box></index-right-box>

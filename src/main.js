@@ -47,8 +47,8 @@ Vue.use(VueMaterial)
 import store from './vuex/store'
 
 // 导入Echarts数据可视化组件
-import echarts from 'echarts'
-Vue.prototype.$echarts = echarts
+// import echarts from 'echarts'
+// Vue.prototype.$echarts = echarts
 
 
 Vue.config.productionTip = false
