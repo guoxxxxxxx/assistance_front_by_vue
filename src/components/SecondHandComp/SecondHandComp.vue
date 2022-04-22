@@ -63,7 +63,7 @@
     <!-- 当该界面没有订单时展示该界面 -->
     <el-empty
       description="暂无信息"
-      v-if="getCurrentItems.length == 0"
+      v-if="getItemsCount == 0"
       :image-size="350"
       style="text-align: center; width: 100%"
     ></el-empty>

@@ -174,9 +174,10 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    
+
     <!-- 评论区 -->
     <comment-comp
+      id="comment"
       :authorId="this.current_item.pubUser.uid"
       @doSend="doSend"
       @doChidSend="doChidSend"
@@ -243,6 +244,7 @@ export default {
     currentPageEvent(page) {
       this.selectDiscussBySid(this.current_sid, page);
       this.current_page = page;
+      document.getElementById("comment").scrollIntoView(true);
     },
     /**
      * 点击发送评论按钮
@@ -259,6 +261,7 @@ export default {
             this.$notify.success("发送评论成功！");
             // 重新查询评论信息
             this.selectDiscussBySid(this.current_sid);
+            this.selectDiscussCountBySid(this.current_sid);
           } else {
             this.$notify.error("发送评论失败!");
           }
@@ -280,6 +283,7 @@ export default {
             this.$notify.success("回复成功");
             // 重新查询该界面的评论消息
             this.selectDiscussBySid(this.current_sid, this.current_page);
+            this.selectDiscussCountBySid(this.current_sid);
           } else {
             this.$notify.error("回复失败");
           }
@@ -390,7 +394,6 @@ export default {
     this.selectDiscussBySid(this.current_sid, 1);
     // 查询当前界面评论信息的数量
     this.selectDiscussCountBySid(this.current_sid);
-
   },
   computed: {},
   components: {

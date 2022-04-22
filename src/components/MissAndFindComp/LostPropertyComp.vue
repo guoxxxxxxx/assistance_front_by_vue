@@ -156,6 +156,7 @@ export default {
     },
   },
   mounted() {
+    this.$store.state.allItems = []
     this.$store.state.queryByCondition = {
       page: 1,
       fuzzyParam: "",

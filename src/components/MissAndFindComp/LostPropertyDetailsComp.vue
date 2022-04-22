@@ -174,7 +174,7 @@
     </div>
 
     <!-- 评论区 -->
-    <comment-comp
+    <comment-comp id="comment"
       :authorId="this.current_item.pubUser.uid"
       @doSend="doSend"
       @doChidSend="doChidSend"
@@ -227,6 +227,8 @@ export default {
      */
     currentPageEvent(newPage) {
       this.queryDiscussByLid(this.current_lid, newPage);
+      this.selectDiscussCountBySid(this.current_lid);
+      document.getElementById("comment").scrollIntoView(true);
     },
     /**
      * 查询当前界面所拥有的评论数量
@@ -382,6 +384,7 @@ export default {
     this.queryDetalisByLid(this.current_lid);
     // 获取当前页面评论信息
     this.queryDiscussByLid(this.current_lid, 1);
+    this.selectDiscussCountBySid(this.current_lid);
   },
   components: {
     CommentComp,

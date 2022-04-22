@@ -291,7 +291,7 @@
     </div>
 
     <!-- 评论功能 -->
-    <comment-comp
+    <comment-comp id="comment"
       :authorId="current_item.pubUser.uid"
       :commentNum="commentNum"
       @doSend="doSend"
@@ -344,6 +344,7 @@ export default {
      */
     currentPageEvent(newPage) {
       this.queryDiscussByTid(newPage);
+      document.getElementById("comment").scrollIntoView(true);
     },
     /**
      * 删除信息方法

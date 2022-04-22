@@ -16,6 +16,7 @@
     "bright-comment": "^1.5.7",
     "buefy": "^0.9.19",
     "core-js": "^3.8.3",
+    "echarts": "^5.3.2",
     "element-ui": "^2.15.6",
     "moment": "^2.29.2",
     "view-design": "^4.7.0",

@@ -31,7 +31,7 @@
 import comment from "bright-comment";
 import { base_url } from "@/config";
 export default {
-  props:["authorId", "commentNum"],
+  props: ["authorId", "commentNum"],
   data() {
     return {
       user: this.$store.state.user,
@@ -46,21 +46,25 @@ export default {
       return this.$store.state.discussList;
     },
   },
-  methods:{
+  methods: {
     /**
      * 调用父组件中的方法
      */
-    doSend(content){
-      this.$emit("doSend", content);
+    doSend(content) {
+      if (content.length == 0) {
+        this.$notify.error("评论不能为空！");
+      } else {
+        this.$emit("doSend", content);
+      }
     },
 
     /**
      * 调用子组件中的方法
      */
-    doChidSend(content, targetUserId, fatherDiscussId){
+    doChidSend(content, targetUserId, fatherDiscussId) {
       this.$emit("doChidSend", content, targetUserId, fatherDiscussId);
-    }
-  }
+    },
+  },
 };
 </script>
 

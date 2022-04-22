@@ -61,7 +61,7 @@
     <!-- 当该界面没有订单时展示该界面 -->
     <el-empty
       description="暂无信息"
-      v-if="getItems.length == 0"
+      v-if="getItemsCount == 0"
       :image-size="350"
       style="text-align: center; width: 100%"
     ></el-empty>
@@ -70,7 +70,7 @@
     <div style="width: 1500px; text-align: center">
       <el-pagination
         layout="prev, pager, next"
-        :total="getItemsCount"
+        :total="getItemsCount == 0"
         :page-size="12"
         v-on:current-change="pageChange"
         v-if="getItems.length == 0 ? false : true"

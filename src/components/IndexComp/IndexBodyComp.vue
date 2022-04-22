@@ -1,35 +1,50 @@
 <template>
-  <div id="index_border">
-    <div id="index_container">
-        <button @click="test">测试按钮</button>
+  <div id="out_box">
+    <index-top-comp></index-top-comp>
+    <div id="index_box">
+      <div id="box_left">
+        <index-left-box-1></index-left-box-1>
+        <index-left-box-2></index-left-box-2>
+      </div>
+      <div id="box_right">
+        <index-right-box></index-right-box>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { base_url } from '@/config';
+import { base_url } from "@/config";
+import IndexLeftBox1 from "@/components/IndexComp/IndexLeftBox1.vue";
+import IndexTopComp from "@/components/IndexComp/IndexTopComp.vue";
+import IndexLeftBox2 from "@/components/IndexComp/IndexLeftBox2.vue";
+import IndexRightBox from "@/components/IndexComp/IndexRightBox.vue";
 export default {
-  methods:{
-    test(){
-      this.axios.post(base_url + '/errand/queryByCondition', {
-        category: "测试",
-        page: 2,
-        fuzzyParam: "fuzzyParam",
-        isHiddenAchieve: "true",
-        isHiddenTakeOrders: "false"
-      })
-    }
-  }
+  components: { IndexTopComp, IndexLeftBox1, IndexLeftBox2, IndexRightBox },
+  methods: {
+    base_url: base_url,
+  },
 };
 </script>
 
 <style scoped>
-#index_border {
-  display: flex;
-  justify-content: center;
+#out_box {
+  padding-top: 40px;
 }
 
-#index_container {
-  width: 80%;
+#index_box {
+  padding-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#box_left {
+  width: 48%;
+  height: 800px;
+}
+
+#box_right {
+  width: 48%;
+  height: 800px;
 }
 </style>

@@ -291,7 +291,7 @@
     </div>
 
     <!-- 评论功能 -->
-    <comment-comp
+    <comment-comp id="comment"
       :authorId="current_item.pubUser.uid"
       :commentNum="commentNum"
       @doSend="doSend"
@@ -429,8 +429,7 @@ export default {
     currentPageEvent(newPage) {
       this.queryDiscussList(newPage);
       // 返回顶部
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      document.getElementById("comment").scrollIntoView(true);
     },
     /**
      * 查询当前订单所对应的评论信息
