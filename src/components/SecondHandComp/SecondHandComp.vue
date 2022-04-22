@@ -65,14 +65,11 @@
       description="暂无信息"
       v-if="getCurrentItems.length == 0"
       :image-size="350"
-      style="text-align: center; width: 100%;"
+      style="text-align: center; width: 100%"
     ></el-empty>
 
     <!-- 分页 -->
-    <div
-      style="width: 1500px; text-align: center"
-      v-if="getItemsCount != 0"
-    >
+    <div style="width: 1500px; text-align: center" v-if="getItemsCount != 0">
       <el-pagination
         layout="prev, pager, next"
         :total="getItemsCount"
@@ -85,87 +82,93 @@
 </template>
 
 <script>
-import {base_url} from '@/config'
+import { base_url } from "@/config";
 export default {
-    data() {
-        return {
-            base_url: base_url,
-            // 获取当前模块符合查询条件的所有信息
-            current_items: this.$store.state.allItems,
-        }
+  data() {
+    return {
+      base_url: base_url,
+      // 获取当前模块符合查询条件的所有信息
+      current_items: this.$store.state.allItems,
+    };
+  },
+  methods: {
+    /**
+     * 查询符合条件的全部数量
+     */
+    queryItemsCountByCondition(condition) {
+      this.axios
+        .post(base_url + "/trade/queryItemsCountByCondition", {
+          category: condition.category,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: condition.isHiddenAchieve,
+          isHiddenTakeOrders: condition.isHiddenTakeOrders,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$store.state.itemsCount = resp.data.object;
+          }
+        });
     },
-    methods:{
-        /**
-         * 查询符合条件的全部数量
-         */
-        queryItemsCountByCondition(condition){
-            this.axios.post(base_url + '/trade/queryItemsCountByCondition', {
-                category: condition.category,
-                fuzzyParam: condition.fuzzyParam,
-                isHiddenAchieve: condition.isHiddenAchieve,
-                isHiddenTakeOrders: condition.isHiddenTakeOrders
-            }).then(resp=>{
-                if (resp.data.status == 200) {
-                    this.$store.state.itemsCount = resp.data.object;
-                }
-            })
+    /**
+     * 点击查看详细信息按钮
+     */
+    see_details(tid) {
+      this.$store.state.isShowSearch = false;
+      this.$router.push({
+        path: "/indexView/indexSecondHandBody/secondHandDetailsComp",
+        query: {
+          tid: tid,
         },
-        /**
-         * 点击查看详细信息按钮
-         */
-        see_details(tid){
-            this.$store.state.isShowSearch = false;
-            this.$router.push({
-                path: '/indexView/indexSecondHandBody/secondHandDetailsComp',
-                query :{
-                    tid: tid
-                }
-            })
-        },
-        /**
-         * 点击换页按钮
-         */
-        currentPageEvent(newPage){
-            this.condition.page = newPage;
-            this.queryItemsByCondtiton(this.condition);
-        },
-        /**
-         * 根据条件获取查询信息
-         */
-        queryItemsByCondtiton(condition){
-            this.axios.post(base_url + '/trade/queryItemsByCondition', {
-                page: condition.page,
-                category: condition.category,
-                fuzzyParam: condition.fuzzyParam,
-                isHiddenAchieve: condition.isHiddenAchieve,
-                isHiddenTakeOrders: condition.isHiddenTakeOrders
-            }).then(resp=>{
-                this.$store.state.allItems = resp.data.object;
-            })
-        }
+      });
     },
-    computed:{
-        /**
-         * 获取符合条件信息
-         */
-        getCurrentItems(){
-            return this.$store.state.allItems;
-        },
-        /**
-         * 获取项目数量
-         */
-        getItemsCount(){
-            return this.$store.state.itemsCount;
-        }
-        
+    /**
+     * 点击换页按钮
+     */
+    currentPageEvent(newPage) {
+      this.condition.page = newPage;
+      this.queryItemsByCondtiton(this.condition);
     },
-    mounted(){
-        // 查询项目
-        this.queryItemsByCondtiton(this.$store.state.queryCondition);
-        // 查询项目数量
-        this.queryItemsCountByCondition(this.$store.state.queryCondition);
-    }
-}
+    /**
+     * 根据条件获取查询信息
+     */
+    queryItemsByCondtiton(condition) {
+      this.axios
+        .post(base_url + "/trade/queryItemsByCondition", {
+          page: condition.page,
+          category: condition.category,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: condition.isHiddenAchieve,
+          isHiddenTakeOrders: condition.isHiddenTakeOrders,
+        })
+        .then((resp) => {
+          this.$store.state.allItems = resp.data.object;
+        });
+    },
+  },
+  computed: {
+    /**
+     * 获取符合条件信息
+     */
+    getCurrentItems() {
+      return this.$store.state.allItems;
+    },
+    /**
+     * 获取项目数量
+     */
+    getItemsCount() {
+      return this.$store.state.itemsCount;
+    },
+  },
+  mounted() {
+    // 清空上级界面缓存
+    this.$store.state.allItems = [];
+    // 查询项目
+    this.queryItemsByCondtiton(this.$store.state.queryCondition);
+    // 查询项目数量
+    this.queryItemsCountByCondition(this.$store.state.queryCondition);
+  },
+  beforeCreate() {},
+};
 </script>
 
 <style scoped>

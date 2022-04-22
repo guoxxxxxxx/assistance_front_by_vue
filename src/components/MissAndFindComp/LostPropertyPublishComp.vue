@@ -12,22 +12,14 @@
         </FormItem>
         <FormItem label="类别" prop="category">
           <Select v-model="formValidate.category" placeholder="请选择类别">
-            <Option value="数学">数学</Option>
-            <Option value="英语">英语</Option>
-            <Option value="物理">物理</Option>
-            <Option value="政治">政治</Option>
-            <Option value="化学">化学</Option>
-            <Option value="生物">生物</Option>
-            <Option value="计算机">计算机</Option>
+            <Option value="找物品">找物品</Option>
+            <Option value="找失主">找失主</Option>
             <Option value="其他">其他</Option>
           </Select>
         </FormItem>
-
-        <!-- 图片上传组件 -->
-        <FormItem label="上传图片" prop="imgSrc">
+        <FormItem label="上传图片">
           <image-upload-comp></image-upload-comp>
         </FormItem>
-
         <FormItem label="详细信息" prop="details">
           <Input
             v-model="formValidate.details"
@@ -48,19 +40,14 @@
     </div>
   </div>
 </template>
+
 <script>
 import ImageUploadComp from "@/components/publicComp/ImageUploadComp.vue";
-import { base_url } from '@/config';
+import { base_url } from "@/config";
 export default {
   data() {
     return {
-      is_show_tips: false,
-      formValidate: {
-        uid: this.$store.state.user.uid,
-        title: '',
-        category: "",
-        details: ""
-      },
+      formValidate: {},
       ruleValidate: {
         title: [
           {
@@ -81,38 +68,38 @@ export default {
   },
   methods: {
     /**
+     * 向后端发送添加信息的请求
+     */
+    publishNewItem(item) {
+      this.axios
+        .post(base_url + "/lostProperty/publishNewItem", {
+          uid: this.$store.state.user.uid,
+          category: item.category,
+          title: item.title,
+          details: item.details,
+          imgUrls: this.$store.state.uploadImgList,
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.$notify.success("发布成功");
+            // 此处写回显代码！
+            this.$router.replace({
+              path:"/indexView/indexMissAndFindBody/LostPropertyDetailsComp",
+              query:{
+                lid: resp.data.object
+              }
+            })
+          } else {
+            this.$notify.error("发布失败");
+          }
+        });
+    },
+    /**
      * 点击提交按钮
      */
     handleSubmit(name) {
-      // 图片上传 全局保存图片
-      let imgUrls = this.$store.state.uploadImgList;
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.axios.post(base_url + "/study/addNewItem", {
-            uid: this.formValidate.uid,
-            title: this.formValidate.title,
-            category: this.formValidate.category,
-            details: this.formValidate.details,
-            imgUrls: imgUrls,
-          }).then(resp => {
-            if (resp.data.status) {
-              this.$notify.success('发布成功')
-              this.$store.state.uploadImgList = [];    
-              // 进入发布项目的详细界面
-              this.$router.replace({
-                path:"/indexView/IndexStudyBody/studyDetailsComp",
-                query: {
-                  sid: resp.data.object
-                }
-              })      
-            }
-            else{
-              this.$notify.error('发布失败');
-            }
-          })
-        } else {
-          this.$Message.error("Fail!");
-        }
+      this.$refs[name].validate(() => {
+        this.publishNewItem(this.formValidate);
       });
     },
     /**
@@ -120,7 +107,6 @@ export default {
      */
     handleReset(name) {
       this.$refs[name].resetFields();
-      this.$store.state.echoImgList = []
     },
   },
   components: {
@@ -130,13 +116,4 @@ export default {
 </script>
 
 <style>
-.form-container {
-  width: 50%;
-}
-
-#form-box {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
 </style>

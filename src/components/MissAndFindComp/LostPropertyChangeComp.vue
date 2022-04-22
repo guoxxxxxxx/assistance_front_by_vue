@@ -12,20 +12,10 @@
         </FormItem>
         <FormItem label="类别" prop="category">
           <Select v-model="formValidate.category" placeholder="请选择类别">
-            <Option value="交通工具">交通工具</Option>
-            <Option value="书本资料">书本资料</Option>
-            <Option value="生活用品">生活用品</Option>
-            <Option value="电脑配件">电脑配件</Option>
+            <Option value="找物品">找物品</Option>
+            <Option value="找失主">找失主</Option>
             <Option value="其他">其他</Option>
           </Select>
-        </FormItem>
-        <FormItem label="价格" prop="isGiveMoney">
-          <el-input-number
-            v-model="formValidate.money"
-            :precision="2"
-            :step="1.0"
-            :min="0"
-          ></el-input-number>
         </FormItem>
         <FormItem label="上传图片">
           <image-upload-comp
@@ -45,7 +35,7 @@
           <Button type="primary" @click="handleSubmit('formValidate')"
             >提交</Button
           >
-          <Button @click="handleReset" style="margin-left: 8px"
+          <Button @click="handleReset()" style="margin-left: 8px"
             >返回</Button
           >
         </FormItem>
@@ -53,6 +43,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import ImageUploadComp from "@/components/publicComp/ImageUploadComp.vue";
 import { base_url } from "@/config";
@@ -61,17 +52,12 @@ export default {
     return {
       // 待删除图片列表
       prepareDeleteImgList: [],
-      current_tid: 0,
-      // 当前登录的用户
-      current_uid: this.$store.state.user.uid,
+      // 所要回显的图片信息
       fileList: [],
-      is_show_tips: false,
-      formValidate: {
-        title: "",
-        category: "",
-        money: 0,
-        details: "",
-      },
+      current_lid: 0,
+      base_url: base_url,
+      formValidate: {},
+
       ruleValidate: {
         title: [
           {
@@ -92,12 +78,38 @@ export default {
   },
   methods: {
     /**
-     * 删除图片按钮
+     * 通过lid查询详细信息
      */
-    handleRemove(file) {
-      let img_src = file.url.substring(base_url.length);
-      // 将要删除的图片存放到待删队列中
-      this.prepareDeleteImgList.push(img_src);
+    queryDetalisByLid(lid) {
+      this.axios
+        .get(base_url + "/lostProperty/queryDetailsByLid", {
+          params: {
+            lid: lid,
+          },
+        })
+        .then((resp) => {
+          console.log(resp);
+          this.formValidate = resp.data.object;
+        });
+    },
+    /**
+     * 通过lid查询所要回显的图片信息
+     */
+    queryImgByLid(lid) {
+      this.axios
+        .get(base_url + "/lostProperty/queryImgByLid", {
+          params: {
+            lid: lid,
+          },
+        })
+        .then((resp) => {
+          let imgUrls = resp.data.object;
+          let res = [];
+          for (let i = 0; i < imgUrls.length; i++) {
+            res.push(this.getEchoImgList(imgUrls[i]));
+          }
+          this.fileList = res;
+        });
     },
     /**
      * 将所需回显的图片封装成对象
@@ -110,6 +122,16 @@ export default {
       return obj;
     },
     /**
+     * 删除图片按钮
+     */
+    handleRemove(file) {
+      let img_src = file.url.substring(base_url.length);
+      // 将要删除的图片存放到待删队列中
+      this.prepareDeleteImgList.push(img_src);
+    },
+
+    // ===============================
+    /**
      * 点击提交按钮
      */
     handleSubmit(name) {
@@ -117,12 +139,11 @@ export default {
       // 删除待删除图片
       this.deleteImg();
       this.axios
-        .post(base_url + "/trade/updateByTid", {
-          tid: this.current_tid,
+        .post(base_url + "/lostProperty/updateByLid", {
+          lid: this.current_lid,
           category: this.formValidate.category,
           title: this.formValidate.title,
           details: this.formValidate.details,
-          money: this.formValidate.money,
           imgUrls: this.$store.state.uploadImgList,
         })
         .then((resp) => {
@@ -131,9 +152,9 @@ export default {
             this.$store.state.uploadImgList = [];
             // 跳转回详细信息界面
             this.$router.replace({
-              path: "/indexView/IndexSecondHandBody/secondHandDetailsComp",
+              path: "/indexView/indexMissAndFindBody/LostPropertyDetailsComp",
               query: {
-                tid: this.current_tid,
+                lid: this.current_lid,
               },
             });
           } else {
@@ -142,7 +163,7 @@ export default {
         });
     },
     /**
-     * 返回上级菜单按钮
+     * 点击返回
      */
     handleReset() {
       this.$router.back(1);
@@ -153,9 +174,9 @@ export default {
     deleteImg() {
       for (let i = 0; i < this.prepareDeleteImgList.length; i++) {
         this.axios
-          .get(base_url + "/trade/fakeDeleteImg", {
+          .get(base_url + "/lostProperty/fakeDeleteImg", {
             params: {
-              img: this.prepareDeleteImgList[i],
+              imgSrc: this.prepareDeleteImgList[i],
             },
           })
           .then((resp) => {
@@ -164,61 +185,19 @@ export default {
       }
       this.prepareDeleteImgList = [];
     },
-    /**
-     * 进入界面回显信息
-     */
-    getEchoInfo() {
-      this.axios
-        .get(base_url + "/trade/queryDetailsByTid", {
-          params: {
-            tid: this.$route.query.tid,
-          },
-        })
-        .then((resp) => {
-          this.formValidate = resp.data.object;
-        });
-    },
-    /**
-     * 查询所要回显的图片
-     */
-    queryImgList() {
-      this.axios
-        .get(base_url + "/trade/queryImgByTid", {
-          params: {
-            tid: this.current_tid,
-          },
-        })
-        .then((resp) => {
-          let imgUrls = resp.data.object;
-          let res = [];
-          for (let i = 0; i < imgUrls.length; i++) {
-            res.push(this.getEchoImgList(imgUrls[i]));
-          }
-          this.fileList = res;
-        });
-    },
+  },
+  mounted() {
+    // 获取当前所要回显的项目id
+    this.current_lid = this.$route.query.lid;
+    // 获取回显信息
+    this.queryDetalisByLid(this.current_lid);
+    this.queryImgByLid(this.current_lid);
   },
   components: {
     ImageUploadComp,
-  },
-  mounted() {
-    // 从上级界面中接收所要回显的项目id
-    this.current_tid = this.$route.query.tid;
-    // 获取所要回显的信息
-    this.getEchoInfo();
-    this.queryImgList();
   },
 };
 </script>
 
 <style>
-.form-container {
-  width: 50%;
-}
-
-#form-box {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
 </style>

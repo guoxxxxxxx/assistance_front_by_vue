@@ -30,6 +30,11 @@ import SecondHandComp from '@/components/SecondHandComp/SecondHandComp'
 import SecondHandDetailsComp from '@/components/SecondHandComp/SecondHandDetailsComp'
 import SecondHandChangeComp from '@/components/SecondHandComp/SecondHandChangeComp'
 
+import LostPropertyPublishComp from '@/components/MissAndFindComp/LostPropertyPublishComp'
+import LostPropertyComp from '@/components/MissAndFindComp/LostPropertyComp'
+import LostPropertyDetailsComp from '@/components/MissAndFindComp/LostPropertyDetailsComp'
+import LostPropertyChangeComp from '@/components/MissAndFindComp/LostPropertyChangeComp'
+
 // 创建并暴露router实例对象
 const router = new VueRouter({
     routes: [
@@ -142,7 +147,29 @@ const router = new VueRouter({
                 {
                     // 失物寻找主体
                     path: 'indexMissAndFindBody',
-                    component: IndexMissAndFindBody
+                    component: IndexMissAndFindBody,
+                    children:[
+                        {
+                            // 失物招领发布信息界面
+                            path: 'lostPropertyPublishComp',
+                            component: LostPropertyPublishComp
+                        },
+                        {
+                            // 失物招领预览界面
+                            path: "lostPropertyComp",
+                            component: LostPropertyComp
+                        },
+                        {
+                            // 详细信息界面
+                            path: "lostPropertyDetailsComp",
+                            component: LostPropertyDetailsComp
+                        },
+                        {
+                            // 修改信息界面
+                            path: "LostPropertyChangeComp",
+                            component: LostPropertyChangeComp
+                        }
+                    ]
                 },
                 {
                     // 校友圈主体

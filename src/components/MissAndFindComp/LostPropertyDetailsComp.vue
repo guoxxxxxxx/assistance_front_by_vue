@@ -13,15 +13,15 @@
         <el-button
           type="primary"
           size="small"
-          @click="setAchieve"
+          @click="setAchieve(current_lid)"
           v-if="
             current_item.uid == this.$store.state.user.uid ||
             current_item.isAchieve == 1
           "
           :disabled="current_item.isAchieve == 1"
-          >{{ current_item.isAchieve ? "已解决" : "标记为已解决" }}</el-button
+          >{{ current_item.isAchieve ? "已完成" : "标记为已完成" }}</el-button
         >
-        <el-button size="small" @click="back(1)">返回</el-button>
+        <el-button size="small" @click="back">返回</el-button>
       </template>
 
       <el-descriptions-item>
@@ -106,7 +106,7 @@
         <el-button
           type="danger"
           size="small"
-          @click="del"
+          @click="fakeDeleteByLid"
           v-if="current_item.uid == this.$store.state.user.uid"
           >删除信息</el-button
         >
@@ -125,7 +125,7 @@
           <i class="el-icon-price-tag"></i>
           问题编号
         </template>
-        {{ current_item.sid }}
+        {{ current_item.lid }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -139,7 +139,7 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-collection"></i>
-          所属学科范畴
+          分类
         </template>
         {{ current_item.category }}
       </el-descriptions-item>
@@ -147,7 +147,7 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-question"></i>
-          是否已解决
+          是否已完成
         </template>
         <el-tag type="success" v-if="current_item.isAchieve">是</el-tag>
         <el-tag type="danger" v-if="!current_item.isAchieve">否</el-tag>
@@ -161,12 +161,10 @@
       </el-descriptions-item>
     </el-descriptions>
 
+    <div style="margin-top: 40px"></div>
+
     <!-- 用户所上传图片轮播效果 -->
-    <div
-      class="block"
-      v-if="current_item.imgUrls.length"
-      style="margin-top: 60px"
-    >
+    <div class="block" v-if="current_item.imgUrls" style="margin-top: 60px">
       <el-carousel height="300px" type="card">
         <el-carousel-item v-for="src in current_item.imgUrls" :key="src">
           <el-image :src="src" :preview-src-list="current_item.imgUrls">
@@ -174,7 +172,7 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    
+
     <!-- 评论区 -->
     <comment-comp
       :authorId="this.current_item.pubUser.uid"
@@ -184,7 +182,10 @@
     ></comment-comp>
 
     <!-- 分页 -->
-    <div style="width: auto; text-align: center" v-if="commentNum">
+    <div
+      style="width: auto; text-align: center"
+      v-if="commentNum == 0 ? false : true"
+    >
       <el-pagination
         layout="prev, pager, next"
         :total="commentNum"
@@ -202,14 +203,14 @@ import { base_url } from "@/config";
 export default {
   data() {
     return {
-      current_page: 1,
-      current_sid: null,
       current_item: {
         pubUser: {},
-        imgUrls: [],
       },
+      current_lid: 0,
       // 该界面评论的总数量
       commentNum: 0,
+      imgUrls: [],
+
       // 更改描述表的格式
       LS: {
         "word-break": "keep-all",
@@ -222,43 +223,43 @@ export default {
   },
   methods: {
     /**
-     * 返回上一级
+     * 分页查询评论信息
      */
-    back(val) {
-      this.$router.back(val);
-      this.$store.state.isShowSearch = true;
+    currentPageEvent(newPage) {
+      this.queryDiscussByLid(this.current_lid, newPage);
     },
     /**
-     * 点击更改信息按钮
+     * 查询当前界面所拥有的评论数量
      */
-    change() {
-      this.$router.push({
-        path: "/indexView/IndexStudyBody/studyChangeComp",
-        query: { sid: this.current_sid },
-      });
-    },
-    /**
-     * 点击页码按钮事件
-     */
-    currentPageEvent(page) {
-      this.selectDiscussBySid(this.current_sid, page);
-      this.current_page = page;
+    selectDiscussCountBySid(lid) {
+      this.axios
+        .get(base_url + "/lostProperty/queryDiscussCountByLid", {
+          params: {
+            lid: lid,
+          },
+        })
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            this.commentNum = resp.data.object;
+          }
+        });
     },
     /**
      * 点击发送评论按钮
      */
     doSend(content) {
       this.axios
-        .post(base_url + "/study/sendDiscuss", {
-          sid: this.current_sid,
+        .post(base_url + "/lostProperty/sendDiscuss", {
+          lid: this.current_lid,
           commentUid: this.$store.state.user.uid,
           content: content,
         })
         .then((resp) => {
           if (resp.data.status == 200) {
             this.$notify.success("发送评论成功！");
-            // 重新查询评论信息
-            this.selectDiscussBySid(this.current_sid);
+            // 重新查询该界面的评论消息
+            this.queryDiscussByLid(this.current_lid, 1);
+            this.selectDiscussCountBySid(this.current_lid);
           } else {
             this.$notify.error("发送评论失败!");
           }
@@ -269,7 +270,7 @@ export default {
      */
     doChidSend(content, targetUserId, fatherDiscussId) {
       this.axios
-        .post(base_url + "/study/doSendReply", {
+        .post(base_url + "/lostProperty/doSendReply", {
           parentDiscussId: fatherDiscussId,
           commentUid: this.$store.state.user.uid,
           targetUid: targetUserId,
@@ -279,49 +280,21 @@ export default {
           if (resp.data.status == 200) {
             this.$notify.success("回复成功");
             // 重新查询该界面的评论消息
-            this.selectDiscussBySid(this.current_sid, this.current_page);
+            this.queryDiscussByLid(this.current_lid, 1);
+            this.selectDiscussCountBySid(this.current_lid);
           } else {
             this.$notify.error("回复失败");
           }
         });
     },
     /**
-     * 点击删除按钮
+     * 通过lid查询详细信息
      */
-    del() {
-      this.$confirm("此操作将删除此贴, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        // 删除操作
-        this.axios
-          .get(base_url + "/study/fakeDeleteBySid", {
-            params: { sid: this.current_sid },
-          })
-          .then((resp) => {
-            if (resp.data.status == 200) {
-              this.$notify.success("删除成功");
-              this.$router.replace({
-                path: "/indexView/IndexStudyBody/StudyComp",
-                query: {
-                  timestamp: Date.now(),
-                },
-              });
-            } else {
-              this.$notify.error("删除失败");
-            }
-          });
-      });
-    },
-    /**
-     * 通过sid获取该学习订单详细信息 并存放到current_item变量中
-     */
-    selectDetailsBySid(sid) {
+    queryDetalisByLid(lid) {
       this.axios
-        .get(base_url + "/study/selectDetailsBySid", {
+        .get(base_url + "/lostProperty/queryDetailsByLid", {
           params: {
-            sid: sid,
+            lid: lid,
           },
         })
         .then((resp) => {
@@ -329,70 +302,87 @@ export default {
         });
     },
     /**
-     * 根据sid查询与之对应的评论信息 分页
+     * 返回到上一级菜单
      */
-    selectDiscussBySid(sid, page) {
-      this.axios
-        .get(base_url + "/study/selectDiscussBySid", {
-          params: { sid: sid, page: page },
-        })
-        .then((resp) => {
-          // 更新vuex中的全局评论对象
-          this.$store.state.discussList = resp.data.object;
-        });
+    back() {
+      this.$router.back(1);
+      this.$store.state.isShowSearch = true;
     },
     /**
-     * 查询当前界面所拥有的评论数量
+     * 通过lid标记项目为已完成
      */
-    selectDiscussCountBySid(sid) {
+    setAchieve(lid) {
       this.axios
-        .get(base_url + "/study/selectDiscussCountBySid", {
+        .get(base_url + "/lostProperty/updateIsAchieveByLid", {
           params: {
-            sid: sid,
+            lid: lid,
           },
         })
         .then((resp) => {
           if (resp.data.status == 200) {
-            this.commentNum = resp.data.object;
+            this.$notify.success("成功标记为已完成");
+            // 重新刷新界面
+            this.queryDetalisByLid(this.current_lid);
+          } else {
+            this.$notify.error("设置已完成失败!");
           }
         });
     },
     /**
-     * 通过sid将当前项目状态改为已完成
+     * 通过lid伪删除订单
      */
-    setAchieve() {
+    fakeDeleteByLid(lid) {
       this.axios
-        .get(base_url + "/study/setAchieveBySid", {
-          params: { sid: this.current_sid },
+        .get(base_url + "/lostProperty/fakeDeleteByLid", {
+          params: {
+            lid: lid,
+          },
         })
         .then((resp) => {
           if (resp.data.status == 200) {
-            this.$notify.success("状态成功更改为已完成");
-            // 重新查询当前页面信息
-            this.selectDetailsBySid(this.current_sid);
+            this.$notify.success("删除成功！");
+            // 跳回到上一级界面
+            this.$router.back(1);
           } else {
-            this.$notify.error("状态更改失败!");
+            this.$notify.error("删除失败");
           }
+        });
+    },
+    /**
+     * 点击修改信息按钮
+     */
+    change() {
+      this.$router.push({
+        path: "/indexView/indexMissAndFindBody/LostPropertyChangeComp",
+        query: {
+          lid: this.current_lid,
+        },
+      });
+    },
+    /**
+     * 通过lid查询当前项目评论详情
+     */
+    queryDiscussByLid(lid, page) {
+      this.axios
+        .get(base_url + "/lostProperty/queryDiscussByLid", {
+          params: {
+            page: page,
+            lid: lid,
+          },
+        })
+        .then((resp) => {
+          this.$store.state.discussList = resp.data.object;
         });
     },
   },
   mounted() {
-    // 返回顶部
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    // 进入该界面 先将之前的全局评论清空
-    this.$store.state.discussList = [];
-    // 从上级路由读取所要查询页面的sid
-    this.current_sid = this.$route.query.sid;
-    // 查询当前页面详细信息
-    this.selectDetailsBySid(this.current_sid);
-    // 查询当前页面评论信息
-    this.selectDiscussBySid(this.current_sid, 1);
-    // 查询当前界面评论信息的数量
-    this.selectDiscussCountBySid(this.current_sid);
-
+    // 获取要查询详细信息的id
+    this.current_lid = this.$route.query.lid;
+    // 查询详细信息
+    this.queryDetalisByLid(this.current_lid);
+    // 获取当前页面评论信息
+    this.queryDiscussByLid(this.current_lid, 1);
   },
-  computed: {},
   components: {
     CommentComp,
   },

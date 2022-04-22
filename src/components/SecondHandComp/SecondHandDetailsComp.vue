@@ -299,7 +299,7 @@
     ></comment-comp>
 
     <!-- 分页 -->
-    <!-- <div
+    <div
       style="width: auto; text-align: center"
       v-if="commentNum == 0 ? false : true"
     >
@@ -310,7 +310,7 @@
         @current-change="currentPageEvent"
       >
       </el-pagination>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -339,6 +339,12 @@ export default {
     };
   },
   methods: {
+    /**
+     * 分页查询评论信息
+     */
+    currentPageEvent(newPage) {
+      this.queryDiscussByTid(newPage);
+    },
     /**
      * 删除信息方法
      */
@@ -378,6 +384,8 @@ export default {
         .then((resp) => {
           if (resp.data.status == 200) {
             this.$notify.success("发表评论成功！");
+            // 重新查询评论数量
+            this.queryDiscussCount(this.current_tid);
             this.queryDiscussByTid(1);
           } else {
             this.$notify.error("发表评论失败!");
@@ -398,6 +406,8 @@ export default {
         .then((resp) => {
           if (resp.data.status == 200) {
             this.$notify.success("发送回复成功！");
+            // 重新查询评论数量
+            this.queryDiscussCount(this.current_tid);
             this.queryDiscussByTid(1);
           } else {
             this.$notify.error("发送回复失败！");
@@ -472,6 +482,20 @@ export default {
           this.$store.state.discussList = resp.data.object;
         });
     },
+    /**
+     * 查询评论数量
+     */
+    queryDiscussCount() {
+      this.axios
+        .get(base_url + "/trade/queryDiscussCount", {
+          params: {
+            tid: this.current_tid,
+          },
+        })
+        .then((resp) => {
+          this.commentNum = resp.data.object;
+        });
+    },
   },
   computed: {},
   mounted() {
@@ -479,6 +503,8 @@ export default {
     this.queryDetailsByTid();
     // 查询评论信息
     this.queryDiscussByTid(1);
+    // 查询评论数量
+    this.queryDiscussCount(this.current_tid);
   },
   components: {
     CommentComp,

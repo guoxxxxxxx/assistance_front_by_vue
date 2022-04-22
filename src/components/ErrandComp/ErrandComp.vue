@@ -159,6 +159,8 @@ export default {
     },
   },
   mounted() {
+    // 清空上级界面缓存
+    this.$store.state.allItems = [];
     // 进入界面加载所有带跑腿项目
     this.queryByCondition(this.$store.state.queryCondition);
     // 进入界面将过滤框显示设为真
@@ -180,6 +182,7 @@ export default {
       return this.$store.state.itemsCount;
     },
   },
+  beforeCreate() {},
 };
 </script>
 

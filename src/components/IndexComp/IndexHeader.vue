@@ -21,7 +21,7 @@
           <Icon type="logo-usd" />
           二手交易
         </MenuItem>
-        <MenuItem name="5" to="/indexView/indexMissAndFindBody">
+        <MenuItem name="5" :to="{path: '/indexView/indexMissAndFindBody/lostPropertyComp', query:{timestamp:Date.now()}}">
           <Icon type="md-search" />
           失物招领
         </MenuItem>

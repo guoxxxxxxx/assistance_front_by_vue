@@ -1,6 +1,6 @@
 <template>
   <div class="items_box">
-    <div v-for="item in filterItems" :key="item.sid">
+    <div v-for="item in getItems" :key="item.lid">
       <md-card class="item-card" data-aos="zoom-in" data-aos-duration="1500">
         <md-card-header>
           <!-- 用户头像显示区域，若用户头像为null则显示默认头像 -->
@@ -52,7 +52,7 @@
         <div id="btn_groups">
           <div id="_pubdate">发布日期: {{ item.pubdate }}</div>
           <md-card-actions>
-            <Button type="warning" ghost @click="see_details(item.sid)"
+            <Button type="warning" ghost @click="see_details(item.lid)"
               >查看详情</Button
             >
           </md-card-actions>
@@ -63,16 +63,13 @@
     <!-- 当该界面没有订单时展示该界面 -->
     <el-empty
       description="暂无信息"
-      v-if="filterItems.length == 0"
+      v-if="getItemsCount == 0"
       :image-size="350"
       style="text-align: center; width: 100%"
     ></el-empty>
 
     <!-- 分页 -->
-    <div
-      style="width: 1500px; text-align: center"
-      v-if="filterItems.length != 0"
-    >
+    <div style="width: 1500px; text-align: center" v-if="getItemsCount != 0">
       <el-pagination
         layout="prev, pager, next"
         :total="getItemsCount"
@@ -90,110 +87,86 @@ export default {
   data() {
     return {
       base_url: base_url,
-      // 存放从后端查询的项目信息
-      items: {},
-      // 当前登录用户的id
-      current_user: this.$store.state.user,
     };
   },
   methods: {
     /**
-     * 点击查看详情按钮
+     * 从后台获取符合条件的信息
      */
-    see_details(id) {
-      this.$store.state.isShowSearch = false;
-      this.$router.push({
-        path: "/indexView/IndexStudyBody/studyDetailsComp",
-        query: {
-          sid: id,
-        },
-      });
-    },
-    /**
-     * 查询study表中有多少记录查询itemsCount
-     */
-    selectItemsCount(condition) {
-      let temp = 0;
-      if (condition.isHiddenAchieve) {
-        temp = 1;
-      }
+    queryByCondition(condition) {
       this.axios
-        .post(base_url + "/study/queryItemsCountByCondition", {
+        .post(base_url + "/lostProperty/queryByCondition", {
+          page: condition.page,
           category: condition.category,
           fuzzyParam: condition.fuzzyParam,
-          isHiddenAchieve: temp,
-        })
-        .then((resp) => {
-          this.$store.state.itemsCount = resp.data.object;
-        });
-    },
-    /**
-     * 获取指定页码的信息
-     * 条件查询
-     */
-    getItemsByCondition(page, condition) {
-      let isHiddenAchieveTemp = 0;
-      if (condition.isHiddenAchieve) {
-        isHiddenAchieveTemp = 1;
-      }
-      this.axios
-        .post(base_url + "/study/queryByCondition", {
-          page: page,
-          category: condition.category,
-          fuzzyParam: condition.fuzzyParam,
-          isHiddenAchieve: isHiddenAchieveTemp,
+          isHiddenAchieve: condition.isHiddenAchieve,
         })
         .then((resp) => {
           this.$store.state.allItems = resp.data.object;
         });
     },
     /**
-     * 点击页码按钮时响应事件
+     * 获取符合条件的项目数量
      */
-    currentPageEvent(current_page) {
-      this.getItemsByCondition(current_page, this.$store.state.queryCondition);
-      // 将页码赋值给current_page;
-      this.$store.state.queryCondition.page = current_page;
-
-      // 返回顶部
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+    queryCountByCondition(condition) {
+      this.axios
+        .post(base_url + "/lostProperty/queryCountByCondition", {
+          page: condition.page,
+          category: condition.category,
+          fuzzyParam: condition.fuzzyParam,
+          isHiddenAchieve: condition.isHiddenAchieve,
+        })
+        .then((resp) => {
+          this.$store.state.itemsCount = resp.data.object;
+        });
     },
+    /**
+     * 点击分页按钮
+     */
+    currentPageEvent(newPage) {
+      this.$store.state.queryCondition.page = newPage;
+      this.queryByCondition(this.$store.state.queryCondition);
+    },
+    /**
+     * 点击查看详情按钮
+     */
+    see_details(lid) {
+        // 隐藏搜索框
+        this.$store.state.isShowSearch = false;
+        this.$router.push({
+            path:"/indexView/indexMissAndFindBody/LostPropertyDetailsComp",
+            query:{
+                lid: lid
+            }
+        })
+    }
   },
   computed: {
     /**
-     * 通过计算属性来更新项目信息
+     * 获取将要显示的项目信息
      */
-    filterItems() {
+    getItems() {
       return this.$store.state.allItems;
     },
     /**
-     * 获取项目总数
+     * 获取符合条件的项目数量
      */
     getItemsCount() {
       return this.$store.state.itemsCount;
     },
-    /**
-     * 获取查询条件
-     */
-    getQueryCondition() {
-      return this.$store.state.queryCondition;
-    },
   },
   mounted() {
-    // 清空上级界面缓存
-    this.$store.state.allItems = [];
-    /**
-     * 进入页面,默认查询全部信息的第一页内容。
-     */
-    this.getItemsByCondition(1, this.$store.state.queryCondition);
-    /**
-     * 查询项目数量
-     */
-    this.selectItemsCount(this.$store.state.queryCondition);
+    this.$store.state.queryByCondition = {
+      page: 1,
+      fuzzyParam: "",
+      category: "全部",
+      isHiddenAchieve: 0,
+    };
+    // 查询将要展示的项目
+    this.queryByCondition(this.$store.state.queryCondition);
+    // 查询符合条件的项目数量
+    this.queryCountByCondition(this.$store.state.queryCondition);
   },
-  watch: {},
-  beforeCreate() {},
 };
 </script>
 
