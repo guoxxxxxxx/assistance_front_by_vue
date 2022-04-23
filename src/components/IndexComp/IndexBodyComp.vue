@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { base_url } from "@/config";
 import IndexLeftBox1 from "@/components/IndexComp/IndexLeftBox1.vue";
 import IndexTopComp from "@/components/IndexComp/IndexTopComp.vue";
 import IndexLeftBox2 from "@/components/IndexComp/IndexLeftBox2.vue";
@@ -22,7 +21,6 @@ import IndexRightBox from "@/components/IndexComp/IndexRightBox.vue";
 export default {
   components: { IndexTopComp, IndexLeftBox1, IndexLeftBox2, IndexRightBox },
   methods: {
-    base_url: base_url,
   },
 };
 </script>

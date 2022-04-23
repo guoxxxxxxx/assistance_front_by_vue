@@ -2,13 +2,9 @@
   <div class="index_header">
     <div id="left_box">
       <div id="index_logo_box">
-        <img class="index_logo" src="../../assets/img/index_logo.png" />
+        <img class="index_logo" src="../../../assets/img/index_logo.png" />
       </div>
-      <Menu mode="horizontal" active-name="1" style="overflow: auto;">
-        <MenuItem name="1" to="/indexView/indexBodyComp">
-          <Icon type="ios-home" />
-          主页
-        </MenuItem>
+      <Menu mode="horizontal" active-name="1">
         <MenuItem name="2" :to="{path:'/indexView/IndexDeliveryBody/ErrandComp', query: {timestamp:Date.now()}}">
           <Icon type="md-bicycle" />
           跑腿
@@ -41,7 +37,7 @@
           <DropdownItem name="username">用户名: {{this.$store.getters.getUserInfo.name}}</DropdownItem>
           <DropdownItem name="user_center">个人中心</DropdownItem>
           <DropdownItem divided name="change_password">修改密码</DropdownItem>
-          <DropdownItem v-if="this.$store.state.user.isManager == 1" name="manager">进入管理员系统</DropdownItem>
+          <DropdownItem v-if="this.$store.state.user.isManager == 1" name="user">进入普通用户系统</DropdownItem>
           <DropdownItem name="exit">退出登录</DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -74,10 +70,10 @@ export default {
       else if (name == 'exit') {
         this.$store.commit('updateUserInfo', {})
         this.$router.replace('/indexView');
-      } // 进入管理员模式
-      else if(name == "manager"){
+      } // 进入用户模式
+      else if(name == "user"){
         this.$router.push({
-          path: "/managerIndexView",
+          path: "/indexView/indexBodyComp",
           query: {
             timestamp: Date.now()
           }

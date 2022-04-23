@@ -5,7 +5,7 @@
       <div style="width: 150px">
         <el-progress
           type="circle"
-          :percentage="60"
+          :percentage="dont"
           :stroke-width="10"
           :width="150"
           color="orange"
@@ -15,7 +15,7 @@
       <div style="width: 150px">
         <el-progress
           type="circle"
-          :percentage="30"
+          :percentage="take"
           :stroke-width="10"
           :width="150"
         ></el-progress>
@@ -24,7 +24,7 @@
       <div style="width: 150px">
         <el-progress
           type="circle"
-          :percentage="20"
+          :percentage="achieve"
           :stroke-width="10"
           :width="150"
           color="green"
@@ -42,13 +42,28 @@ export default {
     return {
       count: 0,
       base_url: base_url,
+      dont: 0,
+      take: 0,
+      achieve: 0,
     };
   },
   methods: {
-    load() {
-      this.count += 2;
-    },
+    /**
+     * 向后端获取所要展示的百分比
+     */
+    queryPercentage(){
+      this.axios.get(base_url + '/index/queryPercentage').then(resp=>{
+        if(resp.data.status == 200){
+          this.dont = Number(resp.data.object.dont);
+          this.take = Number(resp.data.object.take);
+          this.achieve = Number(resp.data.object.achieve);
+        }
+      })
+    }
   },
+  mounted(){
+    this.queryPercentage();
+  }
 };
 </script>
 

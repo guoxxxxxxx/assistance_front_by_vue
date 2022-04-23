@@ -70,7 +70,7 @@
     <div style="width: 1500px; text-align: center">
       <el-pagination
         layout="prev, pager, next"
-        :total="getItemsCount == 0"
+        :total="getItemsCount"
         :page-size="12"
         v-on:current-change="pageChange"
         v-if="getItems.length == 0 ? false : true"

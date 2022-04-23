@@ -35,6 +35,10 @@ import LostPropertyComp from '@/components/MissAndFindComp/LostPropertyComp'
 import LostPropertyDetailsComp from '@/components/MissAndFindComp/LostPropertyDetailsComp'
 import LostPropertyChangeComp from '@/components/MissAndFindComp/LostPropertyChangeComp'
 
+import ManagerIndexView from '@/views/ManagerViews/ManagerIndexView'
+
+import ManagerDeleteComp from '@/components/ManagerComp/ManagerDeleteComp'
+
 // 创建并暴露router实例对象
 const router = new VueRouter({
     routes: [
@@ -53,6 +57,7 @@ const router = new VueRouter({
             path: '/forgetView',
             component: ForgetView
         },
+        // 主界面
         {
             // 主界面
             path: '/indexView',
@@ -80,6 +85,7 @@ const router = new VueRouter({
                         },
                         {
                             // 跑腿详细信息界面
+                            name: 'errandDetails',
                             path: 'errandDetailsComp',
                             component: ErrandDetailsComp
                         },
@@ -188,14 +194,27 @@ const router = new VueRouter({
                 }
             ]
         },
+        // 管理员界面
+        {
+            path: "/ManagerIndexView",
+            component: ManagerIndexView,
+            children:[
+                {
+                    // 删除界面
+                    path: "ManagerDeleteComp",
+                    component:ManagerDeleteComp
+                },
+            ]
+        }
     ]
 })
 
 // 获取Vuex中的用户个人信息
 import store from '@/vuex/store'
 
-// 每次路由切换之前被调用
+// 每次路由切换之前被调用 路由前置守卫
 router.beforeEach((to, from, next)=>{
+    console.log("from: ", from);
     if (to.path == '/loginView' || to.path == '/forgetView' || to.path == '/registerView') {
         next();
     }

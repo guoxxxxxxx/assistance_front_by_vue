@@ -1,6 +1,6 @@
 <template>
   <div>
-    <index-header></index-header>
+    <manager-header-comp></manager-header-comp>
     <div class="border">
       <div class="container">
         <router-view></router-view>
@@ -11,15 +11,20 @@
 </template>
 
 <script>
-import IndexHeader from "@/components/IndexComp/IndexHeader.vue";
 import IndexFooter from "@/components/IndexComp/IndexFooterComp.vue";
+import ManagerHeaderComp from '@/components/ManagerComp/Comp/ManagerHeaderComp.vue'
 export default {
   components: {
-    IndexHeader,
     IndexFooter,
+    ManagerHeaderComp,
   },
-  created() {
-    // this.$router.replace("/indexView/indexBodyComp");
+  mounted() {
+    this.$router.replace({
+      path: "/managerIndexView/ManagerDeleteComp",
+      query: {
+        timestamp: Date.now()
+      }
+    })
   },
 };
 </script>

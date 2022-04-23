@@ -37,6 +37,21 @@ export default new Vuex.Store({
 
         // 用于存放记录总条数, 显示页码时需要用到
         itemsCount: 0,
+
+        // 全局管理员界面信息
+        manager: {
+            title: '跑腿',          // 标题
+            methodName: 'errand',     // 方法名
+            discussCount: 0,    // 讨论数量
+            replyCount: 0,      // 回复数量
+            itemCount: 0,       // 项目总数量
+            pre_take: 0,       // 已接单百分比
+            pre_dont: 0,        //未结单百分比
+            pre_achieve: 0,     // 已完成百分比
+            itemTable: [],      // 项目表格
+            discussTable: [],   // 讨论表格
+            replyTable: [],     // 回复表格
+        }
     },
     getters:{
         // 实时监听state值的变化(最新状态)
