@@ -140,12 +140,6 @@ export default {
     },
   },
   mounted() {
-    this.$router.push({
-      path: "/indexView/IndexDeliveryBody/ErrandComp",
-      query: {
-        timestamp: Date.now(),
-      },
-    });
     // 进入跑腿界面初始化过滤条件
     this.$store.state.queryCondition = {
       page: "1", // 所查询的页码

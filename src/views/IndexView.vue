@@ -18,8 +18,7 @@ export default {
     IndexHeader,
     IndexFooter,
   },
-  created() {
-    // this.$router.replace("/indexView/indexBodyComp");
+  beforeCreate() {
   },
 };
 </script>

@@ -21,7 +21,9 @@
       <el-table-column property="status" label="状态" width="120">
       </el-table-column>
       <el-table-column property="status" label="操作" width="180">
-        <el-button type="primary" size="mini" @click="seeDetails">查看</el-button>
+        <el-button type="primary" size="mini" @click="seeDetails"
+          >查看</el-button
+        >
         <el-button type="danger" size="mini">删除</el-button>
       </el-table-column>
     </el-table>
@@ -60,14 +62,16 @@ export default {
      * 点击查看详情
      */
     seeDetails() {
-      if (this.manager.methodName == "errand") {
-        this.$router.push({
-          name: "errandDetails",
-          query: {
-            eid: 122,
-          },
-        });
-      }
+      setTimeout(() => {
+        if (this.manager.methodName == "errand") {
+          this.$router.push({
+            name: "errandDetails",
+            query: {
+              eid: this.currentRow.id,
+            },
+          });
+        }
+      }, 1);
     },
   },
   computed: {

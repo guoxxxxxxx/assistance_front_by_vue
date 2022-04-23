@@ -127,7 +127,7 @@ export default {
               this.$store.commit('updateUserInfo', resp.data.object)
               // 将数据保存到sessionStorage中
               window.sessionStorage.setItem('user', resp.data.object.uid) 
-              this.$router.replace('/indexView')
+              this.$router.replace("/indexView/indexBodyComp")
             } else if (resp.data.status == 401) {
               this.$message.error("该邮箱尚未注册！");
             } else if (resp.data.status == 400) {
