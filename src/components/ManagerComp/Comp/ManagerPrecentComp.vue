@@ -87,6 +87,7 @@ export default {
         this.queryPercentage(this.$store.state.manager.methodName);
       },
       immediate: true,
+      deep: true,
     },
   },
 };

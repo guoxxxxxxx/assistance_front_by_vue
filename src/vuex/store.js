@@ -5,13 +5,13 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    state:{
+    state: {
         // 要设置的全局访问的State对象
         // 要设置的初始属性值
-        user:{},
+        user: {},
 
         // 设置discussList 全局评论内容全部仅依靠该对象
-        discussList:[],
+        discussList: [],
 
         // 设置uploadImgList 全局图片上传路径
         uploadImgList: [],
@@ -49,52 +49,52 @@ export default new Vuex.Store({
             pre_dont: 0,        //未结单百分比
             pre_achieve: 0,     // 已完成百分比
             itemTable: [],      // 项目表格
-            discussTable: [],   // 讨论表格
+            discussTable: [{ pubUser: '' }],   // 讨论表格
             replyTable: [],     // 回复表格
         }
     },
-    getters:{
+    getters: {
         // 实时监听state值的变化(最新状态)
-        getUserInfo(state){
+        getUserInfo(state) {
             return state.user;
         },
         // 获取用户头像路径
-        getUserAvatar(state){
+        getUserAvatar(state) {
             return state.avatarPath
         },
         // 获取过Errand界面的过滤属性
-        getErrandFilterType(state){
+        getErrandFilterType(state) {
             return state.errandFilterType;
         }
     },
-    mutations:{
+    mutations: {
         // 更新用户信息
-        updateUserInfo(state, user){
+        updateUserInfo(state, user) {
             state.user = user;
         },
         // 更新用户头像信息
-        updateUserAvatar(state, avatarPath){
+        updateUserAvatar(state, avatarPath) {
             state.user.avatarPath = avatarPath;
         },
         // 更新过滤属性
         // 更新所属范畴
-        updateErrandTypeCategory(state, category){
+        updateErrandTypeCategory(state, category) {
             state.errandFilterType.category = category
         },
         // 更新是否查看已完成订单
-        updateErrandTypeSeeIsAchieve(state, isSeeAchieve){
+        updateErrandTypeSeeIsAchieve(state, isSeeAchieve) {
             state.errandFilterType.isSeeAchieve = isSeeAchieve
         },
         // 更新是否查看已被接单订单
-        updateErrandTypeIsSeeTakeOrder(state, isSeeTakeOrder){
+        updateErrandTypeIsSeeTakeOrder(state, isSeeTakeOrder) {
             state.errandFilterType.isSeeTakeOrder = isSeeTakeOrder
         },
         // 更新评论信息对象
-        updateDiscussList(state, discussList){
+        updateDiscussList(state, discussList) {
             state.discussList = discussList;
         },
         // 更新全局查询条件对象
-        updateQueryCondition(state, queryCondition){
+        updateQueryCondition(state, queryCondition) {
             state.queryCondition = queryCondition;
         }
     }

@@ -83,6 +83,7 @@ export default {
         this.queryItemDisCount(this.$store.state.manager.methodName);
       },
       immediate: true,
+      deep: true,
     },
   },
 };

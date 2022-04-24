@@ -175,6 +175,8 @@ export default {
       handler() {
         this.queryAllItem(this.$store.state.manager.methodName);
       },
+      immediate:true,
+      deep:true
     },
   },
 };

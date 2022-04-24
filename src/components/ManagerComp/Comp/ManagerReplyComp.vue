@@ -173,6 +173,7 @@ export default {
         this.queryReplyTable();
       },
       immediate: true,
+      deep: true,
     },
   },
 };
