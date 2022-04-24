@@ -291,7 +291,8 @@
     </div>
 
     <!-- 评论功能 -->
-    <comment-comp id="comment"
+    <comment-comp
+      id="comment"
       :authorId="current_item.pubUser.uid"
       :commentNum="commentNum"
       @doSend="doSend"
@@ -506,6 +507,8 @@ export default {
     this.queryDiscussByTid(1);
     // 查询评论数量
     this.queryDiscussCount(this.current_tid);
+    // 进入详细界面 隐藏搜素框
+    this.$store.state.isShowSearch = false;
   },
   components: {
     CommentComp,

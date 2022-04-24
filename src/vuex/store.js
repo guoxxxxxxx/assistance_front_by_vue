@@ -40,8 +40,8 @@ export default new Vuex.Store({
 
         // 全局管理员界面信息
         manager: {
-            title: '跑腿',          // 标题
-            methodName: 'errand',     // 方法名
+            title: '',          // 标题
+            methodName: '',     // 方法名
             discussCount: 0,    // 讨论数量
             replyCount: 0,      // 回复数量
             itemCount: 0,       // 项目总数量

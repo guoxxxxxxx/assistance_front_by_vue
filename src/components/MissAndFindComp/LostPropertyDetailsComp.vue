@@ -174,7 +174,8 @@
     </div>
 
     <!-- 评论区 -->
-    <comment-comp id="comment"
+    <comment-comp
+      id="comment"
       :authorId="this.current_item.pubUser.uid"
       @doSend="doSend"
       @doChidSend="doChidSend"
@@ -385,6 +386,8 @@ export default {
     // 获取当前页面评论信息
     this.queryDiscussByLid(this.current_lid, 1);
     this.selectDiscussCountBySid(this.current_lid);
+    // 进入详细界面 隐藏搜素框
+    this.$store.state.isShowSearch = false;
   },
   components: {
     CommentComp,

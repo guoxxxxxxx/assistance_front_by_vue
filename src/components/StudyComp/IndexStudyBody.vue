@@ -151,12 +151,12 @@ export default {
     },
   },
   mounted() {
-    this.$router.replace({
-      path: "/indexView/IndexStudyBody/studyComp",
-      query: {
-        timestamp: Date.now(),
-      },
-    });
+    // this.$router.replace({
+    //   path: "/indexView/IndexStudyBody/studyComp",
+    //   query: {
+    //     timestamp: Date.now(),
+    //   },
+    // });
 
     // 进入该界面时将查询条件，项目总数清空
     this.clearAll();

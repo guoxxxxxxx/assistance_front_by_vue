@@ -113,6 +113,7 @@ const router = new VueRouter({
                         },
                         {
                             // 学习界面详细信息界面
+                            name: 'studyDetails',
                             path: 'studyDetailsComp',
                             component: StudyDetailsComp
                         },
@@ -140,6 +141,7 @@ const router = new VueRouter({
                         },
                         {
                             // 详细信息界面
+                            name: "tradeDetails",
                             path:'SecondHandDetailsComp',
                             component: SecondHandDetailsComp
                         },
@@ -167,6 +169,7 @@ const router = new VueRouter({
                         },
                         {
                             // 详细信息界面
+                            name: "lostDetails",
                             path: "lostPropertyDetailsComp",
                             component: LostPropertyDetailsComp
                         },
@@ -214,7 +217,6 @@ import store from '@/vuex/store'
 
 // 每次路由切换之前被调用 路由前置守卫
 router.beforeEach((to, from, next)=>{
-    console.log("from: ", from);
     if (to.path == '/loginView' || to.path == '/forgetView' || to.path == '/registerView') {
         next();
     }

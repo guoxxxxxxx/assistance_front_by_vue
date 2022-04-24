@@ -394,6 +394,8 @@ export default {
     this.selectDiscussBySid(this.current_sid, 1);
     // 查询当前界面评论信息的数量
     this.selectDiscussCountBySid(this.current_sid);
+    // 隐藏搜索栏
+    this.$store.state.isShowSearch = false;
   },
   computed: {},
   components: {

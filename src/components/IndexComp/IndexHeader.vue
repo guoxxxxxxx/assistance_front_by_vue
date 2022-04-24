@@ -76,6 +76,8 @@ export default {
         this.$router.replace('/indexView');
       } // 进入管理员模式
       else if(name == "manager"){
+        // this.$store.state.manager.methodName = "errand";
+        // this.$store.state.manager.title = "跑腿";
         this.$router.push({
           path: "/managerIndexView",
           query: {

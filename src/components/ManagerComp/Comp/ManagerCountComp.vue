@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { base_url } from '@/config';
+import { base_url } from "@/config";
 export default {
   data() {
     return {
@@ -31,37 +31,59 @@ export default {
      * 查询项目总数和评论总数
      */
     queryItemDisCount(methodName) {
-        this.axios.get(base_url + '/manager/' + methodName + '/queryItemDisCount').then(resp=>{
-            console.log(resp);
-            if(resp.data.status == 200){
-                let info = resp.data.object;
-                console.log(info);
-                this.$store.state.manager.replyCount = info.replyCount;
-                this.$store.state.manager.discussCount = info.discussCount;
-                this.$store.state.manager.itemCount = info.itemCount;
-            }
-        })
+      this.axios
+        .get(base_url + "/manager/" + methodName + "/queryItemDisCount")
+        .then((resp) => {
+          if (resp.data.status == 200) {
+            let info = resp.data.object;
+            this.$store.state.manager.replyCount = info.replyCount;
+            this.$store.state.manager.discussCount = info.discussCount;
+            this.$store.state.manager.itemCount = info.itemCount;
+          }
+        });
     },
   },
-  computed:{
-      getReplyCount(){
-          return this.$store.state.manager.replyCount;
-      },
-      getDiscussCount(){
-          return this.$store.state.manager.discussCount;
-      },
-      getItemCount(){
-          return this.$store.state.manager.itemCount;
-      },
-      getTitle(){
-          return this.$store.state.manager.title;
-      }
+  computed: {
+    getReplyCount() {
+      return this.$store.state.manager.replyCount;
+    },
+    getDiscussCount() {
+      return this.$store.state.manager.discussCount;
+    },
+    getItemCount() {
+      return this.$store.state.manager.itemCount;
+    },
+    getTitle() {
+      return this.$store.state.manager.title;
+    },
+
+    /**
+     * 监听各参数改变状态
+     */
+    listenerChange() {
+      return (
+        this.$store.state.manager.itemTable,
+        this.$store.state.manager.discussTable,
+        this.$store.state.manager.replyTable,
+        this.$store.state.manager.methodName
+      );
+    },
   },
   mounted() {
     // 从vuex中获取管理员信息
     this.manager = this.$store.state.manager;
     // 查询信息
     this.queryItemDisCount(this.$store.state.manager.methodName);
+  },
+  watch: {
+    // 检测如果项目列表改变的时候重新查询
+    listenerChange: {
+      handler() {
+        console.log("改变了");
+        this.queryItemDisCount(this.$store.state.manager.methodName);
+      },
+      immediate: true,
+    },
   },
 };
 </script>
