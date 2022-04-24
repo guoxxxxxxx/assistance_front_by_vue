@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div id="blank"></div>
-    <div id="mbox1">
+    <div id="blank" v-if="getMethodName != 'alumni'"></div>
+    <div id="mbox1" v-if="getMethodName != 'alumni'">
       <manager-count-comp class="smaller-box"></manager-count-comp>
       <manager-precent-comp class="smaller-box"></manager-precent-comp>
     </div>
@@ -13,13 +13,14 @@
         height: 30px;
         margin-top: 30px;
       "
+      v-if="getMethodName != 'alumni'"
     >
       项目管理
     </div>
-    <div id="mbox2">
+    <div id="mbox2" v-if="getMethodName != 'alumni'">
       <manager-item-comp class="big-box"></manager-item-comp>
     </div>
-    <div style="display: flex; width: 100%; justify-content:space-between;">
+    <div style="display: flex; width: 100%; justify-content: space-between">
       <div
         style="
           width: 48%;
@@ -63,6 +64,11 @@ export default {
     ManagerItemComp,
     ManagerDiscussComp,
     ManagerReplyComp,
+  },
+  computed: {
+    getMethodName() {
+      return this.$store.state.manager.methodName;
+    },
   },
 };
 </script>

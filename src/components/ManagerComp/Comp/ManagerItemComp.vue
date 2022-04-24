@@ -92,6 +92,7 @@ export default {
      */
     seeDetails(methodName) {
       setTimeout(() => {
+        console.log("currentROW = ", this.currentRow);
         if (methodName == "errand") {
           this.$router.push({
             name: "errandDetails",

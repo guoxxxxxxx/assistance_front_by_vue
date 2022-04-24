@@ -10,7 +10,7 @@
           :percentage="getDont"
           color="orange"
         ></el-progress>
-        <div class="small_title">未被接单</div>
+        <div class="small_title">未完成</div>
       </div>
       <div
         class="pre"
