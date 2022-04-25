@@ -1,6 +1,7 @@
 <template>
   <div id="footer">
     email: <a href="mailto:guo_x0315@163.com">guo_x0315@163.com</a> <br />
+    GitHub: <a href="https://github.com/guoxxxxxxx">https://github.com/guoxxxxxxx</a>
     Powered By GuoX <br />
   </div>
 </template>
