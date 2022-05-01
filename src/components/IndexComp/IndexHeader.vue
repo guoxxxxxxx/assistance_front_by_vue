@@ -72,8 +72,14 @@ export default {
       }
       // 退出
       else if (name == 'exit') {
-        this.$store.commit('updateUserInfo', {})
-        this.$router.replace('/indexView');
+        sessionStorage.clear();
+        this.$store.commit('updateUserInfo', null)
+        this.$router.replace({
+          path: '/login',
+          query: {
+            timestamp: Date.now()
+          }
+        });
       } // 进入管理员模式
       else if(name == "manager"){
         this.$store.state.manager.methodName = "errand";

@@ -131,32 +131,32 @@ const router = new VueRouter({
                     children: [
                         {
                             // 二手交易发布信息界面
-                            path:'SecondHandPublishData',
+                            path: 'SecondHandPublishData',
                             component: SecondHandPublishData
                         },
                         {
                             // 二手交易信息预览界面
-                            path:'SecondHandComp',
+                            path: 'SecondHandComp',
                             component: SecondHandComp
                         },
                         {
                             // 详细信息界面
                             name: "tradeDetails",
-                            path:'SecondHandDetailsComp',
+                            path: 'SecondHandDetailsComp',
                             component: SecondHandDetailsComp
                         },
                         {
                             // 修改信息界面
-                            path:'SecondHandChangeComp',
+                            path: 'SecondHandChangeComp',
                             component: SecondHandChangeComp
                         }
-                    ]  
+                    ]
                 },
                 {
                     // 失物寻找主体
                     path: 'indexMissAndFindBody',
                     component: IndexMissAndFindBody,
-                    children:[
+                    children: [
                         {
                             // 失物招领发布信息界面
                             path: 'lostPropertyPublishComp',
@@ -201,11 +201,11 @@ const router = new VueRouter({
         {
             path: "/ManagerIndexView",
             component: ManagerIndexView,
-            children:[
+            children: [
                 {
                     // 删除界面
                     path: "ManagerDeleteComp",
-                    component:ManagerDeleteComp
+                    component: ManagerDeleteComp
                 },
             ]
         }
@@ -216,14 +216,16 @@ const router = new VueRouter({
 import store from '@/vuex/store'
 
 // 每次路由切换之前被调用 路由前置守卫
-router.beforeEach((to, from, next)=>{
+router.beforeEach((to, from, next) => {
+    // 从session中读取用户信息
+    store.state.user = JSON.parse(sessionStorage.getItem("user"));
     if (to.path == '/loginView' || to.path == '/forgetView' || to.path == '/registerView') {
         next();
     }
-    else if(store.state.user.uid == null){
+    else if (store.state.user == null) {
         next('/loginView')
     }
-    else{
+    else {
         next();
     }
 })

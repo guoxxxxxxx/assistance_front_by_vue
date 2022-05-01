@@ -124,10 +124,10 @@ export default {
             if (resp.data.status == 200) {
               this.$message.success("登录成功！");
               // 保存到Vuex中
-              this.$store.commit('updateUserInfo', resp.data.object)
+              this.$store.commit("updateUserInfo", resp.data.object);
               // 将数据保存到sessionStorage中
-              window.sessionStorage.setItem('user', resp.data.object.uid) 
-              this.$router.replace("/indexView/indexBodyComp")
+              window.sessionStorage.setItem("user", JSON.stringify(resp.data.object));
+              this.$router.replace("/indexView/indexBodyComp");
             } else if (resp.data.status == 401) {
               this.$message.error("该邮箱尚未注册！");
             } else if (resp.data.status == 400) {
@@ -141,14 +141,11 @@ export default {
       }
     },
   },
-  mounted(){
-    
-  }
+  mounted() {},
 };
 </script>
 
 // 导入外部样式
 <style scoped src='../assets/css/login.css'></style>
 <style scoped>
-
 </style>

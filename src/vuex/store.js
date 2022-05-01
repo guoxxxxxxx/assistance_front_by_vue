@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
+// 引入持久化插件
+// import persistance from "vuex-persistedstate"
 
 export default new Vuex.Store({
     state: {
@@ -97,5 +99,6 @@ export default new Vuex.Store({
         updateQueryCondition(state, queryCondition) {
             state.queryCondition = queryCondition;
         }
-    }
+    },
+    // plugins: [persistance()]
 })

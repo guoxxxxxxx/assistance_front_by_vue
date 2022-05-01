@@ -9,11 +9,13 @@ export default {
   name: "App",
   components: {},
   mounted() {
-    // // 跳转到登录界面
-    this.$router.replace({
-      path: '/loginView',
-      query: {timestamp: Date.now()}
-    })
+    if (this.$store.state.user == null) {
+      // 跳转到登录界面
+      this.$router.replace({
+        path: "/loginView",
+        query: { timestamp: Date.now() },
+      });
+    }
 
     // 主界面
     // this.$router.replace({
@@ -22,6 +24,9 @@ export default {
     // });
   },
   methods: {},
+  created() {
+    // this.$store.state.user = JSON.parse(sessionStorage.getItem('user'));
+  },
 };
 </script>
 
