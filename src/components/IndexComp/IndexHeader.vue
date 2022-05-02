@@ -34,7 +34,7 @@
     <div id="right_box">
       <Dropdown @on-click="selectItem">
         <Avatar
-          :src="user.avatarPath"
+          :src="getAvatar"
           size="large"
         />
         <DropdownMenu slot="list">
@@ -101,6 +101,11 @@ export default {
       }
     },
   },
+  computed:{
+    getAvatar() {
+      return this.$store.state.user.avatarPath;
+    }
+  }
 };
 </script>
 

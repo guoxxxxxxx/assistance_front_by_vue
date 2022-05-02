@@ -77,7 +77,7 @@ export default {
       // 点击发布信息按钮
       if (id == "pubdata") {
         this.$store.state.isShowSearch = false;
-        this.$router.replace({
+        this.$router.push({
           path: "/indexView/indexDeliveryBody/errandPublishData",
           query: {
             timestamp: Date.now(),

@@ -117,6 +117,9 @@ export default {
               "updateUserAvatar",
               base_url + "/avatar/" + this.last_fileName
             );
+            // 更新storageSession中的用户信息
+            sessionStorage.clear();
+            sessionStorage.setItem("user", JSON.stringify(this.$store.state.user));
             this.imageUrl = this.$store.getters.getUserInfo.avatarPath;
           } else {
             this.$notify({

@@ -74,7 +74,7 @@ export default {
      */
     selectItem(name) {
       if (name == "发布信息") {
-        this.$router.replace({
+        this.$router.push({
           path: "/indexView/IndexStudyBody/studyPublishData",
           query: {
             timestamp: Date.now(),
