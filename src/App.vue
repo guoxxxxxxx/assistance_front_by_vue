@@ -1,28 +1,34 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  components: {},
+  mounted() {
+    // // 跳转到登录界面
+    this.$router.replace({
+      path: '/loginView',
+      query: {timestamp: Date.now()}
+    })
+
+    // 主界面
+    // this.$router.replace({
+    //   path: "/indexView",
+    //   query: { timestamp: Date.now() },
+    // });
+  },
+  methods: {},
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.login-bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 </style>

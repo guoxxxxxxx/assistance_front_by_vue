@@ -1,0 +1,30 @@
+<template>
+  <div>
+      <Tabs value="all" @on-click="selectItem" >
+        <TabPane label="全部" name="all"></TabPane>
+        <TabPane label="交通工具" name="vehicle"></TabPane>
+        <TabPane label="书本资料" name="book"></TabPane>
+        <TabPane label="生活用品" name="supplies"></TabPane>
+        <TabPane label="电脑配件" name="computer_device"></TabPane>
+        <TabPane label="其他" name="other"></TabPane>
+        <TabPane label="发布信息" name="pubdata"></TabPane>
+      </Tabs>
+      <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+    methods:{
+        selectItem(name){
+            if(name == 'pubdata'){
+                this.$router.push('/indexView/indexSecondHandBody/secondHandPublishData')
+            }
+        } 
+    }
+}
+</script>
+
+<style>
+
+</style>
